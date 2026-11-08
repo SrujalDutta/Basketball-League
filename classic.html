@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HoopReady Tournament</title>
+<meta name="description" content="HoopReady 3v3 & 5v5 Basketball Tournament — register your team, check the schedule, and get tournament ready.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   EDIT THESE COLORS TO RE-BRAND THE WHOLE SITE
+   ========================================================= */
+:root{
+  --bg:#0b0b0d;
+  --bg-2:#141417;
+  --bg-3:#1c1c21;
+  --text:#f5f3ef;
+  --muted:#9a978f;
+  --line:#2a2a30;
+  --accent:#ff6b1a;      /* basketball orange */
+  --accent-2:#ffb21a;    /* gold */
+  --accent-dark:#c94d0a;
+  --display:'Anton', Impact, 'Arial Narrow', sans-serif;
+  --body:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --radius:14px;
+  --max:1240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 24px}
+.display{font-family:var(--display);text-transform:uppercase;letter-spacing:.01em;line-height:.92;font-weight:400}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+.eyebrow::before{content:"";width:28px;height:2px;background:currentColor}
+.accent{color:var(--accent)}
+.outline{-webkit-text-stroke:2px var(--text);color:transparent}
+section{position:relative}
+main{overflow-x:clip}
+.sec{padding:140px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;margin-bottom:64px}
+.sec-head h2{font-size:clamp(3rem,8vw,6.5rem)}
+.sec-head p{max-width:420px;color:var(--muted)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;font-weight:700;font-size:.95rem;letter-spacing:.04em;text-transform:uppercase;transition:transform .25s, background .25s, color .25s, box-shadow .25s}
+.btn-primary{background:var(--accent);color:#111}
+.btn-primary:hover{background:var(--accent-2);transform:translateY(-2px);box-shadow:0 12px 30px -10px var(--accent)}
+.btn-ghost{border:1.5px solid var(--line);color:var(--text)}
+.btn-ghost:hover{border-color:var(--text);transform:translateY(-2px)}
+.btn svg{width:18px;height:18px;transition:transform .25s}
+.btn:hover svg{transform:translateX(4px)}
+
+/* ===== scroll progress + nav ===== */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:200}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s, padding .3s, border-color .3s;padding:22px 0;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(11,11,13,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:14px 0;border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:1.6rem;letter-spacing:.02em;text-transform:uppercase}
+.logo svg{width:34px;height:34px}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{font-size:.88rem;font-weight:600;color:var(--muted);transition:color .2s;position:relative}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--accent)}
+.nav .btn{padding:12px 22px;font-size:.82rem}
+.burger{display:none;width:44px;height:44px;position:relative}
+.burger span{position:absolute;left:10px;right:10px;height:2px;background:var(--text);transition:transform .3s, opacity .3s}
+.burger span:nth-child(1){top:15px}.burger span:nth-child(2){top:21px}.burger span:nth-child(3){top:27px}
+.nav.open .burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav.open .burger span:nth-child(2){opacity:0}
+.nav.open .burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* ===== hero ===== */
+.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:140px 0 80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-bg .glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle, rgba(255,107,26,.32), transparent 60%);right:-250px;top:-150px;filter:blur(20px)}
+.hero-bg .court{position:absolute;inset:0;opacity:.07;background-image:linear-gradient(var(--text) 1px,transparent 1px),linear-gradient(90deg,var(--text) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse at 70% 40%,#000 20%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 20%,transparent 70%)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(3.6rem,11vw,10.5rem);margin:22px 0 28px}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .line span{display:block;transform:translateY(105%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards}
+.hero h1 .line:nth-child(2) span{animation-delay:.12s}
+.hero h1 .line:nth-child(3) span{animation-delay:.24s}
+@keyframes rise{to{transform:none}}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:520px;margin-bottom:36px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:36px;margin-top:56px;flex-wrap:wrap}
+.hero-meta div{border-left:2px solid var(--accent);padding-left:14px}
+.hero-meta b{display:block;font-family:var(--display);font-size:1.6rem;font-weight:400;letter-spacing:.02em}
+.hero-meta small{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.12em}
+.ball-wrap{position:relative;aspect-ratio:1;width:100%;max-width:440px;justify-self:end}
+.ball{width:100%;height:100%;filter:drop-shadow(0 40px 60px rgba(255,107,26,.35));will-change:transform}
+.ball-shadow{position:absolute;bottom:-40px;left:15%;right:15%;height:30px;border-radius:50%;background:radial-gradient(rgba(0,0,0,.7),transparent 70%)}
+.scroll-cue{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);z-index:1}
+.scroll-cue i{width:1px;height:46px;background:linear-gradient(var(--accent),transparent);animation:cue 1.8s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ===== countdown ===== */
+.countdown{display:flex;gap:12px;margin-top:40px}
+.countdown div{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:82px;text-align:center}
+.countdown b{display:block;font-family:var(--display);font-weight:400;font-size:2.2rem;line-height:1}
+.countdown small{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== marquee ===== */
+.marquee{background:var(--accent);color:#111;overflow:hidden;padding:18px 0;transform:rotate(-2deg) scale(1.04);margin:40px 0}
+.marquee.alt{background:var(--text);transform:rotate(1.5deg) scale(1.04)}
+.marquee-track{display:flex;width:max-content;animation:marq 30s linear infinite}
+.marquee.alt .marquee-track{animation-direction:reverse}
+.marquee-track span{font-family:var(--display);font-size:2.4rem;text-transform:uppercase;padding:0 28px;display:flex;align-items:center;gap:56px;white-space:nowrap}
+.marquee-track span::after{content:"●";font-size:1rem}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ===== pinned story (sticky scroll) ===== */
+.story{height:320vh}
+.story-sticky{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;overflow:hidden}
+.story .wrap{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+.story-words{position:relative;height:clamp(5rem,15vw,13rem)}
+.story-words h2{position:absolute;inset:0;font-size:clamp(4.5rem,15vw,13rem);opacity:0;transform:translateY(40px);transition:opacity .5s, transform .5s}
+.story-words h2.on{opacity:1;transform:none}
+.story-copy{position:relative;min-height:220px;width:100%;max-width:640px;margin-left:auto}
+.story-copy div{position:absolute;inset:0;opacity:0;transform:translateY(20px);transition:opacity .5s .05s, transform .5s .05s}
+.story-copy div.on{opacity:1;transform:none}
+.story-copy .num{font-family:var(--display);font-size:1rem;color:var(--accent);letter-spacing:.2em}
+.story-copy h3{font-size:1.9rem;margin:10px 0 14px;line-height:1.2}
+.story-copy p{color:var(--muted);font-size:1.08rem}
+.story-dots{display:flex;gap:8px;margin-top:30px;position:absolute;bottom:-60px}
+.story-dots i{width:34px;height:4px;border-radius:4px;background:var(--line);transition:background .3s}
+.story-dots i.on{background:var(--accent)}
+.story-bar{position:absolute;left:0;bottom:0;height:3px;background:var(--accent);width:0}
+
+/* ===== stats ===== */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:56px 28px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(3rem,6vw,5rem);line-height:1}
+.stat b em{font-style:normal;color:var(--accent)}
+.stat span{color:var(--muted);font-size:.9rem;text-transform:uppercase;letter-spacing:.12em}
+
+/* ===== horizontal scroll divisions ===== */
+.hscroll{height:400vh}
+.hscroll-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hscroll-head{margin-bottom:48px}
+.hscroll-head h2{font-size:clamp(3rem,8vw,6.5rem)}
+.hscroll-track{display:flex;gap:28px;padding-left:max(24px, calc((100vw - var(--max))/2 + 24px));padding-right:24px;will-change:transform;width:max-content}
+.div-card{width:min(78vw,400px);height:min(56vh,480px);flex:none;border-radius:22px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;background:var(--bg-2);border:1px solid var(--line);transition:transform .35s, border-color .35s}
+.div-card:hover{transform:translateY(-8px);border-color:var(--accent)}
+.div-card::before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;border:2px solid rgba(255,255,255,.06);right:-120px;top:-120px}
+.div-card::after{content:"";position:absolute;width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,255,255,.06);right:-50px;top:-50px}
+.div-card .tag{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:7px 12px;border-radius:999px;background:rgba(255,107,26,.14);color:var(--accent)}
+.div-card h3{font-family:var(--display);font-weight:400;font-size:clamp(3.4rem,6vw,5rem);line-height:.9;text-transform:uppercase}
+.div-card ul{list-style:none;color:var(--muted);font-size:.95rem;display:grid;gap:6px;margin-top:16px}
+.div-card ul li::before{content:"→ ";color:var(--accent)}
+.div-card .price{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:18px}
+.div-card .price b{font-family:var(--display);font-weight:400;font-size:2rem}
+.div-card.hot{background:linear-gradient(160deg,var(--accent),var(--accent-dark));color:#111;border-color:transparent}
+.div-card.hot .tag{background:#111;color:var(--accent)}
+.div-card.hot ul{color:#2a1608}.div-card.hot ul li::before{color:#111}
+.div-card.hot .price{border-color:rgba(0,0,0,.2)}
+.hscroll-count{display:flex;align-items:center;gap:16px;margin-top:40px;color:var(--muted);font-size:.85rem;letter-spacing:.14em}
+.hscroll-count .rail{flex:1;max-width:260px;height:2px;background:var(--line);position:relative}
+.hscroll-count .rail i{position:absolute;inset:0;background:var(--accent);transform-origin:0;transform:scaleX(0)}
+
+/* ===== how it works timeline ===== */
+.steps{position:relative;display:grid;gap:0}
+.steps-line{position:absolute;left:39px;top:0;bottom:0;width:2px;background:var(--line)}
+.steps-line i{position:absolute;inset:0;background:var(--accent);transform-origin:top;transform:scaleY(0)}
+.step{display:grid;grid-template-columns:80px 1fr auto;gap:36px;align-items:center;padding:42px 0;border-bottom:1px solid var(--line);position:relative}
+.step-num{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:1.8rem;background:var(--bg);border:2px solid var(--line);position:relative;z-index:1;transition:border-color .4s, background .4s, color .4s}
+.step.lit .step-num{border-color:var(--accent);background:var(--accent);color:#111}
+.step h3{font-size:clamp(1.6rem,3vw,2.4rem);font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em}
+.step p{color:var(--muted);max-width:560px}
+.step .when{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:8px 14px;border-radius:999px;white-space:nowrap}
+
+/* ===== schedule ===== */
+.tabs{display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.tab{padding:12px 22px;border-radius:999px;border:1.5px solid var(--line);font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:all .25s}
+.tab.on{background:var(--text);color:#111;border-color:var(--text)}
+.panel{display:none}
+.panel.on{display:block;animation:fade .5s}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.sched-row{display:grid;grid-template-columns:140px 1fr auto;gap:24px;align-items:center;padding:24px 8px;border-bottom:1px solid var(--line);transition:background .25s, padding .25s}
+.sched-row:hover{background:var(--bg-2);padding-left:20px}
+.sched-row time{font-family:var(--display);font-size:1.6rem}
+.sched-row h4{font-size:1.15rem}
+.sched-row p{color:var(--muted);font-size:.9rem}
+.sched-row .court-tag{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+
+/* ===== bracket ===== */
+.bracket-scroll{overflow-x:auto;padding-bottom:12px}
+.bracket{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:32px;min-width:960px}
+.round h5{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.round .games{display:flex;flex-direction:column;justify-content:space-around;height:100%;gap:18px}
+.game{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.game div{display:flex;justify-content:space-between;padding:12px 16px;font-weight:600;font-size:.92rem}
+.game div+div{border-top:1px solid var(--line)}
+.game div b{font-family:var(--display);font-weight:400;font-size:1.1rem}
+.game .win{color:var(--text)}.game .win b{color:var(--accent)}
+.game .lose{color:var(--muted)}
+.game.final{border-color:var(--accent);box-shadow:0 0 40px -10px var(--accent)}
+.trophy{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;height:100%}
+.trophy svg{width:90px;height:90px}
+.trophy b{font-family:var(--display);font-weight:400;font-size:1.8rem;text-transform:uppercase}
+
+/* ===== prizes ===== */
+.prizes{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:24px;align-items:end}
+.prize{background:var(--bg-2);border:1px solid var(--line);border-radius:22px;padding:40px 30px;text-align:center}
+.prize.first{background:linear-gradient(180deg,rgba(255,178,26,.16),var(--bg-2));border-color:var(--accent-2);padding:64px 30px}
+.prize .place{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.prize b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(3rem,6vw,5rem);line-height:1;margin:14px 0}
+.prize.first b{color:var(--accent-2)}
+.prize p{color:var(--muted);font-size:.92rem}
+
+/* ===== gallery ===== */
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:240px;gap:16px}
+.g{border-radius:18px;overflow:hidden;position:relative;background:var(--bg-3)}
+.g:nth-child(1){grid-column:span 2;grid-row:span 2}
+.g:nth-child(4){grid-row:span 2}
+.g:nth-child(5){grid-column:span 2}
+.g .ph{position:absolute;inset:-12% 0;display:grid;place-items:center;will-change:transform}
+.g .ph svg{width:46%;opacity:.9}
+.g:nth-child(odd) .ph{background:radial-gradient(circle at 30% 20%,rgba(255,107,26,.5),transparent 60%),var(--bg-3)}
+.g:nth-child(even) .ph{background:radial-gradient(circle at 70% 80%,rgba(255,178,26,.35),transparent 60%),var(--bg-2)}
+.g figcaption{position:absolute;left:16px;bottom:14px;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);padding:6px 10px;border-radius:6px;backdrop-filter:blur(6px)}
+
+/* ===== testimonials ===== */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.quote{background:var(--bg-2);border:1px solid var(--line);border-radius:22px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.quote p{font-size:1.08rem}
+.quote p::before{content:"“";display:block;font-family:var(--display);font-size:4rem;line-height:.6;color:var(--accent);margin-bottom:10px}
+.who{display:flex;align-items:center;gap:12px}
+.who i{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-style:normal;font-weight:800;color:#111}
+.who small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ===== sponsors ===== */
+.sponsors{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:40px 0}
+.sponsors .marquee-track{animation-duration:40s}
+.sponsors .marquee-track span{font-size:2rem;color:var(--muted);opacity:.65;gap:80px}
+.sponsors .marquee-track span::after{content:"✦";color:var(--accent)}
+
+/* ===== faq ===== */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 0;text-align:left;font-size:1.15rem;font-weight:600}
+.faq-q .pm{width:34px;height:34px;flex:none;border-radius:50%;border:1.5px solid var(--line);position:relative;transition:transform .3s, background .3s, border-color .3s}
+.faq-q .pm::before,.faq-q .pm::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:currentColor;transform:translate(-50%,-50%)}
+.faq-q .pm::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .3s}
+.faq-item.open .pm{background:var(--accent);border-color:var(--accent);color:#111}
+.faq-item.open .pm::after{transform:translate(-50%,-50%) rotate(0)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}
+.faq-a>div{overflow:hidden}
+.faq-a p{color:var(--muted);padding-bottom:26px;max-width:620px}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+
+/* ===== register ===== */
+.register{background:var(--accent);color:#111;border-radius:32px;padding:80px 64px;display:grid;grid-template-columns:1fr 1fr;gap:60px;position:relative;overflow:hidden}
+.register::before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;border:3px solid rgba(0,0,0,.12);left:-200px;bottom:-300px}
+.register::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:3px solid rgba(0,0,0,.12);left:-50px;bottom:-150px}
+.register h2{font-size:clamp(3.4rem,8vw,7rem);position:relative;z-index:1}
+.register .eyebrow{color:#111}
+.register>div>p{font-size:1.1rem;margin-top:22px;max-width:420px;position:relative;z-index:1}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px;position:relative;z-index:1}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.field input,.field select,.field textarea{font:inherit;padding:15px 16px;border-radius:12px;border:2px solid transparent;background:rgba(255,255,255,.9);color:#111;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#111}
+form .btn{grid-column:1/-1;justify-content:center;background:#111;color:var(--text);margin-top:6px}
+form .btn:hover{background:#000;box-shadow:0 14px 30px -12px #000}
+.form-ok{display:none;grid-column:1/-1;background:#111;color:var(--text);padding:18px;border-radius:12px;font-weight:600;text-align:center}
+.form-ok.on{display:block}
+
+/* ===== footer ===== */
+footer{padding:100px 0 40px}
+.foot-big{font-size:clamp(4rem,17vw,16rem);line-height:.85;margin-bottom:60px;white-space:nowrap}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:60px;border-bottom:1px solid var(--line)}
+.foot-grid h6{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;font-weight:700}
+.foot-grid ul{list-style:none;display:grid;gap:10px}
+.foot-grid a{color:var(--text);opacity:.85;transition:color .2s, opacity .2s}
+.foot-grid a:hover{color:var(--accent);opacity:1}
+.foot-grid p{color:var(--muted);max-width:340px;margin-top:14px}
+.socials{display:flex;gap:10px;margin-top:22px}
+.socials a{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;transition:all .25s}
+.socials a:hover{background:var(--accent);border-color:var(--accent);color:#111}
+.socials svg{width:18px;height:18px}
+.foot-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:28px;color:var(--muted);font-size:.85rem}
+
+/* ===== scroll reveal ===== */
+.reveal{opacity:0;transform:translateY(50px);transition:opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}
+
+/* back to top */
+.totop{position:fixed;right:22px;bottom:22px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#111;display:grid;place-items:center;z-index:90;opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .3s, transform .3s}
+.totop.on{opacity:1;transform:none;pointer-events:auto}
+.totop svg{width:20px;height:20px}
+
+/* ===== responsive ===== */
+@media (max-width:1024px){
+  .nav-links{display:none}
+  .nav .btn{display:none}
+  .burger{display:block}
+  .nav.open .nav-links{display:flex;position:fixed;top:72px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 24px 28px}
+  .nav.open .nav-links a{display:block;padding:16px 0;font-size:1.3rem;font-family:var(--display);text-transform:uppercase;color:var(--text);border-bottom:1px solid var(--line)}
+  .nav.open .nav-links a.active::after{display:none}
+  .hero .wrap{grid-template-columns:1fr}
+  .ball-wrap{position:absolute;right:-120px;top:-40px;width:360px;opacity:.35;z-index:-1}
+  .story .wrap{grid-template-columns:1fr;gap:30px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .prizes{grid-template-columns:1fr}
+  .prize.first{order:-1}
+  .quotes{grid-template-columns:1fr}
+  .faq-grid{grid-template-columns:1fr;gap:20px}
+  .register{grid-template-columns:1fr;padding:56px 32px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:180px}
+  .g:nth-child(5){grid-column:span 1}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .sec{padding:96px 0}
+  .countdown div{min-width:0;flex:1;padding:12px 6px}
+  .countdown b{font-size:1.7rem}
+  .step{grid-template-columns:60px 1fr;gap:20px}
+  .step-num{width:60px;height:60px;font-size:1.4rem}
+  .steps-line{left:29px}
+  .step .when{grid-column:2;justify-self:start}
+  .sched-row{grid-template-columns:1fr;gap:6px}
+  form{grid-template-columns:1fr}
+  .register{padding:44px 20px;border-radius:24px}
+  .foot-grid{grid-template-columns:1fr}
+  .marquee-track span{font-size:1.7rem}
+  .hero-meta{gap:22px}
+  .scroll-cue{display:none}
+  .story-copy{min-height:280px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+  .hero h1 .line span{transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="HoopReady home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#ff6b1a"/><g fill="none" stroke="#111" stroke-width="3"><path d="M2 32h60M32 2v60"/><path d="M11 11c8 8 8 34 0 42M53 11c-8 8-8 34 0 42"/></g></svg>
+      HoopReady
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#divisions">Divisions</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#prizes">Prizes</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#register" class="btn btn-primary">Register Team</a>
+    <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg"><div class="glow"></div><div class="court"></div></div>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Spring Showdown · 2027 Season</span>
+      <h1 class="display">
+        <span class="line"><span>Are You</span></span>
+        <span class="line"><span class="accent">Hoop</span></span>
+        <span class="line"><span>Ready?</span></span>
+      </h1>
+      <p class="lead">The city's biggest youth &amp; adult basketball tournament. Three days, eight courts, 120+ teams and one trophy. Lace up, bring your squad and prove it on the hardwood.</p>
+      <div class="hero-ctas">
+        <a href="#register" class="btn btn-primary">Register Your Team <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        <a href="#schedule" class="btn btn-ghost">View Schedule</a>
+      </div>
+      <div class="countdown" id="countdown" aria-label="Countdown to tip-off">
+        <div><b id="cd-d">00</b><small>Days</small></div>
+        <div><b id="cd-h">00</b><small>Hours</small></div>
+        <div><b id="cd-m">00</b><small>Mins</small></div>
+        <div><b id="cd-s">00</b><small>Secs</small></div>
+      </div>
+    </div>
+    <div class="ball-wrap" aria-hidden="true">
+      <svg class="ball" id="ball" viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="bg1" cx="35%" cy="30%" r="75%">
+            <stop offset="0" stop-color="#ffa45c"/><stop offset=".55" stop-color="#ff6b1a"/><stop offset="1" stop-color="#a83d05"/>
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="96" fill="url(#bg1)"/>
+        <g fill="none" stroke="#1a0b02" stroke-width="4" stroke-linecap="round">
+          <path d="M4 100h192"/><path d="M100 4v192"/>
+          <path d="M32 30c26 26 26 114 0 140"/><path d="M168 30c-26 26-26 114 0 140"/>
+        </g>
+        <circle cx="100" cy="100" r="96" fill="none" stroke="#1a0b02" stroke-width="3"/>
+      </svg>
+      <div class="ball-shadow"></div>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll<i></i></div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Register Now</span><span>3v3 &amp; 5v5</span><span>All Ages</span><span>Cash Prizes</span><span>March 14–16</span><span>Register Now</span><span>3v3 &amp; 5v5</span><span>All Ages</span><span>Cash Prizes</span><span>March 14–16</span>
+    <span>Register Now</span><span>3v3 &amp; 5v5</span><span>All Ages</span><span>Cash Prizes</span><span>March 14–16</span><span>Register Now</span><span>3v3 &amp; 5v5</span><span>All Ages</span><span>Cash Prizes</span><span>March 14–16</span>
+  </div>
+</div>
+
+<!-- ================= STORY (pinned scroll) ================= -->
+<section class="story" id="about">
+  <div class="story-sticky">
+    <div class="wrap">
+      <div class="story-words">
+        <h2 class="display on">Train.</h2>
+        <h2 class="display accent">Compete.</h2>
+        <h2 class="display outline">Win.</h2>
+      </div>
+      <div class="story-copy">
+        <div class="on">
+          <span class="num">01 / 03</span>
+          <h3>Built for every baller</h3>
+          <p>From first-time rec players to varsity starters and weekend legends, HoopReady has a division for you. Fair brackets, certified refs and pro-level organisation, every game.</p>
+        </div>
+        <div>
+          <span class="num">02 / 03</span>
+          <h3>Guaranteed game time</h3>
+          <p>Every team plays a minimum of three games, with pool play leading into single-elimination brackets. No travelling across town for one game and done.</p>
+        </div>
+        <div>
+          <span class="num">03 / 03</span>
+          <h3>Play for something real</h3>
+          <p>Cash prizes, championship rings, MVP awards and live-streamed finals. Scouts and college coaches attend the showcase rounds every year.</p>
+        </div>
+        <div class="story-dots"><i class="on"></i><i></i><i></i></div>
+      </div>
+    </div>
+    <div class="story-bar" id="storyBar"></div>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section class="sec" style="padding-top:60px">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="stat"><b><span data-count="120">0</span><em>+</em></b><span>Teams</span></div>
+      <div class="stat"><b><span data-count="8">0</span></b><span>Courts</span></div>
+      <div class="stat"><b><span data-count="350">0</span><em>+</em></b><span>Games Played</span></div>
+      <div class="stat"><b><em>$</em><span data-count="25">0</span><em>K</em></b><span>Prize Pool</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DIVISIONS (horizontal scroll) ================= -->
+<section class="hscroll" id="divisions">
+  <div class="hscroll-sticky">
+    <div class="wrap hscroll-head">
+      <span class="eyebrow">Find your bracket</span>
+      <h2 class="display">Divisions</h2>
+    </div>
+    <div class="hscroll-track" id="hTrack">
+      <article class="div-card">
+        <span class="tag">Youth</span>
+        <div><h3>U12</h3><ul><li>Boys &amp; Girls</li><li>5v5 · 8-min quarters</li><li>Min. 3 games</li></ul></div>
+        <div class="price"><span>Entry / team</span><b>$250</b></div>
+      </article>
+      <article class="div-card">
+        <span class="tag">Youth</span>
+        <div><h3>U14</h3><ul><li>Boys &amp; Girls</li><li>5v5 · 8-min quarters</li><li>Min. 3 games</li></ul></div>
+        <div class="price"><span>Entry / team</span><b>$275</b></div>
+      </article>
+      <article class="div-card">
+        <span class="tag">High School</span>
+        <div><h3>U16</h3><ul><li>Boys &amp; Girls</li><li>5v5 · 10-min quarters</li><li>Scout showcase</li></ul></div>
+        <div class="price"><span>Entry / team</span><b>$300</b></div>
+      </article>
+      <article class="div-card hot">
+        <span class="tag">Most Popular</span>
+        <div><h3>U18 Elite</h3><ul><li>Boys &amp; Girls</li><li>5v5 · 10-min quarters</li><li>College scouts attending</li></ul></div>
+        <div class="price"><span>Entry / team</span><b>$350</b></div>
+      </article>
+      <article class="div-card">
+        <span class="tag">Adult</span>
+        <div><h3>Open 5v5</h3><ul><li>Men's &amp; Women's</li><li>18+ · Full court</li><li>$10K top prize</li></ul></div>
+        <div class="price"><span>Entry / team</span><b>$400</b></div>
+      </article>
+      <article class="div-card">
+        <span class="tag">Street</span>
+        <div><h3>3v3 Half</h3><ul><li>All ages, by bracket</li><li>Games to 21</li><li>Up to 4 players</li></ul></div>
+        <div class="price"><span>Entry / team</span><b>$120</b></div>
+      </article>
+    </div>
+    <div class="wrap hscroll-count"><span id="hNum">01</span><div class="rail"><i id="hRail"></i></div><span>06</span></div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Get tournament ready</span><h2 class="display">How It<br>Works</h2></div>
+      <p>Four simple steps from sign-up to championship Sunday. We handle the refs, scoreboards and brackets — you bring the game.</p>
+    </div>
+    <div class="steps" id="steps">
+      <div class="steps-line"><i id="stepsLine"></i></div>
+      <div class="step reveal"><div class="step-num">01</div><div><h3>Register your team</h3><p>Pick a division, add your roster and pay the entry fee online. Early-bird pricing ends February 1.</p></div><span class="when">Now – Mar 1</span></div>
+      <div class="step reveal"><div class="step-num">02</div><div><h3>Get your schedule</h3><p>Pool assignments and game times are emailed to every coach one week before tip-off.</p></div><span class="when">Mar 7</span></div>
+      <div class="step reveal"><div class="step-num">03</div><div><h3>Play pool games</h3><p>Every team plays at least three pool games. Records and point differential decide bracket seeding.</p></div><span class="when">Mar 14–15</span></div>
+      <div class="step reveal"><div class="step-num">04</div><div><h3>Win on Sunday</h3><p>Single-elimination brackets, live-streamed finals and the trophy ceremony at centre court.</p></div><span class="when">Mar 16</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee alt" aria-hidden="true">
+  <div class="marquee-track">
+    <span>No Excuses</span><span>Ball Is Life</span><span>Leave It On The Court</span><span>Hoop Ready</span><span>No Excuses</span><span>Ball Is Life</span><span>Leave It On The Court</span><span>Hoop Ready</span>
+    <span>No Excuses</span><span>Ball Is Life</span><span>Leave It On The Court</span><span>Hoop Ready</span><span>No Excuses</span><span>Ball Is Life</span><span>Leave It On The Court</span><span>Hoop Ready</span>
+  </div>
+</div>
+
+<!-- ================= SCHEDULE ================= -->
+<section class="sec" id="schedule">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Three days of hoops</span><h2 class="display">Schedule</h2></div>
+      <p>All games at Downtown Sports Complex, 123 Court Street. Doors open 30 minutes before the first game each day.</p>
+    </div>
+    <div class="tabs reveal" role="tablist">
+      <button class="tab on" data-tab="d1" role="tab">Fri · Mar 14</button>
+      <button class="tab" data-tab="d2" role="tab">Sat · Mar 15</button>
+      <button class="tab" data-tab="d3" role="tab">Sun · Mar 16</button>
+    </div>
+    <div class="panel on reveal" id="d1">
+      <div class="sched-row"><time>5:00 PM</time><div><h4>Check-in &amp; Warm-ups</h4><p>Team registration desk, wristbands &amp; jerseys</p></div><span class="court-tag">Main Lobby</span></div>
+      <div class="sched-row"><time>6:00 PM</time><div><h4>Opening Ceremony</h4><p>Team introductions &amp; national anthem</p></div><span class="court-tag">Centre Court</span></div>
+      <div class="sched-row"><time>6:30 PM</time><div><h4>Pool Play — Round 1</h4><p>U16, U18 Elite, Open 5v5</p></div><span class="court-tag">Courts 1–8</span></div>
+      <div class="sched-row"><time>9:00 PM</time><div><h4>Skills Night</h4><p>3-point contest &amp; dunk contest</p></div><span class="court-tag">Centre Court</span></div>
+    </div>
+    <div class="panel" id="d2">
+      <div class="sched-row"><time>8:00 AM</time><div><h4>Pool Play — Youth</h4><p>U12 &amp; U14 divisions</p></div><span class="court-tag">Courts 1–4</span></div>
+      <div class="sched-row"><time>8:00 AM</time><div><h4>3v3 Street Bracket</h4><p>All ages, half-court games to 21</p></div><span class="court-tag">Outdoor Courts</span></div>
+      <div class="sched-row"><time>12:00 PM</time><div><h4>Pool Play — Rounds 2 &amp; 3</h4><p>U16, U18 Elite, Open 5v5</p></div><span class="court-tag">Courts 1–8</span></div>
+      <div class="sched-row"><time>7:00 PM</time><div><h4>Seeding Announced</h4><p>Brackets posted online &amp; in the lobby</p></div><span class="court-tag">Online</span></div>
+    </div>
+    <div class="panel" id="d3">
+      <div class="sched-row"><time>9:00 AM</time><div><h4>Quarterfinals</h4><p>All divisions</p></div><span class="court-tag">Courts 1–8</span></div>
+      <div class="sched-row"><time>12:30 PM</time><div><h4>Semifinals</h4><p>All divisions</p></div><span class="court-tag">Courts 1–4</span></div>
+      <div class="sched-row"><time>3:00 PM</time><div><h4>Championship Games</h4><p>Live-streamed finals</p></div><span class="court-tag">Centre Court</span></div>
+      <div class="sched-row"><time>6:00 PM</time><div><h4>Awards Ceremony</h4><p>Trophies, rings, MVP &amp; All-Tournament team</p></div><span class="court-tag">Centre Court</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BRACKET ================= -->
+<section class="sec" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Last year · U18 Elite</span><h2 class="display">The Bracket</h2></div>
+      <p>Last season's road to the title. Who's taking the crown this year?</p>
+    </div>
+    <div class="bracket-scroll reveal">
+      <div class="bracket">
+        <div class="round"><h5>Quarterfinals</h5><div class="games">
+          <div class="game"><div class="win">Eastside Elite<b>68</b></div><div class="lose">River City<b>54</b></div></div>
+          <div class="game"><div class="lose">Northside Kings<b>61</b></div><div class="win">Blacktop Ballers<b>63</b></div></div>
+          <div class="game"><div class="win">Metro Hoops<b>72</b></div><div class="lose">West End<b>59</b></div></div>
+          <div class="game"><div class="win">Southside Storm<b>66</b></div><div class="lose">Harbor Heat<b>60</b></div></div>
+        </div></div>
+        <div class="round"><h5>Semifinals</h5><div class="games">
+          <div class="game"><div class="win">Eastside Elite<b>70</b></div><div class="lose">Blacktop Ballers<b>65</b></div></div>
+          <div class="game"><div class="lose">Metro Hoops<b>58</b></div><div class="win">Southside Storm<b>64</b></div></div>
+        </div></div>
+        <div class="round"><h5>Final</h5><div class="games">
+          <div class="game final"><div class="win">Eastside Elite<b>77</b></div><div class="lose">Southside Storm<b>74</b></div></div>
+        </div></div>
+        <div class="round"><h5>Champion</h5>
+          <div class="trophy">
+            <svg viewBox="0 0 64 64" fill="none" stroke="#ffb21a" stroke-width="3" stroke-linejoin="round"><path d="M20 6h24v18a12 12 0 0 1-24 0z" fill="rgba(255,178,26,.15)"/><path d="M20 12H10v4a10 10 0 0 0 10 10M44 12h10v4a10 10 0 0 1-10 10M32 36v10M22 58h20l-3-12H25z"/></svg>
+            <b>Eastside Elite</b><small style="color:var(--muted)">2026 Champions</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRIZES ================= -->
+<section class="sec" id="prizes" style="padding-top:60px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Play for it</span><h2 class="display">Prizes</h2></div>
+      <p>Open 5v5 cash prizes shown. Youth divisions win championship rings, medals and team trophies.</p>
+    </div>
+    <div class="prizes">
+      <div class="prize reveal reveal-d1"><span class="place">2nd Place</span><b>$5,000</b><p>Silver medals + team trophy</p></div>
+      <div class="prize first reveal"><span class="place">🏆 Champion</span><b>$10,000</b><p>Championship rings, trophy &amp; banner</p></div>
+      <div class="prize reveal reveal-d2"><span class="place">3rd Place</span><b>$2,500</b><p>Bronze medals</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section class="sec" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Moments</span><h2 class="display">Highlights</h2></div>
+      <p>Replace these placeholders with your own photos (see comments in the code).</p>
+    </div>
+    <div class="gallery">
+      <!-- To use real photos: replace the <div class="ph">...</div> with <img class="ph" src="your-photo.jpg" alt="..." style="width:100%;height:124%;object-fit:cover"> -->
+      <figure class="g reveal"><div class="ph" data-speed=".12"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="#f5f3ef" stroke-width="2"/><path d="M4 32h56M32 4v56M12 12c7 7 7 33 0 40M52 12c-7 7-7 33 0 40" fill="none" stroke="#f5f3ef" stroke-width="2"/></svg></div><figcaption>Championship Final</figcaption></figure>
+      <figure class="g reveal reveal-d1"><div class="ph" data-speed=".08"></div><figcaption>Tip-Off</figcaption></figure>
+      <figure class="g reveal reveal-d2"><div class="ph" data-speed=".1"></div><figcaption>Dunk Contest</figcaption></figure>
+      <figure class="g reveal reveal-d1"><div class="ph" data-speed=".14"></div><figcaption>MVP</figcaption></figure>
+      <figure class="g reveal reveal-d2"><div class="ph" data-speed=".08"></div><figcaption>Youth Division</figcaption></figure>
+      <figure class="g reveal reveal-d3"><div class="ph" data-speed=".1"></div><figcaption>3v3 Street</figcaption></figure>
+      <figure class="g reveal"><div class="ph" data-speed=".12"></div><figcaption>Trophy Ceremony</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section class="sec" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Word on the court</span><h2 class="display">They Played</h2></div>
+    </div>
+    <div class="quotes">
+      <div class="quote reveal"><p>Best-run tournament we've been to. Games started on time, refs were solid and the kids got real competition.</p><div class="who"><i>CM</i><div><b>Coach Name</b><small>U14 Head Coach</small></div></div></div>
+      <div class="quote reveal reveal-d1"><p>Two of our players got looks from college coaches at the showcase. That alone was worth the entry fee.</p><div class="who"><i>AR</i><div><b>Coach Name</b><small>U18 Elite Coach</small></div></div></div>
+      <div class="quote reveal reveal-d2"><p>The Open division is legit. Great competition, great atmosphere, and the finals on the stream were a vibe.</p><div class="who"><i>JT</i><div><b>Player Name</b><small>Open 5v5 Champion</small></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPONSORS ================= -->
+<div class="sponsors" aria-label="Sponsors">
+  <div class="marquee-track">
+    <span>Sponsor One</span><span>Sponsor Two</span><span>Sponsor Three</span><span>Sponsor Four</span><span>Sponsor Five</span><span>Sponsor Six</span>
+    <span>Sponsor One</span><span>Sponsor Two</span><span>Sponsor Three</span><span>Sponsor Four</span><span>Sponsor Five</span><span>Sponsor Six</span>
+  </div>
+</div>
+
+<!-- ================= FAQ ================= -->
+<section class="sec" id="faq">
+  <div class="wrap faq-grid">
+    <div class="reveal">
+      <span class="eyebrow">Questions</span>
+      <h2 class="display" style="font-size:clamp(3rem,8vw,6.5rem);margin-top:12px">FAQ</h2>
+      <p style="color:var(--muted);margin-top:18px;max-width:340px">Can't find what you need? Email <a href="mailto:info@example.com" class="accent">info@example.com</a></p>
+    </div>
+    <div class="reveal reveal-d1" id="faqList">
+      <div class="faq-item open"><button class="faq-q" aria-expanded="true">How many players can be on a roster?<span class="pm"></span></button><div class="faq-a"><div><p>5v5 teams can register up to 12 players. 3v3 teams can register up to 4 players. Roster changes are allowed until check-in on Friday.</p></div></div></div>
+      <div class="faq-item"><button class="faq-q" aria-expanded="false">How are age divisions determined?<span class="pm"></span></button><div class="faq-a"><div><p>Players must be under the division age as of September 1 of the current season. Proof of age may be requested at check-in.</p></div></div></div>
+      <div class="faq-item"><button class="faq-q" aria-expanded="false">Is there a refund policy?<span class="pm"></span></button><div class="faq-a"><div><p>Full refunds are available until February 15. After that, entry fees can be transferred to next season's tournament.</p></div></div></div>
+      <div class="faq-item"><button class="faq-q" aria-expanded="false">Do spectators need tickets?<span class="pm"></span></button><div class="faq-a"><div><p>Day passes are $10 for adults and free for kids under 12. Weekend passes are $20 and available at the door or online.</p></div></div></div>
+      <div class="faq-item"><button class="faq-q" aria-expanded="false">What rules do you play by?<span class="pm"></span></button><div class="faq-a"><div><p>Youth and high school divisions follow standard high school rules. The Open division follows FIBA rules. Full rulebook is sent to coaches after registration.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REGISTER ================= -->
+<section class="sec" id="register" style="padding-top:20px">
+  <div class="wrap">
+    <div class="register reveal">
+      <div>
+        <span class="eyebrow">Spots are limited</span>
+        <h2 class="display" style="margin-top:14px">Get In<br>The Game</h2>
+        <p>Register your team today. Early-bird pricing ends February 1. We'll email confirmation and next steps to the coach.</p>
+      </div>
+      <!-- To collect real sign-ups, set action="" to your form service (Formspree, Google Forms, etc.) -->
+      <form id="regForm" novalidate>
+        <div class="field full"><label for="team">Team name</label><input id="team" name="team" required placeholder="e.g. Eastside Elite"></div>
+        <div class="field"><label for="coach">Coach name</label><input id="coach" name="coach" required placeholder="Full name"></div>
+        <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="(555) 000-0000"></div>
+        <div class="field full"><label for="email">Email</label><input id="email" name="email" type="email" required placeholder="coach@email.com"></div>
+        <div class="field"><label for="division">Division</label>
+          <select id="division" name="division" required>
+            <option value="">Select…</option><option>U12</option><option>U14</option><option>U16</option><option>U18 Elite</option><option>Open 5v5</option><option>3v3 Half Court</option>
+          </select>
+        </div>
+        <div class="field"><label for="players">Players</label><input id="players" name="players" type="number" min="3" max="12" placeholder="10"></div>
+        <button type="submit" class="btn">Register Team <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+        <div class="form-ok" id="formOk" role="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-big display"><span class="outline">Hoop</span><span class="accent">Ready</span></div>
+    <div class="foot-grid">
+      <div>
+        <a href="#top" class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#ff6b1a"/><g fill="none" stroke="#111" stroke-width="3"><path d="M2 32h60M32 2v60"/><path d="M11 11c8 8 8 34 0 42M53 11c-8 8-8 34 0 42"/></g></svg>HoopReady</a>
+        <p>The basketball tournament built for players, coaches and fans. See you on the court.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l16 16M20 4L4 20"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-2a4 4 0 0 0-4 4v3H7v4h2v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z"/></svg></a>
+        </div>
+      </div>
+      <div><h6>Tournament</h6><ul><li><a href="#divisions">Divisions</a></li><li><a href="#schedule">Schedule</a></li><li><a href="#prizes">Prizes</a></li><li><a href="#register">Register</a></li></ul></div>
+      <div><h6>Info</h6><ul><li><a href="#how">How It Works</a></li><li><a href="#faq">FAQ</a></li><li><a href="#">Rulebook</a></li><li><a href="#">Become a Sponsor</a></li></ul></div>
+      <div><h6>Contact</h6><ul><li><a href="mailto:info@example.com">info@example.com</a></li><li><a href="tel:+15550000000">(555) 000-0000</a></li><li>Downtown Sports Complex</li><li>123 Court Street</li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>© <span id="yr"></span> HoopReady Tournament. All rights reserved.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<a href="#top" class="totop" id="totop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
+
+<script>
+/* ===== EDIT: tournament start date/time ===== */
+const TIPOFF = new Date('2027-03-14T17:00:00');
+
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
+  $('#yr').textContent = new Date().getFullYear();
+
+  /* --- mobile nav --- */
+  const nav = $('#nav');
+  $('#burger').addEventListener('click', () => nav.classList.toggle('open'));
+  $$('#navLinks a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+  /* --- countdown --- */
+  const pad = n => String(n).padStart(2, '0');
+  function tick() {
+    let d = Math.max(0, TIPOFF - Date.now()) / 1000;
+    const days = Math.floor(d / 86400); d %= 86400;
+    const h = Math.floor(d / 3600); d %= 3600;
+    const m = Math.floor(d / 60); const s = Math.floor(d % 60);
+    $('#cd-d').textContent = pad(days); $('#cd-h').textContent = pad(h);
+    $('#cd-m').textContent = pad(m); $('#cd-s').textContent = pad(s);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* --- reveal on scroll --- */
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+  $$('.reveal').forEach(el => io.observe(el));
+
+  /* --- counters --- */
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    cio.unobserve(e.target);
+    $$('[data-count]', e.target).forEach(el => {
+      const end = +el.dataset.count, t0 = performance.now(), dur = reduce ? 0 : 1600;
+      const step = t => {
+        const p = dur ? clamp((t - t0) / dur) : 1;
+        el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }), { threshold: .4 });
+  $$('.stats').forEach(el => cio.observe(el));
+
+  /* --- tabs --- */
+  $$('.tab').forEach(t => t.addEventListener('click', () => {
+    $$('.tab').forEach(x => x.classList.toggle('on', x === t));
+    $$('.panel').forEach(p => { p.classList.toggle('on', p.id === t.dataset.tab); p.classList.add('in'); });
+  }));
+
+  /* --- FAQ --- */
+  $$('.faq-q').forEach(q => q.addEventListener('click', () => {
+    const item = q.parentElement, open = !item.classList.contains('open');
+    $$('.faq-item').forEach(i => { i.classList.remove('open'); $('.faq-q', i).setAttribute('aria-expanded', 'false'); });
+    if (open) { item.classList.add('open'); q.setAttribute('aria-expanded', 'true'); }
+  }));
+
+  /* --- register form (front-end only) --- */
+  $('#regForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.target, ok = $('#formOk');
+    const missing = $$('[required]', f).filter(i => !i.value.trim());
+    const emailBad = f.email.value && !/^\S+@\S+\.\S+$/.test(f.email.value);
+    $$('[required]', f).forEach(i => i.style.borderColor = '');
+    if (missing.length || emailBad) {
+      missing.forEach(i => i.style.borderColor = '#111');
+      if (emailBad) f.email.style.borderColor = '#111';
+      ok.textContent = 'Please fill in team name, coach, a valid email and division.';
+      ok.classList.add('on'); return;
+    }
+    ok.textContent = `🏀 ${f.team.value} is registered for ${f.division.value}! Check ${f.email.value} for next steps.`;
+    ok.classList.add('on'); f.reset();
+  });
+
+  /* --- scroll-driven effects --- */
+  const progress = $('#progress'), totop = $('#totop'), ball = $('#ball');
+  const story = $('.story'), words = $$('.story-words h2'), copies = $$('.story-copy > div:not(.story-dots)'), dots = $$('.story-dots i'), storyBar = $('#storyBar');
+  const hs = $('.hscroll'), track = $('#hTrack'), hRail = $('#hRail'), hNum = $('#hNum'), cards = $$('.div-card');
+  const steps = $('#steps'), stepsLine = $('#stepsLine'), stepEls = $$('.step');
+  const phs = $$('.ph[data-speed]');
+  const sections = $$('main section[id]'), links = $$('#navLinks a');
+  let ticking = false;
+
+  function sectionProgress(el) {
+    const r = el.getBoundingClientRect();
+    return clamp(-r.top / (r.height - innerHeight));
+  }
+
+  function update() {
+    ticking = false;
+    const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    nav.classList.toggle('scrolled', y > 40);
+    totop.classList.toggle('on', y > innerHeight);
+
+    if (!reduce) ball.style.transform = `translateY(${y * .25}px) rotate(${y * .35}deg)`;
+
+    // pinned story
+    const sp = sectionProgress(story);
+    const idx = Math.min(words.length - 1, Math.floor(sp * words.length));
+    words.forEach((w, i) => w.classList.toggle('on', i === idx));
+    copies.forEach((c, i) => c.classList.toggle('on', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('on', i <= idx));
+    storyBar.style.width = sp * 100 + '%';
+
+    // horizontal divisions
+    const hp = sectionProgress(hs);
+    const dist = Math.max(0, track.scrollWidth - innerWidth);
+    track.style.transform = `translate3d(${-hp * dist}px,0,0)`;
+    hRail.style.transform = `scaleX(${hp})`;
+    hNum.textContent = pad(Math.min(cards.length, 1 + Math.round(hp * (cards.length - 1))));
+
+    // timeline fill
+    const sr = steps.getBoundingClientRect();
+    const fill = clamp((innerHeight * .6 - sr.top) / sr.height);
+    stepsLine.style.transform = `scaleY(${fill})`;
+    stepEls.forEach(s => {
+      const r = s.getBoundingClientRect();
+      s.classList.toggle('lit', r.top + r.height / 2 < innerHeight * .6);
+    });
+
+    // gallery parallax
+    if (!reduce) phs.forEach(p => {
+      const r = p.parentElement.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const c = (r.top + r.height / 2 - innerHeight / 2);
+      p.style.transform = `translate3d(0,${-c * +p.dataset.speed}px,0)`;
+    });
+
+    // active nav link
+    let cur = '';
+    sections.forEach(s => { if (s.getBoundingClientRect().top < innerHeight * .4) cur = s.id; });
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+  }
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+</body>
+</html>

@@ -931,7 +931,7 @@
       drawLogo(g, w / 2, 320, 110);
       g.fillStyle = '#9a9a9a'; g.textAlign = 'center'; g.font = '600 15px "Barlow Condensed"'; spaced(g, 'THE BASKETBALL TOURNAMENT PLATFORM', w / 2, 420, 2);
       g.fillStyle = ORANGE; g.fillRect(28, 560, w - 56, 52);
-      g.fillStyle = '#140600'; g.font = '700 22px "Barlow Condensed"'; spaced(g, 'REGISTER TEAM', w / 2, 594, 3);
+      g.fillStyle = '#140600'; g.font = '700 22px "Barlow Condensed"'; spaced(g, 'REGISTER NOW', w / 2, 594, 3);
       g.strokeStyle = '#555'; g.lineWidth = 2; g.strokeRect(28, 628, (w - 66) / 2, 46); g.strokeRect(w / 2 + 5, 628, (w - 66) / 2, 46);
       g.fillStyle = '#ddd'; g.font = '600 18px "Barlow Condensed"'; spaced(g, 'SCHEDULE', 28 + (w - 66) / 4, 657, 2); spaced(g, 'BRACKETS', w / 2 + 5 + (w - 66) / 4, 657, 2);
     });

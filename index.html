@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Hoop Ready: a three-day 3v3 and 5v5 basketball tournament for youth, high school and open divisions. March 14–16, 2027.">
+<meta name="description" content="Hoop Ready: a three-day under-16 basketball tournament. 5v5, fair seeding, certified refs. March 14–16, 2027.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Big Shoulders Display = headlines, Archivo = text, Chivo Mono = scoreboard data.
@@ -226,71 +226,49 @@ main{position:relative;z-index:2}
 .drawer details p{padding-bottom:6px}
 template{display:none}
 
-/* ---------- fixtures board ---------- */
+/* ---------- fixtures: coming soon ---------- */
 .links{display:flex;flex-wrap:wrap;gap:0 28px}
-.fx{position:fixed;inset:0;z-index:45;display:flex;flex-direction:column;background:rgba(13,11,10,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;visibility:hidden;transform:translateY(28px);transition:opacity .45s var(--ease),transform .6s var(--ease),visibility .6s}
+.soon{font-family:var(--f-data);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--night);background:var(--led);padding:2px 5px;margin-left:4px;vertical-align:2px;border-radius:1px}
+.fx{position:fixed;inset:0;z-index:45;background:rgba(13,11,10,.93);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;visibility:hidden;transform:translateY(28px);transition:opacity .45s var(--ease),transform .6s var(--ease),visibility .6s;overflow:hidden}
 .fx-open .fx{opacity:1;visibility:visible;transform:none}
-.fx::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--ball)}
-.fx-head,.fx-body{padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
-.fx-head{display:grid;gap:20px;padding-block:calc(30px + env(safe-area-inset-top, 0px)) 0}
+.fx::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--ball);z-index:2}
+.fx::after{content:"16";position:absolute;right:-3vw;bottom:-14vw;font-family:var(--f-display);font-weight:900;font-size:58vw;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(241,235,225,.07);pointer-events:none;z-index:0}
+.fx-in{position:relative;z-index:1;height:100%;overflow-y:auto;overscroll-behavior:contain;display:grid;align-content:start;grid-auto-rows:max-content;gap:clamp(22px,3.4vh,36px);
+  padding-block:calc(30px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
 .fx-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
-.fx-title{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(3rem,7vw,6rem);line-height:.84}
-.fx-meta{font-size:var(--t-small);color:var(--hardwood);margin-top:12px}
-.fx-meta b{font-family:var(--f-data);font-weight:500;color:var(--led)}
+.fx-top .tag{margin:10px 0 0}
 .fx-x{flex:none;width:44px;height:44px;border:1px solid var(--seam-strong);border-radius:2px;font-size:22px;line-height:1;transition:border-color .2s,color .2s}
 .fx-x:hover{border-color:var(--ball);color:var(--ball)}
-.fx-days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--seam-strong);max-width:760px}
-.fx-day{display:grid;gap:4px;text-align:left;padding:12px 16px;border-right:1px solid var(--seam);transition:background .2s,color .2s;min-width:0}
-.fx-day:last-child{border-right:0}
-.fx-day b{font-family:var(--f-display);font-weight:800;font-size:1.7rem;line-height:1;text-transform:uppercase}
-.fx-day span{font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--hardwood);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fx-day em{font-style:normal}
-.fx-day:hover{background:rgba(241,235,225,.06)}
-.fx-day[aria-selected="true"]{background:var(--chalk);color:var(--night)}
-.fx-day[aria-selected="true"] span{color:rgba(13,11,10,.66)}
-.fx-tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-bottom:18px;border-bottom:1px solid var(--seam-strong)}
-.fx-divs{display:flex;flex-wrap:wrap;gap:6px;border:0;min-width:0}
-.fx-divs legend{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-.fx-divs label{position:relative}
-.fx-divs input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
-.fx-divs span{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--seam-strong);border-radius:2px;font-size:var(--t-small);font-weight:500;transition:background .2s,color .2s,border-color .2s}
-.fx-divs label:hover span{border-color:var(--chalk)}
-.fx-divs input:checked+span{background:var(--chalk);border-color:var(--chalk);color:var(--night);font-weight:600}
-.fx-divs input:focus-visible+span{outline:2px solid var(--led);outline-offset:3px}
-.fx-search{margin-left:auto;display:grid;width:min(280px,100%)}
-.fx-search input{width:100%;font:inherit;font-size:16px;color:var(--chalk);background:rgba(8,7,6,.7);border:1px solid var(--seam-strong);border-radius:2px;padding:9px 12px;outline:none}
-.fx-search input:focus{border-color:var(--led)}
-.fx-search input::placeholder{color:rgba(179,167,150,.6)}
-.fx-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding-block:4px calc(40px + env(safe-area-inset-bottom, 0px))}
-.fx-note{font-size:var(--t-small);color:var(--hardwood);padding:14px 0 6px;max-width:60em}
-.fx-note b{color:var(--chalk);font-weight:600}
-.fx-group{display:grid;grid-template-columns:118px minmax(0,1fr);gap:0 24px;border-bottom:1px solid var(--seam);padding:10px 0}
-.fx-time{font-family:var(--f-data);font-weight:500;font-size:1.05rem;color:var(--led);padding-top:13px;font-variant-numeric:tabular-nums;align-self:start;position:sticky;top:0}
-.fx-time small{display:block;font-size:var(--t-label);color:var(--hardwood);letter-spacing:.06em;margin-top:2px}
-.fx-list{list-style:none;min-width:0}
-.fx-row{display:grid;grid-template-columns:104px minmax(0,1fr) 200px 96px;align-items:center;gap:16px;padding:11px 0;border-bottom:1px solid rgba(241,235,225,.06)}
-.fx-row:last-child{border-bottom:0}
-.fx-court{font-family:var(--f-data);font-size:var(--t-label);letter-spacing:.04em;text-transform:uppercase;color:var(--hardwood)}
-.fx-court.cc{color:var(--chalk)}
-.fx-match{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:12px;font-weight:600;min-width:0}
-.fx-match .h{text-align:right}
-.fx-match .vs{font-family:var(--f-data);font-size:var(--t-label);color:var(--hardwood);font-weight:400}
-.fx-match .tbd{color:var(--hardwood);font-weight:500}
-.fx-match mark{background:none;color:var(--ball);box-shadow:inset 0 -2px 0 var(--ball)}
-.fx-row.event .fx-match{grid-template-columns:minmax(0,1fr);font-weight:500;color:var(--chalk)}
-.fx-info{display:grid;gap:1px;font-size:var(--t-small);min-width:0}
-.fx-info b{font-family:var(--f-data);font-weight:500;font-size:var(--t-label);letter-spacing:.04em}
-.fx-info span{color:var(--hardwood)}
-.fx-info .ko{color:var(--chalk);font-weight:600}
-.fx-status{justify-self:end;display:inline-flex;align-items:center;gap:6px;font-family:var(--f-data);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--seam-strong);color:var(--hardwood);white-space:nowrap}
-.fx-status.live{border-color:var(--ball);color:var(--ball)}
-.fx-status.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ball);animation:pulse 1.2s ease-in-out infinite}
-.fx-status.done{opacity:.55}
-.fx-status.stream{border-color:var(--led);color:var(--led)}
-@keyframes pulse{50%{opacity:.25}}
-.fx-empty{padding:44px 0;color:var(--hardwood);max-width:36em}
-.fx-empty b{display:block;font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:1;text-transform:uppercase;color:var(--chalk);margin-bottom:10px}
-.fx-empty button{margin-top:14px}
+.fx-title{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(3.6rem,10.5vw,10.5rem);line-height:.82;letter-spacing:.005em}
+.fx-title>span{display:block}
+.fx-title .o{color:transparent;-webkit-text-stroke:2px rgba(241,235,225,.75)}
+.fx-title .f{background:linear-gradient(100deg,var(--chalk) 42%,#fff8ea 50%,var(--chalk) 58%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent}
+.fx-open .fx-title .f{animation:sheen 4.5s ease-in-out 1s infinite}
+.fx-title .pt{color:var(--ball);-webkit-text-fill-color:var(--ball)}
+@keyframes sheen{0%{background-position:100% 0}45%,100%{background-position:0 0}}
+.fx-drop{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:18px 40px;align-items:end;border-top:1px solid var(--seam-strong);padding-top:18px;max-width:1000px}
+.fx-drop .k{display:block;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hardwood);margin-bottom:6px}
+.fx-drop b{font-family:var(--f-data);font-weight:500;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1;color:var(--led);text-shadow:0 0 16px rgba(255,181,71,.4);font-variant-numeric:tabular-nums;white-space:nowrap}
+.fx-copy{color:var(--hardwood);max-width:34em;font-size:var(--t-small)}
+.fx-art{overflow-x:auto;max-width:1000px;padding-bottom:4px}
+.fx-art svg{display:block;width:100%;min-width:620px;height:auto}
+.fx-art rect{fill:rgba(23,20,18,.92);stroke:var(--seam-strong);stroke-width:1}
+.fx-art .f rect{stroke:var(--ball);stroke-width:1.5;fill:rgba(255,90,31,.08)}
+.fx-art .l{font-family:var(--f-data);font-size:11px;letter-spacing:.08em;fill:var(--hardwood)}
+.fx-art .t{font-family:var(--f-body);font-weight:600;font-size:15px;fill:rgba(241,235,225,.45)}
+.fx-art .fl{font-family:var(--f-display);font-weight:900;font-size:30px;fill:var(--chalk);letter-spacing:.04em}
+.fx-art .fs{font-family:var(--f-data);font-size:10px;letter-spacing:.08em;fill:var(--led)}
+.fx-art path{fill:none;stroke:var(--ball);stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:1}
+.fx-art .b{opacity:0}
+.fx-open .fx-art .q{animation:pop .5s var(--ease) .25s both}
+.fx-open .fx-art .c1{animation:draw .7s var(--ease) .55s forwards}
+.fx-open .fx-art .s{animation:pop .5s var(--ease) .95s both}
+.fx-open .fx-art .c2{animation:draw .7s var(--ease) 1.15s forwards}
+.fx-open .fx-art .f{animation:pop .6s var(--ease) 1.55s both}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
+.fx-cta .more{margin-top:0}
 
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
@@ -323,25 +301,16 @@ template{display:none}
   .form{padding:18px}
   .stats>div+div{padding-left:12px}
   .stats>div{padding-right:12px}
-  .fx-head{gap:14px}
-  .fx-day{padding:10px 10px}
-  .fx-day b{font-size:1.3rem}
-  .fx-day em.sub{display:none}
-  .fx-search{margin-left:0;width:100%}
-  .fx-group{grid-template-columns:1fr}
-  .fx-time{position:static;padding:4px 0 2px}
-  .fx-time small{display:inline;margin-left:8px}
-  .fx-row{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"match match match" "court info status";gap:6px 12px}
-  .fx-match{grid-area:match;display:flex;flex-wrap:wrap;gap:2px 8px}
-  .fx-match .h{text-align:left}
-  .fx-court{grid-area:court}
-  .fx-info{grid-area:info;display:flex;flex-wrap:wrap;gap:0 8px}
-  .fx-status{grid-area:status}
+  .fx-drop{grid-template-columns:1fr 1fr}
+  .fx-copy{grid-column:1 / -1}
+  .fx-title .o{-webkit-text-stroke-width:1.5px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .fx{transition:opacity .2s,visibility .2s;transform:none}
-  .fx-status.live::before{animation:none}
+  .fx-open .fx-title .f,.fx-open .fx-art *{animation:none}
+  .fx-art .b{opacity:1}
+  .fx-art path{stroke-dashoffset:0}
   .enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
 }
 </style>
@@ -363,15 +332,15 @@ template{display:none}
 <header class="hdr">
   <a href="#overview" class="brand" aria-label="Hoop Ready, back to start">
     <span class="mark"><b>H</b><i>R</i></span>
-    <span class="wordmark"><b>Hoop Ready</b><small>Basketball tournament · March 14–16, 2027</small></span>
+    <span class="wordmark"><b>Hoop Ready</b><small>Under-16 tournament · March 14–16, 2027</small></span>
   </a>
   <nav class="hnav" aria-label="Main">
-    <button type="button" data-fixtures>Fixtures</button>
-    <a href="#court">Divisions</a>
+    <button type="button" data-fixtures>Fixtures <span class="soon">Soon</span></button>
+    <a href="#court">Format</a>
     <a href="#events">Tickets</a>
     <button type="button" id="faqBtn">FAQ</button>
   </nav>
-  <a href="#register" class="btn btn-solid">Register a team</a>
+  <a href="#register" class="btn btn-solid">Register to play</a>
 </header>
 
 <main>
@@ -381,10 +350,10 @@ template{display:none}
     <div class="chap-in">
       <p class="tag"><span class="rd">R00</span><span class="meta">March 14–16, 2027 · Downtown Sports Complex</span></p>
       <h1 class="headline"><span class="ln"><span>Hoop</span></span><span class="ln"><span>Ready</span></span></h1>
-      <p class="sub">The basketball tournament with standards. 3v3 and 5v5 brackets for youth, high school and open divisions, with fair seeding, certified refs and <strong>at least three games for every team</strong>.</p>
+      <p class="sub">The under-16 basketball tournament with standards. Five-on-five, full court, with fair seeding, certified refs and <strong>at least three games for every team</strong>.</p>
       <div class="actions">
-        <a href="#register" class="btn btn-solid">Register a team</a>
-        <a href="#court" class="btn btn-line">Divisions &amp; entry fees</a>
+        <a href="#register" class="btn btn-solid">Register to play</a>
+        <a href="#court" class="btn btn-line">Format &amp; eligibility</a>
       </div>
       <p class="fine">Early-bird pricing ends <b>FEB 01</b></p>
     </div>
@@ -420,28 +389,25 @@ template{display:none}
   <section class="chap" id="court" data-name="The Court">
     <div class="chap-in">
       <p class="tag"><span class="rd">R02</span><span>The Court</span></p>
-      <h2 class="headline"><span class="ln"><span>One court<span class="pt">.</span></span></span><span class="ln"><span>One crown<span class="pt">.</span></span></span></h2>
-      <p class="sub">Six divisions, one champion each. Entry is per team.</p>
-      <ul class="board" aria-label="Entry fee per team">
-        <li><span class="k">U12 · 5v5</span><span class="v">$250</span></li>
-        <li><span class="k">U14 · 5v5</span><span class="v">$275</span></li>
-        <li><span class="k">U16 · 5v5</span><span class="v">$300</span></li>
-        <li><span class="k">U18 Elite</span><span class="v">$350</span></li>
-        <li><span class="k">Open 5v5</span><span class="v">$400</span></li>
-        <li><span class="k">3v3 Half</span><span class="v">$120</span></li>
-      </ul>
-      <button class="more" data-more="m-court">Division rules</button>
+      <h2 class="headline"><span class="ln"><span>One division<span class="pt">.</span></span></span><span class="ln"><span>One crown<span class="pt">.</span></span></span></h2>
+      <p class="sub">Under-16s only, so every game is against players your own age.</p>
+      <dl class="stats">
+        <div><dt>Age limit</dt><dd>U16</dd></div>
+        <div><dt>Format</dt><dd class="word">5v5 full</dd></div>
+        <div><dt>Quarters</dt><dd>4×10</dd></div>
+        <div><dt>Games guaranteed</dt><dd>3+</dd></div>
+      </dl>
+      <button class="more" data-more="m-court">Eligibility &amp; rules</button>
       <template id="m-court">
         <p class="tag"><span class="rd">R02</span><span>The Court</span></p>
-        <h3>Divisions &amp; entry</h3>
-        <p>Pick your bracket. Players must be under the division age on September 1 of the current season.</p>
+        <h3>Under-16 division</h3>
+        <p>Open to players who are under 16 on September 1, 2026, which means born on or after September 2, 2010. Proof of age is checked at Friday check-in.</p>
         <ul>
-          <li><span>U12 · Boys &amp; Girls · 5v5</span><span>$250</span></li>
-          <li><span>U14 · Boys &amp; Girls · 5v5</span><span>$275</span></li>
-          <li><span>U16 · Boys &amp; Girls · 5v5</span><span>$300</span></li>
-          <li><span>U18 Elite · Scout showcase</span><span>$350</span></li>
-          <li><span>Open 5v5 · Men's &amp; Women's</span><span>$400</span></li>
-          <li><span>3v3 Half Court · All ages</span><span>$120</span></li>
+          <li><span>Format</span><span>5v5 full court</span></li>
+          <li><span>Game length</span><span>4 × 10 min</span></li>
+          <li><span>Shot clock</span><span>24 sec</span></li>
+          <li><span>Rules</span><span>High school</span></li>
+          <li><span>Games guaranteed</span><span>3+</span></li>
         </ul>
       </template>
     </div>
@@ -453,7 +419,7 @@ template{display:none}
     <div class="chap-in">
       <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
       <h2 class="headline"><span class="ln"><span>The right</span></span><span class="ln"><span>matchups<span class="pt">.</span></span></span></h2>
-      <p class="sub">Pools are set by age, level and record, so the best games happen late and blowouts stay rare.</p>
+      <p class="sub">Pools are set by level and past results, so the best games happen late and blowouts stay rare.</p>
       <dl class="stats">
         <div><dt>Pool play</dt><dd class="word">Fri–Sat</dd></div>
         <div><dt>Seeding posted</dt><dd class="word">Sat 7 PM</dd></div>
@@ -463,8 +429,8 @@ template{display:none}
       <template id="m-matchups">
         <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
         <h3>Fair brackets, every game.</h3>
-        <p>Teams are placed into pools by age, competitive level and past results. Pool records and point differential set Sunday's seeding, so the best games happen late.</p>
-        <p>Every game uses certified referees, a live scoreboard and a shot clock in U16 and above.</p>
+        <p>Teams are placed into pools by competitive level and past results. Pool records and point differential set Sunday's seeding, so the best games happen late.</p>
+        <p>Every game uses certified referees, a live scoreboard and a 24-second shot clock.</p>
         <ul><li><span>Pool play</span><span>Fri–Sat</span></li><li><span>Seeding posted</span><span>Sat 7 PM</span></li><li><span>Single elimination</span><span>Sunday</span></li></ul>
       </template>
     </div>
@@ -476,7 +442,7 @@ template{display:none}
     <div class="chap-in">
       <p class="tag"><span class="rd">R04</span><span>Training</span></p>
       <h2 class="headline"><span class="ln"><span>Get hoop</span></span><span class="ln"><span>ready<span class="pt">.</span></span></span></h2>
-      <p class="sub">Registered teams get four coach-led clinics in the weeks before tip-off.</p>
+      <p class="sub">Registered players get four coach-led clinics in the weeks before tip-off.</p>
       <ul class="board dates" aria-label="Clinic dates">
         <li><span class="k">FEB 15</span><span class="v">Shooting</span></li>
         <li><span class="k">FEB 22</span><span class="v">Handles</span></li>
@@ -487,7 +453,7 @@ template{display:none}
       <template id="m-training">
         <p class="tag"><span class="rd">R04</span><span>Training</span></p>
         <h3>Clinics before tip-off.</h3>
-        <p>In the four weeks before the tournament, registered teams get access to coach-led clinics: shooting, ball handling, defence and team sets.</p>
+        <p>In the four weeks before the tournament, registered players get access to coach-led clinics: shooting, ball handling, defence and team sets.</p>
         <ul><li><span>Shooting clinic</span><span>Sat Feb 15</span></li><li><span>Handles &amp; finishing</span><span>Sat Feb 22</span></li><li><span>Team defence</span><span>Sat Mar 1</span></li><li><span>Film session</span><span>Sat Mar 8</span></li></ul>
       </template>
     </div>
@@ -498,19 +464,19 @@ template{display:none}
   <section class="chap" id="teams" data-name="Teams &amp; Rosters">
     <div class="chap-in">
       <p class="tag"><span class="rd">R05</span><span>Teams &amp; Rosters</span></p>
-      <h2 class="headline"><span class="ln"><span>Anyone can</span></span><span class="ln"><span>ball<span class="pt">.</span></span></span></h2>
-      <p class="sub">Coaches create the team, add players and their jersey numbers, and can change the roster until Friday check-in.</p>
+      <h2 class="headline"><span class="ln"><span>Find your</span></span><span class="ln"><span>five<span class="pt">.</span></span></span></h2>
+      <p class="sub">Every player registers on their own. Add your team or club when you sign up, or leave it blank and we'll place you on a squad at your level.</p>
       <dl class="stats">
-        <div><dt>5v5 roster</dt><dd>12</dd></div>
-        <div><dt>3v3 roster</dt><dd>4</dd></div>
+        <div><dt>Max roster</dt><dd>12</dd></div>
+        <div><dt>To start a game</dt><dd>5</dd></div>
         <div><dt>Roster lock</dt><dd class="word">Fri check-in</dd></div>
       </dl>
-      <button class="more" data-more="m-teams">Roster rules</button>
+      <button class="more" data-more="m-teams">Squad rules</button>
       <template id="m-teams">
         <p class="tag"><span class="rd">R05</span><span>Teams &amp; Rosters</span></p>
-        <h3>Build your squad.</h3>
-        <p>Coaches create the team, add players and upload jersey numbers. Roster changes are allowed until check-in on Friday.</p>
-        <ul><li><span>5v5 roster</span><span>Up to 12</span></li><li><span>3v3 roster</span><span>Up to 4</span></li><li><span>Roster lock</span><span>Fri check-in</span></li></ul>
+        <h3>Squads &amp; rosters</h3>
+        <p>Each player registers individually. Players from the same team or club are kept together. Players without a team are grouped into squads by level before the tournament.</p>
+        <ul><li><span>Max roster</span><span>12 players</span></li><li><span>To start a game</span><span>5 players</span></li><li><span>Roster lock</span><span>Fri check-in</span></li></ul>
       </template>
     </div>
   </section>
@@ -533,7 +499,7 @@ template{display:none}
         <h3>Schedule &amp; tickets</h3>
         <ul>
           <li><span>Fri · Opening night + Skills contest</span><span>5 PM</span></li>
-          <li><span>Sat · Pool play, all divisions</span><span>8 AM</span></li>
+          <li><span>Sat · Pool play, all teams</span><span>8 AM</span></li>
           <li><span>Sun · Quarterfinals → Finals</span><span>9 AM</span></li>
           <li><span>Sun · Awards ceremony</span><span>6 PM</span></li>
         </ul>
@@ -551,53 +517,45 @@ template{display:none}
   <!-- ROUND 07 -->
   <section class="chap reg" id="register" data-name="Register">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R07</span><span>Who it's for</span></p>
-      <h2 class="headline"><span class="ln"><span>Every corner</span></span><span class="ln"><span>of the game<span class="pt">.</span></span></span></h2>
-      <p class="sub">Players, coaches, parents, fans and sponsors. Register below and we'll email you the next steps.</p>
+      <p class="tag"><span class="rd">R07</span><span>Player registration</span></p>
+      <h2 class="headline"><span class="ln"><span>Your shot</span></span><span class="ln"><span>starts here<span class="pt">.</span></span></span></h2>
+      <p class="sub">Registration is for players under 16. Sign up below and we'll email you the next steps.</p>
       <template id="m-who">
-        <p class="tag"><span class="rd">R07</span><span>Who it's for</span></p>
-        <h3>Built for the whole game.</h3>
+        <p class="tag"><span class="rd">R07</span><span>Player registration</span></p>
+        <h3>Who can register</h3>
         <ul>
-          <li><span>Players</span><span>Compete</span></li>
-          <li><span>Coaches</span><span>Register teams</span></li>
-          <li><span>Parents</span><span>Schedules</span></li>
-          <li><span>Fans</span><span>Tickets &amp; stream</span></li>
-          <li><span>Sponsors</span><span>Partner with us</span></li>
+          <li><span>Who</span><span>Players only</span></li>
+          <li><span>Age</span><span>Under 16 on Sep 1, 2026</span></li>
+          <li><span>Born on or after</span><span>Sep 2, 2010</span></li>
+          <li><span>Early-bird ends</span><span>Feb 1</span></li>
+          <li><span>Full refunds until</span><span>Feb 15</span></li>
         </ul>
-        <p>Early-bird pricing ends February 1. Full refunds until February 15.</p>
+        <p>Coaches, parents and fans don't need to register. Spectators can buy day or weekend passes at the door.</p>
       </template>
 
       <!-- To receive sign-ups, send this form's data to your form service (Formspree, Google Forms, etc.) in the submit handler below. -->
       <form class="form" id="regForm" novalidate>
-        <fieldset class="chips" id="roleSet">
-          <legend>I'm registering as</legend>
-          <label><input type="radio" name="role" id="r-player" value="Player"><span>Player</span></label>
-          <label><input type="radio" name="role" id="r-coach" value="Coach"><span>Coach</span></label>
-          <label><input type="radio" name="role" id="r-parent" value="Parent"><span>Parent</span></label>
-          <label><input type="radio" name="role" id="r-fan" value="Fan"><span>Fan</span></label>
-          <label><input type="radio" name="role" id="r-sponsor" value="Sponsor"><span>Sponsor</span></label>
-        </fieldset>
-        <fieldset class="chips" id="divSet">
-          <legend>Division</legend>
-          <label><input type="radio" name="division" id="d-u12" value="U12"><span>U12</span></label>
-          <label><input type="radio" name="division" id="d-u14" value="U14"><span>U14</span></label>
-          <label><input type="radio" name="division" id="d-u16" value="U16"><span>U16</span></label>
-          <label><input type="radio" name="division" id="d-u18" value="U18 Elite"><span>U18 Elite</span></label>
-          <label><input type="radio" name="division" id="d-open" value="Open 5v5"><span>Open 5v5</span></label>
-          <label><input type="radio" name="division" id="d-3v3" value="3v3 Half Court"><span>3v3 Half</span></label>
+        <div class="row2">
+          <label class="field" id="nameField"><span>Player's full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
+          <label class="field" id="dobField"><span>Date of birth</span><input id="f-dob" name="dob" type="date" min="2010-09-02" max="2022-12-31"></label>
+        </div>
+        <fieldset class="chips" id="posSet">
+          <legend>Position</legend>
+          <label><input type="radio" name="position" id="p-guard" value="Guard"><span>Guard</span></label>
+          <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
+          <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
         </fieldset>
         <div class="row2">
-          <label class="field" id="nameField"><span>Full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@team.com"></label>
+          <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
+          <label class="field"><span>Team or club <em>optional</em></span><input id="f-team" name="team" placeholder="Leave blank to be placed"></label>
         </div>
-        <label class="field"><span>Team or club <em>optional</em></span><input id="f-team" name="team" placeholder="e.g. Eastside Elite"></label>
         <div class="submit-row">
-          <button class="btn btn-solid" type="submit">Register</button>
-          <p class="fine">Early-bird ends <b>FEB 01</b> · Full refunds until <b>FEB 15</b></p>
+          <button class="btn btn-solid" type="submit">Register to play</button>
+          <p class="fine">Under 16 on <b>SEP 01 2026</b> · Early-bird ends <b>FEB 01</b></p>
         </div>
         <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
       </form>
-      <button class="more" data-more="m-who">Who can take part</button>
+      <button class="more" data-more="m-who">Who can register</button>
     </div>
   </section>
 
@@ -632,34 +590,33 @@ template{display:none}
 <template id="m-faq">
   <p class="tag"><span class="rd">FAQ</span><span>Questions</span></p>
   <h3>Before you register</h3>
-  <details open><summary>How many players can be on a roster?</summary><p>5v5 teams can register up to 12 players. 3v3 teams can register up to 4.</p></details>
-  <details><summary>How are age divisions decided?</summary><p>Players must be under the division age on September 1 of the current season. Proof of age may be requested at check-in.</p></details>
+  <details open><summary>Who can play?</summary><p>Players who are under 16 on September 1, 2026, which means born on or after September 2, 2010. Proof of age is checked at Friday check-in.</p></details>
+  <details><summary>Do I need a team to register?</summary><p>No. Every player registers on their own. Add your team or club if you have one, or leave it blank and we'll place you on a squad at your level.</p></details>
+  <details><summary>How many players are on a roster?</summary><p>Up to 12 players per team, and at least 5 to start a game.</p></details>
   <details><summary>Is there a refund policy?</summary><p>Full refunds until February 15. After that, entry can be moved to next season.</p></details>
-  <details><summary>Do spectators need tickets?</summary><p>Day passes are $10, weekend passes $20, and kids under 12 get in free.</p></details>
-  <details><summary>What rules do you play by?</summary><p>Youth and high school divisions use standard high school rules. The Open division uses FIBA rules. The full rulebook is emailed after registration.</p></details>
+  <details><summary>Do spectators need tickets?</summary><p>Day passes are $10, weekend passes $20, and kids under 12 get in free. Coaches and parents don't register.</p></details>
+  <details><summary>What rules do you play by?</summary><p>Standard high school rules: four 10-minute quarters and a 24-second shot clock. The full rulebook is emailed after registration.</p></details>
   <p>Still stuck? Email <strong>info@example.com</strong></p>
 </template>
 
-<!-- ======================= FIXTURES BOARD ======================= -->
+<!-- ======================= FIXTURES (coming soon) ======================= -->
 <section class="fx" id="fx" role="dialog" aria-modal="true" aria-labelledby="fxTitle" aria-hidden="true">
-  <div class="fx-head">
+  <div class="fx-in">
     <div class="fx-top">
-      <div>
-        <p class="tag"><span class="rd">FIX</span><span class="meta">Downtown Sports Complex · 8 indoor + 4 outdoor courts</span></p>
-        <h2 class="fx-title" id="fxTitle">Fixtures</h2>
-        <p class="fx-meta" id="fxMeta"></p>
-      </div>
+      <p class="tag"><span class="rd">FIX</span><span class="meta">Under-16 · Downtown Sports Complex · March 14–16, 2027</span></p>
       <button class="fx-x" id="fxClose" aria-label="Close fixtures">×</button>
     </div>
-    <div class="fx-days" role="tablist" aria-label="Tournament day" id="fxDays"></div>
-    <div class="fx-tools">
-      <fieldset class="fx-divs" id="fxDivs"><legend>Division</legend></fieldset>
-      <label class="fx-search"><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Find your team</span><input id="fxSearch" type="search" placeholder="Find your team" autocomplete="off"></label>
+    <h2 class="fx-title" id="fxTitle"><span class="o">Fixtures</span><span class="f">Coming soon<span class="pt">.</span></span></h2>
+    <div class="fx-drop">
+      <div><span class="k">Fixtures go live</span><b>MAR 07</b></div>
+      <div><span class="k">Released in</span><b id="fxCount">--</b></div>
+      <p class="fx-copy">Pools, tip-off times and courts for every team land here one week before the tournament. Registered players get them by email first.</p>
     </div>
-  </div>
-  <div class="fx-body" id="fxBody" role="tabpanel" tabindex="-1">
-    <p class="fx-note">Sample fixtures showing the tournament format. Final pools and times are emailed to coaches on <b>March 7</b>. Knockout opponents are set when seeding is posted on Saturday at 7 PM.</p>
-    <div id="fxList"></div>
+    <div class="fx-art"><svg viewBox="0 0 1000 412" role="img" aria-label="Knockout bracket, teams to be decided"><path class="c1" pathLength="1" d="M160 46 H180 V136 H160 M180 91 H200"/><path class="c1" pathLength="1" d="M160 276 H180 V366 H160 M180 321 H200"/><path class="c2" pathLength="1" d="M350 91 H380 V321 H350 M380 206 H410"/><path class="c1" pathLength="1" d="M840 46 H820 V136 H840 M820 91 H800"/><path class="c1" pathLength="1" d="M840 276 H820 V366 H840 M820 321 H800"/><path class="c2" pathLength="1" d="M650 91 H620 V321 H650 M620 206 H590"/><g class="b q"><rect x="10" y="20" width="150" height="52" rx="2"/><text class="l" x="24" y="40">1ST · POOL A</text><text class="t" x="24" y="60">TBD</text></g><g class="b q"><rect x="840" y="20" width="150" height="52" rx="2"/><text class="l" x="854" y="40">1ST · POOL B</text><text class="t" x="854" y="60">TBD</text></g><g class="b q"><rect x="10" y="110" width="150" height="52" rx="2"/><text class="l" x="24" y="130">2ND · POOL B</text><text class="t" x="24" y="150">TBD</text></g><g class="b q"><rect x="840" y="110" width="150" height="52" rx="2"/><text class="l" x="854" y="130">2ND · POOL A</text><text class="t" x="854" y="150">TBD</text></g><g class="b q"><rect x="10" y="250" width="150" height="52" rx="2"/><text class="l" x="24" y="270">1ST · POOL C</text><text class="t" x="24" y="290">TBD</text></g><g class="b q"><rect x="840" y="250" width="150" height="52" rx="2"/><text class="l" x="854" y="270">1ST · POOL D</text><text class="t" x="854" y="290">TBD</text></g><g class="b q"><rect x="10" y="340" width="150" height="52" rx="2"/><text class="l" x="24" y="360">2ND · POOL D</text><text class="t" x="24" y="380">TBD</text></g><g class="b q"><rect x="840" y="340" width="150" height="52" rx="2"/><text class="l" x="854" y="360">2ND · POOL C</text><text class="t" x="854" y="380">TBD</text></g><g class="b s"><rect x="200" y="65" width="150" height="52" rx="2"/><text class="l" x="214" y="85">WINNER QF1</text><text class="t" x="214" y="105">TBD</text></g><g class="b s"><rect x="650" y="65" width="150" height="52" rx="2"/><text class="l" x="664" y="85">WINNER QF3</text><text class="t" x="664" y="105">TBD</text></g><g class="b s"><rect x="200" y="295" width="150" height="52" rx="2"/><text class="l" x="214" y="315">WINNER QF2</text><text class="t" x="214" y="335">TBD</text></g><g class="b s"><rect x="650" y="295" width="150" height="52" rx="2"/><text class="l" x="664" y="315">WINNER QF4</text><text class="t" x="664" y="335">TBD</text></g><g class="b f"><rect x="410" y="176" width="180" height="60" rx="2"/><text class="fl" x="500.0" y="209" text-anchor="middle">FINAL</text><text class="fs" x="500.0" y="226" text-anchor="middle">SUN 16 · CENTRE COURT</text></g></svg></div>
+    <div class="fx-cta">
+      <a href="#register" class="btn btn-solid" data-fx-close>Register to play</a>
+      <button class="more" type="button" data-more="m-events">See the weekend schedule</button>
+    </div>
   </div>
 </section>
 
@@ -815,18 +772,18 @@ template{display:none}
     }
   });
 
-  /* ---- register form (front end only) ---- */
+  /* ---- player registration (front end only) ---- */
   const form = $('#regForm'), msg = $('#formMsg');
+  const CUTOFF = '2010-09-02'; // EDIT: earliest allowed date of birth (under 16 on Sep 1, 2026)
   form.addEventListener('change', (e) => { const fs = e.target.closest('fieldset'); if (fs) fs.classList.remove('bad'); });
   form.addEventListener('input', (e) => { const fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const role = form.role.value, division = form.division.value;
-    const name = form.name.value.trim(), email = form.email.value.trim();
+    const name = form.name.value.trim(), dob = form.dob.value, position = form.position.value, email = form.email.value.trim();
     const missing = [];
-    $('#roleSet').classList.toggle('bad', !role); if (!role) missing.push('who you are');
-    $('#divSet').classList.toggle('bad', !division); if (!division) missing.push('a division');
-    $('#nameField').classList.toggle('bad', !name); if (!name) missing.push('your name');
+    $('#nameField').classList.toggle('bad', !name); if (!name) missing.push("the player's name");
+    $('#dobField').classList.toggle('bad', !dob); if (!dob) missing.push('a date of birth');
+    $('#posSet').classList.toggle('bad', !position); if (!position) missing.push('a position');
     const okEmail = /^\S+@\S+\.\S+$/.test(email);
     $('#emailField').classList.toggle('bad', !okEmail); if (!okEmail) missing.push('a valid email');
     msg.classList.remove('ok');
@@ -834,192 +791,69 @@ template{display:none}
       msg.textContent = 'Add ' + missing.join(', ').replace(/, ([^,]*)$/, ' and $1') + ' to register.';
       return;
     }
+    if (dob < CUTOFF) {
+      $('#dobField').classList.add('bad');
+      msg.textContent = 'This tournament is for players under 16 on September 1, 2026, so the player must be born on or after September 2, 2010.';
+      return;
+    }
     msg.classList.add('ok');
-    msg.textContent = `You're registered for ${division}, ${name.split(' ')[0]}. Next steps are on their way to ${email}.`;
+    msg.textContent = `You're registered, ${name.split(' ')[0]}. Next steps are on their way to ${email}.`;
     form.reset();
   });
 })();
 </script>
 <script>
-/* ============ fixtures board ============ */
+/* ============ fixtures: coming soon ============ */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
-  const root = document.documentElement, body = document.body;
+  const root = document.documentElement, body = document.body, fx = $('#fx');
+  const RELEASE = new Date('2027-03-07T09:00:00'); // EDIT: when fixtures are published
 
-  /* ---- tournament days and divisions ---- */
-  const DAYS = [
-    { date: '2027-03-14', label: 'Fri 14', sub: 'Opening night' },
-    { date: '2027-03-15', label: 'Sat 15', sub: 'Pool play' },
-    { date: '2027-03-16', label: 'Sun 16', sub: 'Finals day' }
-  ];
-  const DIVS = ['U12', 'U14', 'U16', 'U18 Elite', 'Open 5v5', '3v3 Half'];
-
-  /* ---- FIXTURES ----
-     Sample fixtures built from the tournament format (16 teams per division, 4 pools of 4,
-     top two of each pool into the quarterfinals). To publish the real schedule, make
-     buildFixtures() return your own list in this shape:
-       { day: 0, start: 18*60+30, len: 50, court: 'Court 3', div: 'U16', stage: 'Pool A · Round 1', home: 'Team', away: 'Team' }
-     day 0/1/2 = Fri/Sat/Sun, start = minutes after midnight, len = game length in minutes.
-     Schedule items use { day, start, court, event: 'Opening ceremony' } instead of teams. */
-  function buildFixtures() {
-    const AREAS = ['Eastside', 'Northside', 'Southside', 'West End', 'Riverside', 'Harbor', 'Metro', 'Uptown', 'Lakeside', 'Hillcrest', 'Parkview', 'Bayview', 'Midtown', 'Oakwood', 'Fairview', 'Downtown'];
-    const NAMES = ['Elite', 'Kings', 'Storm', 'Heat', 'Ballers', 'Hawks', 'Wolves', 'Flight', 'Blaze', 'Titans', 'Rockets', 'Raptors', 'Knights', 'Comets', 'Bulls', 'Lions'];
-    const teams = {};
-    DIVS.forEach((d, di) => { teams[d] = AREAS.map((a, i) => `${a} ${NAMES[(i * 5 + di * 3) % 16]}`); });
-    const PAIRS = [[[0, 1], [2, 3]], [[0, 2], [1, 3]], [[0, 3], [1, 2]]];
-    const pool = (div, r) => [0, 1, 2, 3].flatMap(p => PAIRS[r].map(([x, y]) => ({ div, stage: `Pool ${'ABCD'[p]} · Round ${r + 1}`, home: teams[div][p * 4 + x], away: teams[div][p * 4 + y] })));
-    const ko = (div, kind) => kind === 'QF'
-      ? [['A', 'B'], ['B', 'A'], ['C', 'D'], ['D', 'C']].map(([a, b], i) => ({ div, ko: true, stage: `Quarterfinal ${i + 1}`, home: `1st Pool ${a}`, away: `2nd Pool ${b}` }))
-      : kind === 'SF'
-        ? [1, 2].map(i => ({ div, ko: true, stage: `Semifinal ${i}`, home: `Winner QF${i * 2 - 1}`, away: `Winner QF${i * 2}` }))
-        : [{ div, ko: true, stage: 'Final', home: 'Winner SF1', away: 'Winner SF2' }];
-    const IN = ['Centre Court', 'Court 2', 'Court 3', 'Court 4', 'Court 5', 'Court 6', 'Court 7', 'Court 8'];
-    const OUT = ['Outdoor 1', 'Outdoor 2', 'Outdoor 3', 'Outdoor 4'];
-    const t = (h, m = 0) => h * 60 + m;
-    const list = [];
-    const place = (games, day, start, slot, courts, len) => games.forEach((g, i) =>
-      list.push(Object.assign(g, { day, start: start + Math.floor(i / courts.length) * slot, court: courts[i % courts.length], len })));
-    const OLDER = ['U16', 'U18 Elite', 'Open 5v5'], YOUTH = ['U12', 'U14'], FIVES = ['U12', 'U14', 'U16', 'U18 Elite', 'Open 5v5'];
-
-    // Friday: opening round for the older divisions
-    place(OLDER.flatMap(d => pool(d, 0)), 0, t(18, 30), 60, IN, 50);
-    // Saturday: youth all three rounds in the morning, older rounds 2–3 in the afternoon, 3v3 outdoors
-    place([0, 1, 2].flatMap(r => YOUTH.flatMap(d => pool(d, r))), 1, t(8), 50, IN, 45);
-    place([1, 2].flatMap(r => OLDER.flatMap(d => pool(d, r))), 1, t(13), 50, IN, 45);
-    place([0, 1, 2].flatMap(r => pool('3v3 Half', r)), 1, t(8), 30, OUT, 25);
-    // Sunday: knockouts, then finals (U18 Elite and Open on Centre Court, streamed)
-    place(FIVES.flatMap(d => ko(d, 'QF')), 2, t(9), 60, IN, 50);
-    place(ko('3v3 Half', 'QF'), 2, t(9), 30, OUT, 25);
-    place(FIVES.flatMap(d => ko(d, 'SF')), 2, t(12, 30), 60, IN, 50);
-    place(ko('3v3 Half', 'SF'), 2, t(12, 30), 30, OUT, 25);
-    [['U12', t(15), 'Court 2'], ['U14', t(15), 'Court 3'], ['U16', t(15), 'Court 4'], ['3v3 Half', t(15), 'Outdoor 1'],
-     ['U18 Elite', t(16), 'Centre Court'], ['Open 5v5', t(17), 'Centre Court']]
-      .forEach(([d, start, court]) => list.push(Object.assign(ko(d, 'F')[0], { day: 2, start, court, len: 50, stream: court === 'Centre Court' })));
-    // schedule items
-    [[0, t(17), 'Main lobby', 'Check-in opens · wristbands and jerseys'], [0, t(18), 'Centre Court', 'Opening ceremony and team introductions'],
-     [0, t(21), 'Centre Court', 'Skills night · 3-point and dunk contests'], [1, t(19), 'Online & lobby', 'Sunday seeding posted'],
-     [2, t(18), 'Centre Court', 'Awards ceremony · trophies, rings and MVP']]
-      .forEach(([day, start, court, event]) => list.push({ day, start, court, event, len: 45 }));
-
-    const order = [...IN, ...OUT, 'Main lobby', 'Online & lobby'];
-    return list.sort((a, b) => a.day - b.day || a.start - b.start || order.indexOf(a.court) - order.indexOf(b.court));
-  }
-  const FIX = buildFixtures();
-
-  /* ---- helpers ---- */
-  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const clock = (min) => { const h = Math.floor(min / 60), m = min % 60; return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
-  const startOf = (f) => { const [y, mo, d] = DAYS[f.day].date.split('-').map(Number); return new Date(y, mo - 1, d, Math.floor(f.start / 60), f.start % 60).getTime(); };
-  function status(f) {
-    const s = startOf(f), e = s + (f.len || 45) * 60000, now = Date.now();
-    if (now >= e) return ['done', 'Played'];
-    if (now >= s) return ['live', 'Live'];
-    if (f.stream) return ['stream', 'Streamed'];
-    return ['up', 'Upcoming'];
-  }
-  const mark = (name, q) => {
-    if (!q) return esc(name);
-    const i = name.toLowerCase().indexOf(q);
-    return i < 0 ? esc(name) : esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + q.length)) + '</mark>' + esc(name.slice(i + q.length));
-  };
-
-  /* ---- state + controls ---- */
-  const todayIdx = DAYS.findIndex(d => { const n = new Date(); return d.date === `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`; });
-  let day = todayIdx >= 0 ? todayIdx : 0, div = 'All';
-  const fx = $('#fx'), daysEl = $('#fxDays'), divsEl = $('#fxDivs'), search = $('#fxSearch'), listEl = $('#fxList');
-
-  const dayBtns = DAYS.map((d, i) => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'fx-day'; b.id = 'fxDay' + i;
-    b.setAttribute('role', 'tab'); b.setAttribute('aria-controls', 'fxBody');
-    b.innerHTML = `<b>${d.label}</b><span></span>`;
-    b.addEventListener('click', () => { day = i; render(); });
-    b.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      e.preventDefault(); day = (day + (e.key === 'ArrowRight' ? 1 : DAYS.length - 1)) % DAYS.length; render(); dayBtns[day].focus();
-    });
-    daysEl.appendChild(b); return b;
-  });
-  ['All', ...DIVS].forEach((d, i) => {
-    const l = document.createElement('label');
-    l.innerHTML = `<input type="radio" name="fxdiv" id="fxdiv${i}" value="${esc(d)}"${d === 'All' ? ' checked' : ''}><span>${esc(d === 'All' ? 'All divisions' : d)}</span>`;
-    divsEl.appendChild(l);
-  });
-  divsEl.addEventListener('change', (e) => { div = e.target.value; render(); });
-  search.addEventListener('input', () => render());
-
-  const matches = (f, q, d) => !f.event && (d === 'All' || f.div === d) && (!q || (!f.ko && (f.home + ' ' + f.away).toLowerCase().includes(q)));
-
-  function render() {
-    const q = search.value.trim().toLowerCase();
-    const showEvents = div === 'All' && !q;
-    // day tabs with live counts for the current filters
-    dayBtns.forEach((b, i) => {
-      const n = FIX.filter(f => f.day === i && matches(f, q, div)).length;
-      b.setAttribute('aria-selected', String(i === day)); b.tabIndex = i === day ? 0 : -1;
-      $('span', b).innerHTML = `<em class="sub">${DAYS[i].sub} · </em>${n} game${n === 1 ? '' : 's'}`;
-    });
-    const rows = FIX.filter(f => f.day === day && (f.event ? showEvents : matches(f, q, div)));
-    const games = rows.filter(f => !f.event).length;
-    $('#fxMeta').innerHTML = `${DAYS[day].label.replace(' ', ' March ')}, 2027 · <b>${games}</b> game${games === 1 ? '' : 's'}${div === 'All' ? '' : ' · ' + esc(div)}${q ? ' matching “' + esc(search.value.trim()) + '”' : ''}`;
-
-    if (!games && !rows.length) {
-      const other = DAYS.map((d, i) => i).filter(i => i !== day && FIX.some(f => f.day === i && matches(f, q, div)));
-      const title = q ? `No games for “${esc(search.value.trim())}” on ${DAYS[day].label}` : `${esc(div)} doesn't play on ${DAYS[day].label}`;
-      listEl.innerHTML = `<div class="fx-empty"><b>${title}</b>${other.length ? `Their games are on ${other.map(i => DAYS[i].label).join(' and ')}.<br><button class="more" type="button" data-day="${other[0]}">Show ${DAYS[other[0]].label}</button>` : q ? 'Check the spelling, or search for part of the name. Knockout games show opponents once seeding is posted.' : ''}</div>`;
-      const jump = $('[data-day]', listEl); if (jump) jump.addEventListener('click', () => { day = +jump.dataset.day; render(); });
-      return;
-    }
-    const groups = [];
-    rows.forEach(f => { const g = groups[groups.length - 1]; if (g && g.start === f.start) g.items.push(f); else groups.push({ start: f.start, items: [f] }); });
-    listEl.innerHTML = groups.map(g => {
-      const n = g.items.filter(f => !f.event).length;
-      return `<div class="fx-group"><div class="fx-time">${clock(g.start)}${n ? `<small>${n} game${n === 1 ? '' : 's'}</small>` : ''}</div><ul class="fx-list">${g.items.map(f => {
-        const [cls, label] = status(f);
-        const court = `<span class="fx-court${f.court === 'Centre Court' ? ' cc' : ''}">${esc(f.court)}</span>`;
-        if (f.event) return `<li class="fx-row event">${court}<span class="fx-match"><span>${esc(f.event)}</span></span><span class="fx-info"><span>Schedule</span></span><span class="fx-status ${cls === 'stream' ? 'up' : cls}">${cls === 'stream' ? 'Upcoming' : label}</span></li>`;
-        const team = (name) => f.ko ? `<span class="tbd">${esc(name)}</span>` : mark(name, q);
-        return `<li class="fx-row">${court}<span class="fx-match"><span class="h">${team(f.home)}</span><span class="vs">vs</span><span class="a">${team(f.away)}</span></span><span class="fx-info"><b>${esc(f.div)}</b><span class="${f.ko ? 'ko' : ''}">${esc(f.stage)}</span></span><span class="fx-status ${cls}">${label}</span></li>`;
-      }).join('')}</ul></div>`;
-    }).join('');
+  const pad = (n) => String(n).padStart(2, '0');
+  function tick() {
+    let s = Math.max(0, Math.floor((RELEASE - Date.now()) / 1000));
+    const d = Math.floor(s / 86400); s %= 86400;
+    const h = Math.floor(s / 3600); s %= 3600;
+    $('#fxCount').textContent = s + h + d === 0 ? 'Any minute' : `${d}D ${pad(h)}:${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
   }
 
-  /* ---- open / close (keeps keyboard focus inside while open) ---- */
   let lastFocus = null, timer = 0;
   function open() {
     if (body.classList.contains('fx-open')) return;
     lastFocus = document.activeElement;
-    render();
+    tick(); timer = setInterval(tick, 1000);
     body.classList.add('fx-open'); fx.setAttribute('aria-hidden', 'false'); root.style.overflow = 'hidden';
-    $('#fxBody').scrollTop = 0;
     setTimeout(() => $('#fxClose').focus(), 60);
-    timer = setInterval(render, 60000); // keep Live / Played labels current
     try { history.replaceState(null, '', '#fixtures'); } catch (e) { /* ignore */ }
   }
-  function close() {
+  function close(restore = true) {
     if (!body.classList.contains('fx-open')) return;
     body.classList.remove('fx-open'); fx.setAttribute('aria-hidden', 'true'); root.style.overflow = '';
     clearInterval(timer);
     try { if (location.hash === '#fixtures') history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    if (restore && lastFocus && lastFocus.focus) lastFocus.focus();
   }
-  document.addEventListener('click', (e) => { if (e.target.closest('[data-fixtures]')) { e.preventDefault(); open(); } });
-  $('#fxClose').addEventListener('click', close);
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-fixtures]')) { e.preventDefault(); open(); return; }
+    if (e.target.closest('#fxClose')) { close(); return; }
+    // links inside the board close it first (register link scrolls, detail panel opens on top)
+    if (e.target.closest('#fx [data-fx-close], #fx [data-more]')) close(false);
+  });
   addEventListener('keydown', (e) => {
     if (!body.classList.contains('fx-open')) return;
     if (e.key === 'Escape') { close(); return; }
     if (e.key === 'Tab') {
-      const f = $$('button, input, [tabindex="0"]', fx).filter(el => el.offsetParent !== null && !el.disabled);
+      const f = $$('button, a[href]', fx).filter(el => el.offsetParent !== null);
       if (!f.length) return;
       if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
       else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
     }
   });
-  // a link ending in #fixtures opens the board once the arena has loaded
-  const openFromHash = () => { if (location.hash === '#fixtures') { const w = setInterval(() => { if ($('#loader').classList.contains('out')) { clearInterval(w); open(); } }, 200); } };
-  addEventListener('hashchange', openFromHash);
-  openFromHash();
+  // a link ending in #fixtures opens it once the arena has loaded
+  const fromHash = () => { if (location.hash === '#fixtures') { const w = setInterval(() => { if ($('#loader').classList.contains('out')) { clearInterval(w); open(); } }, 200); } };
+  addEventListener('hashchange', fromHash);
+  fromHash();
   window.__hrFixtures = { open, close };
 })();
 </script>

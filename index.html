@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Hoop Ready: a three-day under-16 basketball tournament. 5v5, fair seeding, certified refs. March 14–16, 2027.">
+<meta name="description" content="Hoop Ready: an under-16 basketball tournament. Register, get picked at the player auction, then play. March 14–16, 2027.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Big Shoulders Display = headlines, Archivo = text, Chivo Mono = scoreboard data.
@@ -35,7 +35,7 @@
   --t-lead:clamp(1.0625rem,1.3vw,1.25rem);
   --t-stat:clamp(2rem,3.2vw,2.75rem);
   --t-h:clamp(3.1rem,7.4vw,7.75rem);
-  --t-hero:clamp(4.2rem,11vw,11rem);
+  --t-hero:clamp(4rem,min(9vw,15vh),9.5rem);
 
   --gut-l:max(16px, env(safe-area-inset-left, 0px));
   --gut-r:max(16px, env(safe-area-inset-right, 0px));
@@ -135,7 +135,7 @@ main{position:relative;z-index:2}
 .board.dates .k{font-family:var(--f-data);letter-spacing:.04em;color:var(--led);font-weight:500}
 
 /* scroll cue */
-.enter{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;font-size:var(--t-label);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--hardwood)}
+.enter{position:absolute;right:max(var(--gut-r),clamp(16px,3.4vw,48px));bottom:34px;display:flex;flex-direction:column;align-items:center;gap:12px;font-size:var(--t-label);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--hardwood)}
 .enter i{width:1px;height:44px;background:linear-gradient(var(--ball),transparent);transform-origin:top;animation:drip 1.8s var(--ease) infinite}
 @keyframes drip{0%{transform:scaleY(0)}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
 
@@ -226,6 +226,17 @@ main{position:relative;z-index:2}
 .drawer details p{padding-bottom:6px}
 template{display:none}
 
+/* ---------- road to the final: the four steps, in order ---------- */
+.road{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:30px;max-width:640px;border-top:1px solid var(--seam-strong)}
+.road li{position:relative;display:grid;gap:5px;align-content:start;padding:13px 14px 0 0;min-width:0}
+.road li+li{padding-left:14px;border-left:1px solid var(--seam)}
+.road .n{font-family:var(--f-data);font-size:var(--t-label);letter-spacing:.06em;color:var(--hardwood)}
+.road b{font-family:var(--f-display);font-weight:800;font-size:1.45rem;line-height:1;text-transform:uppercase}
+.road .st{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--hardwood)}
+.road .now::before{content:"";position:absolute;left:0;right:14px;top:-1px;height:2px;background:var(--ball)}
+.road .now .n,.road .now .st{color:var(--ball)}
+.play .road{animation:fadeup .8s var(--ease) both;animation-delay:.3s}
+
 /* ---------- fixtures: coming soon ---------- */
 .links{display:flex;flex-wrap:wrap;gap:0 28px}
 .soon{font-family:var(--f-data);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--night);background:var(--led);padding:2px 5px;margin-left:4px;vertical-align:2px;border-radius:1px}
@@ -284,7 +295,12 @@ template{display:none}
   .form{padding:18px}
   .stats>div+div{padding-left:12px}
   .stats>div{padding-right:12px}
+  .road{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .road li:nth-child(3){padding-left:0;border-left:0}
+  .road li:nth-child(n+3){margin-top:14px;border-top:1px solid var(--seam)}
+  .road .now::before{right:0}
   .fx-drop{grid-template-columns:1fr 1fr}
+  .fx-drop b{white-space:normal;font-size:1.3rem}
   .fx-copy{grid-column:1 / -1}
   .fx-title .o{-webkit-text-stroke-width:1.5px}
 }
@@ -292,7 +308,7 @@ template{display:none}
   html{scroll-behavior:auto}
   .fx{transition:opacity .2s,visibility .2s;transform:none}
   .fx-open .fx-title .f{animation:none}
-  .enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
+  .play .road,.enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
 }
 </style>
 
@@ -317,6 +333,7 @@ template{display:none}
   </a>
   <nav class="hnav" aria-label="Main">
     <button type="button" data-fixtures>Fixtures <span class="soon">Soon</span></button>
+    <a href="#teams">Auction</a>
     <a href="#court">Format</a>
     <a href="#events">Tickets</a>
     <button type="button" id="faqBtn">FAQ</button>
@@ -331,12 +348,17 @@ template{display:none}
     <div class="chap-in">
       <p class="tag"><span class="rd">R00</span><span class="meta">March 14–16, 2027 · Downtown Sports Complex</span></p>
       <h1 class="headline"><span class="ln"><span>Hoop</span></span><span class="ln"><span>Ready</span></span></h1>
-      <p class="sub">The under-16 basketball tournament with standards. Five-on-five, full court, with fair seeding, certified refs and <strong>at least three games for every team</strong>.</p>
+      <p class="sub">The under-16 basketball tournament with standards. Register, get picked at the player auction, then play five-on-five with certified refs and <strong>at least three games for every team</strong>.</p>
       <div class="actions">
         <a href="#register" class="btn btn-solid">Register to play</a>
-        <a href="#court" class="btn btn-line">Format &amp; eligibility</a>
+        <a href="#teams" class="btn btn-line">How the auction works</a>
       </div>
-      <p class="fine">Early-bird pricing ends <b>FEB 01</b></p>
+      <ol class="road" aria-label="How the tournament works">
+        <li class="now"><span class="n">01</span><b>Register</b><span class="st">Open now</span></li>
+        <li><span class="n">02</span><b>Auction</b><span class="st">Date to be announced</span></li>
+        <li><span class="n">03</span><b>Fixtures</b><span class="st">After the auction</span></li>
+        <li><span class="n">04</span><b>Matches</b><span class="st">Mar 14–16, 2027</span></li>
+      </ol>
     </div>
     <a href="#tunnel" class="enter">Scroll to enter the arena<i></i></a>
   </section>
@@ -400,7 +422,7 @@ template{display:none}
     <div class="chap-in">
       <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
       <h2 class="headline"><span class="ln"><span>The right</span></span><span class="ln"><span>matchups<span class="pt">.</span></span></span></h2>
-      <p class="sub">Pools are set by level and past results, so the best games happen late and blowouts stay rare.</p>
+      <p class="sub">Once the auction sets the teams, they're drawn into pools by level, so the best games happen late and blowouts stay rare.</p>
       <dl class="stats">
         <div><dt>Pool play</dt><dd class="word">Fri–Sat</dd></div>
         <div><dt>Seeding posted</dt><dd class="word">Sat 7 PM</dd></div>
@@ -410,7 +432,7 @@ template{display:none}
       <template id="m-matchups">
         <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
         <h3>Fair brackets, every game.</h3>
-        <p>Teams are placed into pools by competitive level and past results. Pool records and point differential set Sunday's seeding, so the best games happen late.</p>
+        <p>After the auction, teams are drawn into pools by competitive level. Pool records and point differential set Sunday's seeding, so the best games happen late.</p>
         <p>Every game uses certified referees, a live scoreboard and a 24-second shot clock.</p>
         <ul><li><span>Pool play</span><span>Fri–Sat</span></li><li><span>Seeding posted</span><span>Sat 7 PM</span></li><li><span>Single elimination</span><span>Sunday</span></li></ul>
       </template>
@@ -442,22 +464,28 @@ template{display:none}
   <div class="gap"></div>
 
   <!-- ROUND 05 -->
-  <section class="chap" id="teams" data-name="Teams &amp; Rosters">
+  <section class="chap" id="teams" data-name="Player Auction">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R05</span><span>Teams &amp; Rosters</span></p>
-      <h2 class="headline"><span class="ln"><span>Find your</span></span><span class="ln"><span>five<span class="pt">.</span></span></span></h2>
-      <p class="sub">Every player registers on their own. Add your team or club when you sign up, or leave it blank and we'll place you on a squad at your level.</p>
+      <p class="tag"><span class="rd">R05</span><span>Player Auction</span></p>
+      <h2 class="headline"><span class="ln"><span>Going, going,</span></span><span class="ln"><span>gone<span class="pt">.</span></span></span></h2>
+      <p class="sub">Every registered player enters the auction pool. Teams bid to build their squads, and when the hammer falls you'll know your team.</p>
       <dl class="stats">
-        <div><dt>Max roster</dt><dd>12</dd></div>
-        <div><dt>To start a game</dt><dd>5</dd></div>
-        <div><dt>Roster lock</dt><dd class="word">Fri check-in</dd></div>
+        <div><dt>Auction entry</dt><dd class="word">Automatic</dd></div>
+        <div><dt>Teams form by</dt><dd class="word">Bidding</dd></div>
+        <div><dt>Auction date</dt><dd class="word">TBA</dd></div>
       </dl>
-      <button class="more" data-more="m-teams">Squad rules</button>
+      <button class="more" data-more="m-teams">How the auction works</button>
       <template id="m-teams">
-        <p class="tag"><span class="rd">R05</span><span>Teams &amp; Rosters</span></p>
-        <h3>Squads &amp; rosters</h3>
-        <p>Each player registers individually. Players from the same team or club are kept together. Players without a team are grouped into squads by level before the tournament.</p>
-        <ul><li><span>Max roster</span><span>12 players</span></li><li><span>To start a game</span><span>5 players</span></li><li><span>Roster lock</span><span>Fri check-in</span></li></ul>
+        <p class="tag"><span class="rd">R05</span><span>Player Auction</span></p>
+        <h3>The player auction</h3>
+        <p>Every registered player goes into the auction pool. Teams bid for players, and each player joins the team that wins them. Once every squad is set, the fixtures are announced.</p>
+        <ul>
+          <li><span>01 · Register</span><span>Open now</span></li>
+          <li><span>02 · Player auction</span><span>Date TBA</span></li>
+          <li><span>03 · Fixtures announced</span><span>After the auction</span></li>
+          <li><span>04 · Matches</span><span>Mar 14–16</span></li>
+        </ul>
+        <p>Registered players get the auction date and how to follow it by email.</p>
       </template>
     </div>
   </section>
@@ -500,7 +528,7 @@ template{display:none}
     <div class="chap-in">
       <p class="tag"><span class="rd">R07</span><span>Player registration</span></p>
       <h2 class="headline"><span class="ln"><span>Your shot</span></span><span class="ln"><span>starts here<span class="pt">.</span></span></span></h2>
-      <p class="sub">Registration is for players under 16. Sign up below and we'll email you the next steps.</p>
+      <p class="sub">Registration is for players under 16. Registering puts you in the player auction pool, and we'll email you the auction date and next steps.</p>
       <template id="m-who">
         <p class="tag"><span class="rd">R07</span><span>Player registration</span></p>
         <h3>Who can register</h3>
@@ -508,6 +536,7 @@ template{display:none}
           <li><span>Who</span><span>Players only</span></li>
           <li><span>Age</span><span>Under 16 on Sep 1, 2026</span></li>
           <li><span>Born on or after</span><span>Sep 2, 2010</span></li>
+          <li><span>Next step</span><span>Player auction</span></li>
           <li><span>Early-bird ends</span><span>Feb 1</span></li>
           <li><span>Full refunds until</span><span>Feb 15</span></li>
         </ul>
@@ -526,10 +555,7 @@ template{display:none}
           <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
           <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
         </fieldset>
-        <div class="row2">
-          <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
-          <label class="field"><span>Team or club <em>optional</em></span><input id="f-team" name="team" placeholder="Leave blank to be placed"></label>
-        </div>
+        <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
         <div class="submit-row">
           <button class="btn btn-solid" type="submit">Register to play</button>
           <p class="fine">Under 16 on <b>SEP 01 2026</b> · Early-bird ends <b>FEB 01</b></p>
@@ -572,7 +598,8 @@ template{display:none}
   <p class="tag"><span class="rd">FAQ</span><span>Questions</span></p>
   <h3>Before you register</h3>
   <details open><summary>Who can play?</summary><p>Players who are under 16 on September 1, 2026, which means born on or after September 2, 2010. Proof of age is checked at Friday check-in.</p></details>
-  <details><summary>Do I need a team to register?</summary><p>No. Every player registers on their own. Add your team or club if you have one, or leave it blank and we'll place you on a squad at your level.</p></details>
+  <details><summary>Do I need a team to register?</summary><p>No. Teams are formed at the player auction. Register on your own and you'll enter the auction pool.</p></details>
+  <details><summary>How does the auction work?</summary><p>Every registered player enters the auction pool. Teams bid for players, and each player joins the team that wins them. The auction date will be announced and emailed to registered players.</p></details>
   <details><summary>How many players are on a roster?</summary><p>Up to 12 players per team, and at least 5 to start a game.</p></details>
   <details><summary>Is there a refund policy?</summary><p>Full refunds until February 15. After that, entry can be moved to next season.</p></details>
   <details><summary>Do spectators need tickets?</summary><p>Day passes are $10, weekend passes $20, and kids under 12 get in free. Coaches and parents don't register.</p></details>
@@ -589,9 +616,9 @@ template{display:none}
     </div>
     <h2 class="fx-title" id="fxTitle"><span class="o">Fixtures</span><span class="f">Coming soon<span class="pt">.</span></span></h2>
     <div class="fx-drop">
-      <div><span class="k">Fixtures go live</span><b>MAR 07</b></div>
-      <div><span class="k">Released in</span><b id="fxCount">--</b></div>
-      <p class="fx-copy">Pools, tip-off times and courts for every team land here one week before the tournament. Registered players get them by email first.</p>
+      <div><span class="k">Announced</span><b>AFTER THE AUCTION</b></div>
+      <div><span class="k">Matches</span><b>MAR 14–16</b></div>
+      <p class="fx-copy">Once the player auction sets every team, pools, tip-off times and courts land here. Registered players get them by email first.</p>
     </div>
     <div class="fx-cta">
       <a href="#register" class="btn btn-solid" data-fx-close>Register to play</a>
@@ -777,7 +804,7 @@ template{display:none}
       return;
     }
     msg.classList.add('ok');
-    msg.textContent = `You're registered, ${name.split(' ')[0]}. Next steps are on their way to ${email}.`;
+    msg.textContent = `You're registered, ${name.split(' ')[0]}. You're in the auction pool, and the next steps are on their way to ${email}.`;
     form.reset();
   });
 })();
@@ -788,21 +815,11 @@ template{display:none}
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const root = document.documentElement, body = document.body, fx = $('#fx');
-  const RELEASE = new Date('2027-03-07T09:00:00'); // EDIT: when fixtures are published
 
-  const pad = (n) => String(n).padStart(2, '0');
-  function tick() {
-    let s = Math.max(0, Math.floor((RELEASE - Date.now()) / 1000));
-    const d = Math.floor(s / 86400); s %= 86400;
-    const h = Math.floor(s / 3600); s %= 3600;
-    $('#fxCount').textContent = s + h + d === 0 ? 'Any minute' : `${d}D ${pad(h)}:${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
-  }
-
-  let lastFocus = null, timer = 0;
+  let lastFocus = null;
   function open() {
     if (body.classList.contains('fx-open')) return;
     lastFocus = document.activeElement;
-    tick(); timer = setInterval(tick, 1000);
     body.classList.add('fx-open'); fx.setAttribute('aria-hidden', 'false'); root.style.overflow = 'hidden';
     setTimeout(() => $('#fxClose').focus(), 60);
     try { history.replaceState(null, '', '#fixtures'); } catch (e) { /* ignore */ }
@@ -810,7 +827,6 @@ template{display:none}
   function close(restore = true) {
     if (!body.classList.contains('fx-open')) return;
     body.classList.remove('fx-open'); fx.setAttribute('aria-hidden', 'true'); root.style.overflow = '';
-    clearInterval(timer);
     try { if (location.hash === '#fixtures') history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
     if (restore && lastFocus && lastFocus.focus) lastFocus.focus();
   }

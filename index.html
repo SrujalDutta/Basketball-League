@@ -321,7 +321,37 @@ template{display:none}
   .fx-copy{grid-column:1 / -1}
   .fx-title .o{-webkit-text-stroke-width:1.5px}
 }
+/* ---------- registration success: the swish ---------- */
+.form .btn[disabled]{opacity:.6;cursor:progress;transform:none}
+.swish{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:rgba(13,11,10,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  padding-block:calc(24px + env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-bottom, 0px));padding-left:var(--gut-l);padding-right:var(--gut-r);opacity:0;transition:opacity .35s}
+.swish[hidden]{display:none}
+.swish.on{opacity:1}
+.swish-in{display:grid;justify-items:center;gap:6px;width:min(620px,100%);text-align:center}
+.swish svg{width:100%;height:auto;max-width:100%;overflow:visible}
+.swish .bbd{fill:rgba(241,235,225,.05);stroke:rgba(241,235,225,.6);stroke-width:3}
+.swish .rim-b{fill:none;stroke:#a8701f;stroke-width:5}
+.swish .rim-f{fill:none;stroke:#e3a43c;stroke-width:5.5;stroke-linecap:round}
+.swish .net{fill:none;stroke:rgba(241,235,225,.82);stroke-width:1.6;stroke-linejoin:round;transform-box:view-box;transform-origin:485px 160px}
+.swish .net.go{animation:swishNet .75s cubic-bezier(.3,.7,.3,1)}
+@keyframes swishNet{0%{transform:scale(1,1)}28%{transform:scale(.86,1.42)}55%{transform:scale(1.05,.9) skewX(-4deg)}78%{transform:scale(.98,1.05) skewX(2deg)}100%{transform:none}}
+.swish .spark{fill:var(--ball);opacity:0;transform-box:fill-box;transform-origin:center}
+.swish .spark.go{animation:spark .8s ease-out forwards}
+@keyframes spark{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+.swish .word{font-family:var(--f-display);font-weight:900;font-size:64px;letter-spacing:.06em;fill:var(--ball);opacity:0;transform-box:fill-box;transform-origin:center}
+.swish .word.go{animation:word 1s var(--ease) forwards}
+@keyframes word{0%{opacity:0;transform:scale(.6)}30%{opacity:1;transform:scale(1.08)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1) translateY(-12px)}}
+.swish-copy{display:grid;justify-items:center;gap:10px;opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.swish-copy.on{opacity:1;transform:none}
+.swish-copy h2{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(3rem,9vw,5.5rem);line-height:.85}
+.swish-copy h2 .pt{color:var(--ball)}
+.swish-copy p{color:var(--hardwood);max-width:30em}
+.swish-copy p b{color:var(--chalk);font-weight:600}
+.swish-copy .btn{margin-top:10px}
+
 @media (prefers-reduced-motion:reduce){
+  .swish .net.go,.swish .spark.go,.swish .word.go{animation:none}
+  .swish-copy{transition:none}
   html{scroll-behavior:auto}
   .fx{transition:opacity .2s,visibility .2s;transform:none}
   .fx-open .fx-title .f{animation:none}
@@ -672,6 +702,35 @@ template{display:none}
   </div>
 </section>
 
+<!-- ======================= REGISTRATION SUCCESS (ball swishes through the hoop) ======================= -->
+<div class="swish" id="swish" role="dialog" aria-modal="true" aria-labelledby="swishTitle" hidden>
+  <div class="swish-in">
+    <svg viewBox="0 0 600 400" aria-hidden="true">
+      <defs>
+        <radialGradient id="sw-ball" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#f3a35c"/><stop offset=".55" stop-color="#d4692a"/><stop offset="1" stop-color="#7a3010"/></radialGradient>
+      </defs>
+      <rect class="bbd" x="402" y="24" width="166" height="112" rx="4"/>
+      <rect class="bbd" x="461" y="70" width="48" height="40" rx="1" style="fill:none"/>
+      <rect x="480" y="136" width="10" height="20" fill="#2a2622"/>
+      <path class="rim-b" d="M443 160 A42 9 0 0 1 527 160"/>
+      <g id="swBall">
+        <circle r="24" fill="url(#sw-ball)"/>
+        <g fill="none" stroke="#2a1206" stroke-width="2.2"><path d="M-24 0 H24"/><path d="M0 -24 V24"/><path d="M-16 -18 C-6 -8 -6 8 -16 18"/><path d="M16 -18 C6 -8 6 8 16 18"/></g>
+      </g>
+      <path class="net" id="swNet"/>
+      <path class="rim-f" d="M443 160 A42 9 0 0 0 527 160"/>
+      <g id="swSparks"></g>
+      <text class="word" id="swWord" x="485" y="300" text-anchor="middle">SWISH</text>
+    </svg>
+    <div class="swish-copy" id="swishCopy">
+      <p class="tag"><span class="rd">IBPL</span><span>Registration complete</span></p>
+      <h2 id="swishTitle">You're in<span class="pt">.</span></h2>
+      <p id="swishMsg"></p>
+      <button class="btn btn-solid" type="button" id="swishDone">Done</button>
+    </div>
+  </div>
+</div>
+
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Details" aria-hidden="true">
   <button class="drawer-x" id="drawerX" aria-label="Close">×</button>
@@ -824,13 +883,62 @@ template{display:none}
     }
   });
 
-  /* ---- player registration (front end only) ---- */
-  const form = $('#regForm'), msg = $('#formMsg');
+  /* ---- player registration: one player per email ----
+     On the Claude link, registrations go to the page's shared database:
+       emails/<fingerprint>        claim marker (no personal data), so anyone can check an email is free
+       registrations/<fingerprint> the full registration, readable only by the owner and editors
+     Anywhere else (localhost, a local file) there is no shared database, so the check only covers
+     registrations made in this browser. A public launch needs a real backend here. */
+  const form = $('#regForm'), msg = $('#formMsg'), submitBtn = $('button[type="submit"]', form);
   const CUTOFF = '2010-09-02'; // EDIT: earliest allowed date of birth (under 16 on Sep 1, 2026)
+  const Registry = (() => {
+    const dbReady = (async () => {
+      try { return window.claude && typeof window.claude.use === 'function' ? await window.claude.use('db') : null; }
+      catch (e) { return null; }
+    })();
+    const holder = 'reg-' + Math.random().toString(36).slice(2);
+    async function fingerprint(email) {
+      const norm = email.trim().toLowerCase();
+      try {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('ibpl:' + norm));
+        return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (e) {                                  // very old browsers / insecure contexts
+        let h1 = 0x811c9dc5, h2 = 0x01000193;
+        for (const ch of norm) { h1 = Math.imul(h1 ^ ch.charCodeAt(0), 16777619); h2 = Math.imul(h2 + ch.charCodeAt(0), 2246822507); }
+        return 'f' + (h1 >>> 0).toString(16) + (h2 >>> 0).toString(16);
+      }
+    }
+    const local = {
+      read() { try { return JSON.parse(localStorage.getItem('ibpl-registered-emails') || '[]'); } catch (e) { return []; } },
+      write(list) { try { localStorage.setItem('ibpl-registered-emails', JSON.stringify(list)); } catch (e) { /* storage blocked */ } }
+    };
+    async function register(rec) {
+      const key = await fingerprint(rec.email);
+      const db = await dbReady;
+      if (!db) {
+        const list = local.read();
+        if (list.includes(key)) return 'taken';
+        list.push(key); local.write(list);
+        return 'ok';
+      }
+      const claim = db.doc('emails/' + key);
+      const lease = await claim.acquire({ holder, ttlMs: 10000 });
+      if (!lease.acquired) return 'taken';                    // the same email is mid-registration elsewhere
+      const snap = await claim.get();
+      if (snap.exists && (snap.data() || {}).claimed) return 'taken';
+      const at = new Date().toISOString();
+      await db.doc('registrations/' + key).set({ name: rec.name, dob: rec.dob, position: rec.position, email: rec.email.trim().toLowerCase(), registeredAt: at });
+      await claim.set({ claimed: true, at });
+      return 'ok';
+    }
+    return { register };
+  })();
+
   form.addEventListener('change', (e) => { const fs = e.target.closest('fieldset'); if (fs) fs.classList.remove('bad'); });
   form.addEventListener('input', (e) => { const fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (submitBtn.disabled) return;
     const name = form.name.value.trim(), dob = form.dob.value, position = form.position.value, email = form.email.value.trim();
     const missing = [];
     $('#nameField').classList.toggle('bad', !name); if (!name) missing.push("the player's name");
@@ -848,9 +956,101 @@ template{display:none}
       msg.textContent = 'This tournament is for players under 16 on September 1, 2026, so the player must be born on or after September 2, 2010.';
       return;
     }
-    msg.classList.add('ok');
-    msg.textContent = `You're registered, ${name.split(' ')[0]}. You're in the auction pool, and the next steps are on their way to ${email}.`;
-    form.reset();
+    const label = submitBtn.textContent;
+    submitBtn.disabled = true; submitBtn.textContent = 'Registering…'; msg.textContent = '';
+    try {
+      const result = await Registry.register({ name, dob, position, email });
+      if (result === 'taken') {
+        $('#emailField').classList.add('bad');
+        msg.textContent = `${email} has already been used to register a player. Each email can register one player only, so use a different email.`;
+        return;
+      }
+      form.reset();
+      msg.classList.add('ok');
+      msg.textContent = `${name.split(' ')[0]} is registered and in the player auction pool.`;
+      celebrate(name.split(' ')[0], email);
+    } catch (err) {
+      msg.textContent = "We couldn't save the registration just now. Check your connection and try again.";
+    } finally {
+      submitBtn.disabled = false; submitBtn.textContent = label;
+    }
+  });
+
+  /* ---- success: the ball swishes through the hoop ---- */
+  const sw = $('#swish'), swBall = $('#swBall'), swNet = $('#swNet'), swWord = $('#swWord'), swSparks = $('#swSparks'), swCopy = $('#swishCopy');
+  // net: strings from the rim (443–527 at y 161) down to the bottom ring (462–508 at y 232), plus diamond mesh
+  (() => {
+    const top = i => [443 + i * 12, 161], bot = i => [462 + i * (46 / 7), 232];
+    const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+    let d = '';
+    for (let i = 0; i < 7; i++) {
+      const a1 = lerp(top(i), bot(i), 0), m1 = lerp(top(i + 1), bot(i + 1), 0.33), a2 = lerp(top(i), bot(i), 0.66), b = lerp(top(i + 1), bot(i + 1), 1);
+      const c1 = lerp(top(i + 1), bot(i + 1), 0), n1 = lerp(top(i), bot(i), 0.33), c2 = lerp(top(i + 1), bot(i + 1), 0.66), e = lerp(top(i), bot(i), 1);
+      d += `M${a1} L${m1} L${a2} L${b} M${c1} L${n1} L${c2} L${e} `;
+    }
+    d += 'M462 232 L508 232';
+    swNet.setAttribute('d', d.replace(/,/g, ' '));
+  })();
+  let swFocus = null, swTimers = [], swRaf = 0;
+  const later = (fn, ms) => swTimers.push(setTimeout(fn, ms));
+  function placeBall(x, y, rot, op = 1) { swBall.setAttribute('transform', `translate(${x} ${y}) rotate(${rot})`); swBall.style.opacity = op; }
+  function sparks() {
+    swSparks.innerHTML = '';
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2 + Math.random() * 0.4, r = 40 + Math.random() * 45;
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', 485); c.setAttribute('cy', 160); c.setAttribute('r', 2.2 + Math.random() * 2.2);
+      c.setAttribute('class', 'spark'); c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px');
+      swSparks.appendChild(c);
+      requestAnimationFrame(() => c.classList.add('go'));
+    }
+  }
+  function celebrate(first, email) {
+    $('#swishMsg').innerHTML = '';
+    const m = $('#swishMsg');
+    m.append(`${first}, you're in the IBPL player auction pool. The auction date and next steps are on their way to `);
+    const b = document.createElement('b'); b.textContent = email; m.append(b, '.');
+    swFocus = document.activeElement;
+    swTimers.forEach(clearTimeout); swTimers = []; cancelAnimationFrame(swRaf);
+    swNet.classList.remove('go'); swWord.classList.remove('go'); swCopy.classList.remove('on'); swSparks.innerHTML = '';
+    sw.hidden = false; requestAnimationFrame(() => sw.classList.add('on'));
+    document.documentElement.style.overflow = 'hidden';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { placeBall(485, 300, 0, 0); swCopy.classList.add('on'); $('#swishDone').focus(); return; }
+    // flight: a quadratic arc from bottom-left into the rim, then a drop through the net
+    const P0 = [70, 360], P1 = [280, -190], P2 = [485, 150], FLY = 1050, DROP = 420;
+    let t0 = 0;
+    placeBall(...P0, 0);
+    const step = (now) => {
+      if (!t0) t0 = now;
+      const e = now - t0;
+      if (e < FLY) {
+        const t = e / FLY, u = 1 - t;
+        const x = u * u * P0[0] + 2 * u * t * P1[0] + t * t * P2[0];
+        const y = u * u * P0[1] + 2 * u * t * P1[1] + t * t * P2[1];
+        placeBall(x, y, t * 600);
+      } else if (e < FLY + DROP) {
+        const t = (e - FLY) / DROP;
+        placeBall(485, 150 + 160 * t * t + 30 * t, 600 + t * 90, t < 0.6 ? 1 : 1 - (t - 0.6) / 0.4);
+      } else { placeBall(485, 340, 690, 0); return; }
+      swRaf = requestAnimationFrame(step);
+    };
+    swRaf = requestAnimationFrame(step);
+    later(() => { swNet.classList.add('go'); sparks(); swWord.classList.add('go'); }, FLY + 40);
+    later(() => { swCopy.classList.add('on'); $('#swishDone').focus(); }, FLY + 900);
+  }
+  function closeSwish() {
+    if (sw.hidden) return;
+    swTimers.forEach(clearTimeout); cancelAnimationFrame(swRaf);
+    sw.classList.remove('on'); document.documentElement.style.overflow = '';
+    setTimeout(() => { sw.hidden = true; }, 350);
+    if (swFocus && swFocus.focus) swFocus.focus();
+  }
+  $('#swishDone').addEventListener('click', closeSwish);
+  addEventListener('keydown', (e) => {
+    if (sw.hidden) return;
+    if (e.key === 'Escape') closeSwish();
+    if (e.key === 'Tab') { e.preventDefault(); $('#swishDone').focus(); }
   });
 })();
 </script>

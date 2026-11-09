@@ -47,7 +47,7 @@
   const maxAniso = renderer.capabilities.getMaxAnisotropy();
   const U_TIME = { value: 0 };           // shared clock for every animated shader
   const BEAMS = [];                      // every visible light cone (dust uses these to sparkle)
-  let ribbonTex = null, phoneGlow = null;
+  let ribbonTex = null;
 
   /* ---------------- helpers ---------------- */
   function tex(w, h, draw, opts = {}) {
@@ -223,7 +223,7 @@
     return l;
   }
 
-  /* ---------------- crowd helpers ---------------- */
+  /* ---------------- geometry helpers ---------------- */
   function mergeGeos(geos, extra) {
     const list = geos.map(g => (g.index ? g.toNonIndexed() : g));
     let n = 0; list.forEach(g => { n += g.attributes.position.count; });
@@ -254,86 +254,6 @@
     const m = A.add(B).multiplyScalar(0.5); g.translate(m.x, m.y, m.z);
     return g;
   }
-  // part: 0 skin, 1 shirt, 2 pants, 3 hair, 4 shoes    limb: 0 body, 1 left arm, 2 right arm
-  function personGeometry(standing) {
-    const G = [], part = [], limb = [];
-    const add = (g, p, l = 0) => { G.push(g); part.push(p); limb.push(l); };
-    const y0 = standing ? 0.4 : -0.03;               // torso base (origin = seat surface)
-    const torso = new THREE.LatheGeometry([[0, 0], [0.125, 0.02], [0.145, 0.12], [0.14, 0.25], [0.155, 0.38], [0.178, 0.47], [0.165, 0.53], [0.09, 0.575], [0, 0.585]].map(([x, y]) => new THREE.Vector2(x, y)), 12);
-    torso.scale(1, 1, 0.66); if (!standing) torso.rotateX(0.07); torso.translate(0, y0, 0);
-    add(torso, 1);
-    const sh = y0 + 0.5, hy = y0 + 0.77;
-    add(capsule(0.045, [0, sh + 0.06, 0.02], [0, sh + 0.15, 0.02], 6), 0);
-    const head = new THREE.SphereGeometry(0.1, 12, 9); head.scale(0.9, 1.1, 0.98); head.translate(0, hy, 0.035); add(head, 0);
-    const hair = new THREE.SphereGeometry(0.107, 12, 6, 0, Math.PI * 2, 0, Math.PI * 0.52); hair.scale(0.93, 1.06, 1.02); hair.rotateX(-0.28); hair.translate(0, hy + 0.012, 0.02); add(hair, 3);
-    [-1, 1].forEach(sx => {
-      const x = sx * 0.1;
-      if (standing) {
-        add(capsule(0.074, [x, 0.42, 0], [x, 0.02, 0.01]), 2);
-        add(capsule(0.058, [x, 0.0, 0.01], [x, -0.36, 0.0]), 2);
-        add(new THREE.BoxGeometry(0.1, 0.075, 0.24).translate(x, -0.385, 0.05), 4);
-      } else {
-        add(capsule(0.076, [x, 0.06, -0.02], [x * 1.05, 0.1, 0.4]), 2);
-        add(capsule(0.058, [x * 1.05, 0.08, 0.42], [x * 1.05, -0.36, 0.46]), 2);
-        add(new THREE.BoxGeometry(0.1, 0.075, 0.24).translate(x * 1.05, -0.385, 0.52), 4);
-      }
-      const L = sx < 0 ? 1 : 2;
-      const S = [sx * 0.19, sh, 0.03];
-      const E = standing ? [sx * 0.23, sh - 0.24, 0.02] : [sx * 0.22, sh - 0.23, 0.09];
-      const Wr = standing ? [sx * 0.24, sh - 0.46, 0.07] : [sx * 0.14, sh - 0.33, 0.3];
-      add(capsule(0.05, S, E), 1, L);                                   // sleeve
-      add(capsule(0.04, E, Wr), 0, L);                                  // forearm
-      add(new THREE.SphereGeometry(0.043, 8, 6).translate(...Wr), 0, L); // hand
-    });
-    return { geo: mergeGeos(G, { part, limb }), pivotY: sh, hand: standing ? [0.24, sh - 0.48, 0.08] : [0.14, sh - 0.35, 0.33] };
-  }
-  // world position of a raised right hand (matches the shader's arm rotation)
-  function handWorld(c, P, raise) {
-    const piv = new THREE.Vector3(0.19, P.pivotY, 0.03);
-    const q = V3(P.hand).sub(piv);
-    const ax = -raise * 2.75, az = -raise * 0.5;
-    let y = q.y * Math.cos(ax) - q.z * Math.sin(ax), z = q.y * Math.sin(ax) + q.z * Math.cos(ax); q.y = y; q.z = z;
-    const x = q.x * Math.cos(az) - q.y * Math.sin(az); y = q.x * Math.sin(az) + q.y * Math.cos(az); q.x = x; q.y = y;
-    const p = piv.add(q).add(new THREE.Vector3(0, 0, 0.06)).multiplyScalar(c.s);
-    p.applyAxisAngle(new THREE.Vector3(0, 1, 0), c.rotY);
-    return p.add(new THREE.Vector3(c.x, c.y + 0.42, c.z));
-  }
-  function crowdMaterial(pivotY) {
-    const mat = new THREE.MeshStandardMaterial({ roughness: 0.82, metalness: 0.0 });
-    mat.onBeforeCompile = (sh) => {
-      sh.uniforms.uTime = U_TIME;
-      sh.uniforms.uPivotY = { value: pivotY };
-      sh.vertexShader = sh.vertexShader
-        .replace('#include <common>', `#include <common>
-          attribute float part; attribute float limb;
-          attribute vec3 iSkin; attribute vec3 iShirt; attribute vec3 iPants; attribute vec3 iHair; attribute vec4 iData;
-          uniform float uTime; uniform float uPivotY; varying vec3 vCrowd;
-          vec3 rotX(vec3 v, float a){ float c = cos(a), s = sin(a); return vec3(v.x, v.y * c - v.z * s, v.y * s + v.z * c); }
-          vec3 rotZ(vec3 v, float a){ float c = cos(a), s = sin(a); return vec3(v.x * c - v.y * s, v.x * s + v.y * c, v.z); }`)
-        .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
-          float ph = iData.x;
-          float wave = 0.5 + 0.5 * sin(uTime * 2.4 + ph);
-          float up = iData.y * smoothstep(0.3, 0.6, wave);
-          float side = limb < 1.5 ? -1.0 : 1.0;
-          float raise = limb > 1.5 ? max(up, iData.z) : up;
-          if (limb > 0.5) objectNormal = rotZ(rotX(objectNormal, -raise * 2.75), -side * raise * 0.5);
-          vCrowd = part < 0.5 ? iSkin : part < 1.5 ? iShirt : part < 2.5 ? iPants : part < 3.5 ? iHair
-                 : mix(vec3(0.85), vec3(0.06), step(0.5, fract(iData.w * 7.0)));`)
-        .replace('#include <begin_vertex>', `vec3 transformed = vec3(position);
-          if (limb > 0.5) {
-            vec3 piv = vec3(side * 0.19, uPivotY, 0.03);
-            transformed = piv + rotZ(rotX(transformed - piv, -raise * 2.75), -side * raise * 0.5);
-          }
-          float body = smoothstep(-0.05, 0.25, position.y);
-          transformed.y += (sin(uTime * 1.7 + ph * 3.0) * 0.01 + up * 0.05) * body;
-          transformed.x += sin(uTime * 0.6 + ph) * 0.015 * max(position.y, 0.0);`);
-      sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', '#include <common>\nvarying vec3 vCrowd;')
-        .replace('vec4 diffuseColor = vec4( diffuse, opacity );', 'vec4 diffuseColor = vec4( diffuse * vCrowd, opacity );');
-    };
-    return mat;
-  }
-
   function build() {
     /* =============== FLOOR (one big slab) =============== */
     const floor = mesh(scaleUV(new THREE.PlaneGeometry(120, 160), 24, 32), floorMat, 0, 0, -40);
@@ -523,7 +443,7 @@
     [[-4, -46], [4, -46], [-4, -62], [4, -62]].forEach(([x, z], i) => {
       spot(0xfff2e0, 2.1, 42, 0.45, 0.85, [x * 1.4, 15, z], [x * 0.6, 0, z], i === 1 || i === 2);
     });
-    // soft fill on the stands so the crowd reads
+    // soft fill on the stands so the card stunt reads
     [-1, 1].forEach(sx => spot(0xffe0c0, 1.6, 34, 0.95, 1, [sx * 4, 14.5, CZ], [sx * 15, 2.5, CZ]));
 
     // lighting rig: trusses over the sidelines, fixtures throwing visible cones onto the court
@@ -602,11 +522,11 @@
     [-1.8, 1.8].forEach(x => [-1.8, 1.8].forEach(z => box(0.03, 4.3, 0.03, metalMat, x, 13.8, CZ + z)));
     const sbLight = new THREE.PointLight(0xff7a3a, 1.1, 12, 2); sbLight.position.set(0, 8.2, CZ); scene.add(sbLight);
 
-    /* =============== STANDS, SEATS + CROWD =============== */
+    /* =============== STANDS, SEATS + CARD STUNT =============== */
     const stepMat = std({ map: concreteTex, color: 0x2a2a2a, roughness: 0.85 });
-    const crowd = [], seats = [];
+    const seats = [];
     function stand(cfg) {
-      const { x0, z0, len, dirX, dirZ, rows } = cfg; // dirX/dirZ: direction the stand rises away from the court
+      const { x0, z0, len, dirX, dirZ, rows, art } = cfg; // dirX/dirZ: direction the stand rises away from the court
       const along = dirX !== 0;
       const rotY = along ? -dirX * Math.PI / 2 : (dirZ < 0 ? 0 : Math.PI);
       for (let r = 0; r < rows; r++) {
@@ -617,10 +537,9 @@
         for (let i = 0; i < n; i++) {
           const t = -len / 2 + 0.28 + i * 0.56;
           const sx = along ? cx + dirX * 0.1 : cx + t, sz = along ? cz + t : cz + dirZ * 0.1;
-          seats.push({ x: sx, y: top, z: sz, rotY, row: r });
-          if (Math.random() < (LOW ? 0.5 : 0.12)) continue; // empty seat
-          crowd.push({ x: sx + rnd(-0.03, 0.03), y: top, z: sz, rotY: rotY + rnd(-0.22, 0.22), s: rnd(0.92, 1.08),
-                       standing: Math.random() < (r < 2 ? 0.5 : 0.16) });
+          // column as read from the court (the -x stand is seen from the other side, so mirror it)
+          const col = dirX < 0 ? n - 1 - i : i;
+          seats.push({ x: sx, y: top, z: sz, rotY, row: r, col, cols: n, rows, art });
         }
       }
       // LED ribbon board along the front of the stand
@@ -639,9 +558,9 @@
       g.fillStyle = 'rgba(0,0,0,.35)'; for (let x = 0; x < w; x += 4) g.fillRect(x, 0, 1, h); // LED pixel grid
     }, { repeat: true });
     const ribbonMat = glow({ map: ribbonTex }, 1.8);
-    stand({ x0: 9.6, z0: CZ, len: 30, dirX: 1, dirZ: 0, rows: 11 });
-    stand({ x0: -9.6, z0: CZ, len: 30, dirX: -1, dirZ: 0, rows: 11 });
-    stand({ x0: 0, z0: CZ - 17.5, len: 18, dirX: 0, dirZ: -1, rows: 10 });
+    stand({ x0: 9.6, z0: CZ, len: 30, dirX: 1, dirZ: 0, rows: 11, art: 'logo' });
+    stand({ x0: -9.6, z0: CZ, len: 30, dirX: -1, dirZ: 0, rows: 11, art: 'logo' });
+    stand({ x0: 0, z0: CZ - 17.5, len: 18, dirX: 0, dirZ: -1, rows: 10, art: 'sixteen' });
 
     // seats (instanced)
     const seatGeo = mergeGeos([
@@ -658,66 +577,63 @@
     });
     seatMesh.receiveShadow = false; scene.add(seatMesh);
 
-    /* people: one merged body per pose, coloured + animated per instance in the shader */
-    const personSeated = personGeometry(false), personStanding = personGeometry(true);
-    const SKIN = ['#3b2417', '#4e3020', '#6b432b', '#8a5a3c', '#a8774f', '#c48d63', '#dcae88', '#ebc6a5'];
-    const SHIRT = ['#141414', '#1c1c1c', '#262626', '#333333', '#e9e9e9', '#d4d4d4', '#ff5a1f', '#ff6a2a', '#e04e14', '#1f2d4d', '#22314f', '#5a1a1a', '#6e1212', '#29402a', '#b8941f', '#575757', '#0f3a66', '#4a2a6b', '#ff5a1f', '#ffffff'];
-    const PANTS = ['#1b1d24', '#22252e', '#2a3550', '#343a46', '#121212', '#4a3f33', '#5d6470', '#1f2a40'];
-    const HAIR = ['#0b0807', '#120c09', '#1c130d', '#2e1d12', '#4a2f1b', '#7a5a33', '#a89f95', '#0b0807', '#0b0807'];
-    function crowdLayer(geo, list, pivotY) {
-      const n = list.length;
-      const mat = crowdMaterial(pivotY);
-      const im = new THREE.InstancedMesh(geo, mat, n);
-      const aSkin = new Float32Array(n * 3), aShirt = new Float32Array(n * 3), aPants = new Float32Array(n * 3), aHair = new Float32Array(n * 3), aData = new Float32Array(n * 4);
-      list.forEach((c, i) => {
-        Q.setFromAxisAngle(YAX, c.rotY); P.set(c.x, c.y + 0.42, c.z); S.set(c.s * rnd(0.94, 1.08), c.s, c.s);
-        M.compose(P, Q, S); im.setMatrixAt(i, M);
-        const v = rnd(0.85, 1.1);
-        C.set(pick(SKIN)).multiplyScalar(v).toArray(aSkin, i * 3);
-        C.set(pick(SHIRT)).multiplyScalar(v).toArray(aShirt, i * 3);
-        C.set(pick(PANTS)).toArray(aPants, i * 3);
-        C.set(pick(HAIR)).toArray(aHair, i * 3);
-        aData.set([rnd(0, 6.28), c.cheer, c.phone, Math.random()], i * 4);
-      });
-      geo = im.geometry;
-      geo.setAttribute('iSkin', new THREE.InstancedBufferAttribute(aSkin, 3));
-      geo.setAttribute('iShirt', new THREE.InstancedBufferAttribute(aShirt, 3));
-      geo.setAttribute('iPants', new THREE.InstancedBufferAttribute(aPants, 3));
-      geo.setAttribute('iHair', new THREE.InstancedBufferAttribute(aHair, 3));
-      geo.setAttribute('iData', new THREE.InstancedBufferAttribute(aData, 4));
-      im.frustumCulled = false;
-      scene.add(im);
-      return im;
+    /* card stunt: every seat holds up a coloured card, together they form a picture.
+       Side stands show the HR mark between two white stripes; the end stand shows 16. */
+    // pixel lettering (5×7, drawn at double width) reads clearly even from an angle
+    const GLYPH = {
+      H: ['10001', '10001', '10001', '11111', '10001', '10001', '10001'],
+      R: ['11110', '10001', '10001', '11110', '10100', '10010', '10001'],
+      1: ['00100', '01100', '00100', '00100', '00100', '00100', '01110'],
+      6: ['00110', '01000', '10000', '11110', '10001', '10001', '01110']
+    };
+    function mosaic(art, cols, rows) {
+      const ORANGE = [1, 0.36, 0.12], CHALK = [0.95, 0.93, 0.89], INK = [0.08, 0.08, 0.08];
+      const text = art === 'logo' ? 'HR' : '16';
+      const bg = art === 'logo' ? ORANGE : INK, fg = art === 'logo' ? CHALK : ORANGE;
+      const W2 = text.length * 10 + (text.length - 1) * 2, left = Math.floor((cols - W2) / 2);
+      const top = art === 'logo' ? 2 : 1;                      // rows counted from the top of the stand
+      return (col, row) => {
+        const r = rows - 1 - row;                                // row 0 = front of the stand
+        if (art === 'logo') {
+          if (r === 0) return INK;                              // dark top row
+          if (r === rows - 1) return CHALK;                     // white front row
+          if (r === top + 3 && (col < left - 3 || col > left + W2 + 2)) return CHALK; // stripes leading into the mark
+        } else if (r === rows - 1) return CHALK;
+        const gx = col - left, gy = r - top;
+        if (gx >= 0 && gx < W2 && gy >= 0 && gy < 7) {
+          const k = Math.floor(gx / 12), cx = Math.floor((gx % 12) / 2);
+          if (cx < 5 && GLYPH[text[k]][gy][cx] === '1') return fg;
+        }
+        return bg;
+      };
     }
-    crowd.forEach(c => {
-      c.cheer = Math.random() < (c.standing ? 0.55 : 0.18) ? rnd(0.7, 1) : 0;
-      c.phone = !c.cheer && Math.random() < 0.09 ? rnd(0.36, 0.46) : 0;
+    const looks = {};
+    const cardMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, toneMapped: false });
+    cardMat.onBeforeCompile = (sh) => {    // a slow stadium wave lifts the cards as it passes
+      sh.uniforms.uTime = U_TIME;
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nuniform float uTime;\nvarying float vLift;')
+        .replace('#include <begin_vertex>', `#include <begin_vertex>
+          vec3 ip = vec3(instanceMatrix[3]);
+          float w = sin((ip.z * 0.9 + ip.x * 0.9) * 0.32 - uTime * 1.9);
+          vLift = pow(max(w, 0.0), 8.0);
+          transformed.y += vLift * 0.32;`);
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying float vLift;')
+        .replace('#include <color_fragment>', '#include <color_fragment>\n          diffuseColor.rgb *= 1.0 + vLift * 0.45;');
+    };
+    const cards = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.55, 0.5), cardMat, seats.length);
+    const tilt = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -0.32), off = new THREE.Vector3();
+    seats.forEach((st, i) => {
+      const look = looks[st.art + st.cols] = looks[st.art + st.cols] || mosaic(st.art, st.cols, st.rows);
+      Q.setFromAxisAngle(YAX, st.rotY);
+      off.set(0, 0.98, 0.1).applyQuaternion(Q);
+      P.set(st.x + off.x, st.y + off.y, st.z + off.z);
+      M.compose(P, Q.clone().multiply(tilt), S.set(1, 1, 1)); cards.setMatrixAt(i, M);
+      const [r, g, b] = look(st.col, st.row), v = rnd(0.82, 0.95);   // each card catches the light a little differently
+      cards.setColorAt(i, C.setRGB(r * v, g * v, b * v));
     });
-    const seatedList = crowd.filter(c => !c.standing), standingList = crowd.filter(c => c.standing);
-    crowdLayer(personSeated.geo, seatedList, personSeated.pivotY);
-    crowdLayer(personStanding.geo, standingList, personStanding.pivotY);
-
-    // phones held up (steady screen glow)
-    const phonePts = [];
-    crowd.forEach(c => { if (c.phone) phonePts.push(...handWorld(c, c.standing ? personStanding : personSeated, c.phone).toArray()); });
-    const phoneGeo = new THREE.BufferGeometry(); phoneGeo.setAttribute('position', new THREE.Float32BufferAttribute(phonePts, 3));
-    const pgm = new THREE.PointsMaterial({ size: 0.09, map: radialTex, color: 0xcfe0ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
-    pgm.color.multiplyScalar(3.5);
-    phoneGlow = new THREE.Points(phoneGeo, pgm); scene.add(phoneGlow);
-
-    // phone flashes in the crowd
-    const flashN = 160, flashPos = new Float32Array(flashN * 3), flashCol = new Float32Array(flashN * 3);
-    for (let i = 0; i < flashN; i++) {
-      const c = pick(crowd);
-      flashPos.set([c.x, c.y + (c.standing ? 1.75 : 1.3), c.z], i * 3);
-    }
-    const flashGeo = new THREE.BufferGeometry();
-    flashGeo.setAttribute('position', new THREE.BufferAttribute(flashPos, 3));
-    flashGeo.setAttribute('color', new THREE.BufferAttribute(flashCol, 3));
-    const flashMat = new THREE.PointsMaterial({ size: 0.22, map: radialTex, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
-    flashMat.color.setScalar(6);
-    const flashes = new THREE.Points(flashGeo, flashMat);
-    scene.add(flashes);
+    scene.add(cards);
 
     // championship banners on the back wall
     ['2023', '2024', '2025', '2026'].forEach((yr, i) => {
@@ -731,77 +647,6 @@
       });
       mesh(new THREE.PlaneGeometry(2.2, 4.8), std({ map: t, roughness: 0.8, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.1 }), -7.5 + i * 5, 11.5, -87.7);
     });
-
-    /* =============== PLAYERS (far end) =============== */
-    const players = [];
-    const skinPal = ['#5b3a24', '#8a5a3a', '#3e2516', '#c48d63', '#6d4228'];
-    const numTexCache = {};
-    function numberTex(num, col) {
-      const k = num + col;
-      if (!numTexCache[k]) numTexCache[k] = tex(128, 128, (g, w, h) => { g.fillStyle = col; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '800 104px "Barlow Condensed"'; g.fillText(num, w / 2, h / 2 + 6); });
-      return numTexCache[k];
-    }
-    function player(jersey, trim, x, z, lookX, lookZ, pose, num = String(1 + ((Math.random() * 34) | 0))) {
-      const grp = new THREE.Group(); scene.add(grp);
-      const skin = std({ color: pick(skinPal), roughness: 0.55 });
-      const jm = std({ color: jersey, roughness: 0.7 });
-      const tm = std({ color: trim, roughness: 0.55 });
-      const sock = std({ color: 0xf2f2f2, roughness: 0.8 });
-      const hairM = std({ color: pick(['#0b0807', '#120c09', '#1c130d']), roughness: 0.9 });
-      const cast = (m) => { m.castShadow = true; return m; };
-      [-0.11, 0.11].forEach(lx => {
-        const shoe = cast(mesh(new THREE.CapsuleGeometry(0.056, 0.17, 4, 10), tm, lx, 0.058, 0.04, grp)); shoe.rotation.x = Math.PI / 2;
-        cast(box(0.12, 0.025, 0.29, sock, lx, 0.012, 0.04, grp));
-        cast(mesh(new THREE.CylinderGeometry(0.056, 0.052, 0.16, 12), sock, lx, 0.18, 0, grp));
-        cast(mesh(capsule(0.062, [lx, 0.24, 0], [lx, 0.5, 0.01]), skin, 0, 0, 0, grp));
-        cast(mesh(capsule(0.086, [lx, 0.52, 0.01], [lx, 0.86, 0]), skin, 0, 0, 0, grp));
-        cast(mesh(new THREE.CylinderGeometry(0.125, 0.135, 0.3, 14, 1, true), jm, lx * 1.05, 0.74, 0, grp)).material.side = THREE.DoubleSide;
-      });
-      cast(mesh(new THREE.CylinderGeometry(0.215, 0.235, 0.22, 16), jm, 0, 0.92, 0, grp));
-      const jersey3d = new THREE.LatheGeometry([[0, 0], [0.18, 0], [0.19, 0.15], [0.182, 0.3], [0.2, 0.44], [0.215, 0.53], [0.19, 0.59], [0.09, 0.625], [0, 0.635]].map(([a, b]) => new THREE.Vector2(a, b)), 18);
-      jersey3d.scale(1, 1, 0.62);
-      cast(mesh(jersey3d, jm, 0, 0.94, 0, grp));
-      const nt = numberTex(num, trim);
-      [1, -1].forEach(f => { const n = mesh(new THREE.PlaneGeometry(0.2, 0.2), new THREE.MeshStandardMaterial({ map: nt, transparent: true, roughness: 0.7, depthWrite: false }), 0, 1.24, f * 0.122, grp); if (f < 0) n.rotation.y = Math.PI; });
-      [-1, 1].forEach(sx => cast(mesh(new THREE.SphereGeometry(0.07, 12, 10), skin, sx * 0.215, 1.47, 0, grp)));
-      cast(mesh(capsule(0.05, [0, 1.56, 0.01], [0, 1.66, 0.02], 8), skin, 0, 0, 0, grp));
-      const head = cast(mesh(new THREE.SphereGeometry(0.112, 18, 14), skin, 0, 1.765, 0.02, grp)); head.scale.set(0.88, 1.08, 0.98);
-      const hair = mesh(new THREE.SphereGeometry(0.118, 18, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), hairM, 0, 1.775, 0.008, grp); hair.scale.set(0.9, 1.0, 1.0); hair.rotation.x = -0.25;
-      if (Math.random() < 0.5) { const hb = mesh(new THREE.TorusGeometry(0.1, 0.014, 6, 24), tm, 0, 1.8, 0.015, grp); hb.rotation.x = Math.PI / 2 - 0.2; hb.scale.set(0.92, 1, 1); }
-      const arms = [-1, 1].map(sx => {
-        const sh = new THREE.Group(); sh.position.set(sx * 0.25, 1.46, 0); grp.add(sh);
-        cast(mesh(capsule(0.058, [0, 0, 0], [0, -0.3, 0]), skin, 0, 0, 0, sh));
-        const el = new THREE.Group(); el.position.set(0, -0.31, 0); sh.add(el);
-        cast(mesh(capsule(0.049, [0, 0, 0], [0, -0.26, 0]), skin, 0, 0, 0, el));
-        cast(mesh(new THREE.SphereGeometry(0.052, 10, 8), skin, 0, -0.31, 0.01, el));
-        sh.userData.elbow = el;
-        return sh;
-      });
-      const elbow = (i, a) => { arms[i].userData.elbow.rotation.x = a; };
-      grp.position.set(x, 0, z);
-      grp.rotation.y = Math.atan2(lookX - x, lookZ - z);
-      const p = { grp, arms, pose, phase: Math.random() * 6, baseY: 0 };
-      if (pose === 'dribble') {
-        p.ball = null; // set later
-        arms[1].rotation.x = -0.35; arms[1].rotation.z = 0.2; elbow(1, -0.7);
-        arms[0].rotation.x = -0.75; arms[0].rotation.z = -0.35; elbow(0, -0.9);
-      } else if (pose === 'defend') {
-        arms[0].rotation.z = -1.05; arms[1].rotation.z = 1.05;
-        arms[0].rotation.x = -0.4; arms[1].rotation.x = -0.4; elbow(0, -0.5); elbow(1, -0.5);
-        p.baseY = -0.07;
-      } else {
-        arms[0].rotation.z = -0.12; arms[1].rotation.z = 0.12; elbow(0, -0.25); elbow(1, -0.35);
-      }
-      players.push(p);
-      return p;
-    }
-    const hoopZ = CZ - CL / 2 + 1.575;
-    const dribbler = player('#ff5a1f', '#111111', 1.6, -59.6, 0.2, hoopZ, 'dribble');
-    player('#eeeeee', '#ff5a1f', 1.2, -61.1, 1.6, -59.6, 'defend');
-    player('#ff5a1f', '#111111', -1.4, -65.2, 0, -60, 'idle');
-    player('#eeeeee', '#ff5a1f', -0.8, -66.1, -1.4, -65.2, 'defend');
-    player('#ff5a1f', '#111111', 5.2, -64.2, 0, -60, 'idle');
-    player('#eeeeee', '#ff5a1f', 4.4, -65.0, 5.2, -64.2, 'defend');
 
     /* basketball */
     const ballTex = tex(1024, 512, (g, w, h) => {
@@ -821,8 +666,29 @@
     });
     const ballMat = std({ map: ballTex, roughness: 0.65 });
     const ballGeo = new THREE.SphereGeometry(0.12, 32, 20);
-    const gameBall = mesh(ballGeo, ballMat, 0, 0.12, 0); gameBall.castShadow = true;
-    dribbler.ball = gameBall;
+    const gameBall = mesh(ballGeo, ballMat, 0.35, 0.12, CZ - CL / 2 + 5.95); gameBall.castShadow = true; // resting on the free-throw line
+    gameBall.rotation.set(0.6, 0.9, 0.2);
+
+    /* pre-game projection show on the court: light rings pulse out from centre court, a soft sweep runs end to end */
+    const show = mesh(new THREE.PlaneGeometry(CW, CL), new THREE.ShaderMaterial({
+      uniforms: { uTime: U_TIME },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `
+        uniform float uTime; varying vec2 vUv;
+        float ring(float d, float r){ return exp(-pow((d - r) * 1.5, 2.0)) * (1.0 - r / 18.0); }
+        void main(){
+          vec2 p = (vUv - 0.5) * vec2(15.0, 28.0);
+          float d = length(p);
+          float r1 = mod(uTime * 2.0, 18.0), r2 = mod(uTime * 2.0 + 9.0, 18.0);
+          float rings = ring(d, r1) + ring(d, r2);
+          float sweep = exp(-pow((p.y - sin(uTime * 0.32) * 13.0) * 0.5, 2.0));
+          float edge = smoothstep(0.0, 0.5, min(min(vUv.x, 1.0 - vUv.x) * 15.0, min(vUv.y, 1.0 - vUv.y) * 28.0));
+          vec3 col = vec3(1.0, 0.36, 0.1) * rings * 0.5 + vec3(1.0, 0.93, 0.82) * sweep * 0.1;
+          gl_FragColor = vec4(col * edge, 1.0);
+        }`,
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2
+    }), 0, 0.016, CZ);
+    show.rotation.x = -Math.PI / 2; show.renderOrder = 3;
 
     /* =============== TRAINING AREA (x 14 → 28, z -26 → -38) =============== */
     const mat = mesh(new THREE.PlaneGeometry(11, 11), std({ color: 0x141414, roughness: 0.95 }), 21, 0.01, -32);
@@ -996,7 +862,7 @@
     dust.frustumCulled = false;
     scene.add(dust);
 
-    return { doorL, doorR, players, dribbler, flashes, flashCol, flashN, dust };
+    return { doorL, doorR, dust };
   }
 
   /* =====================================================================
@@ -1145,7 +1011,7 @@
     let cur = window.__hrT || 0;
     let last = performance.now();
     const clock = new THREE.Clock();
-    let flashTimer = 0, perfFrames = 0, perfTime = -1, quality = window.__hrSnap ? 0 : 2;
+    let perfFrames = 0, perfTime = -1, quality = window.__hrSnap ? 0 : 2;
 
     function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
@@ -1164,6 +1030,7 @@
       camera.lookAt(s.l.x + mx * 0.25, s.l.y - my * 0.15, s.l.z);
       const off = W > 900 ? s.o : 0;
       if (off) camera.setViewOffset(W, Hh, -W * off, 0, W, Hh); else camera.clearViewOffset();
+      if (window.__hrCam) { camera.position.set(...window.__hrCam.p); camera.lookAt(...window.__hrCam.l); camera.clearViewOffset(); } // testing only: free camera
 
       // doors open as camera approaches
       const open = Math.min(1, Math.max(0, (9 - s.p.z) / 6.5));
@@ -1171,38 +1038,6 @@
       W0.doorL.rotation.y = e * 1.45;
       W0.doorR.rotation.y = -e * 1.45;
 
-      // players
-      W0.players.forEach(p => {
-        const k = time * 2 + p.phase;
-        if (p.pose === 'dribble') {
-          const b = Math.abs(Math.sin(time * 4.6));
-          p.grp.position.y = Math.sin(time * 9.2) * 0.012;
-          p.arms[1].rotation.x = -0.25 - b * 0.3; p.arms[1].userData.elbow.rotation.x = -0.5 - b * 0.4;
-          const local = new THREE.Vector3(0.33, 0.12 + b * 0.7, 0.3);
-          p.grp.localToWorld(local);
-          p.ball.position.copy(local);
-          p.ball.rotation.x += dt * 4;
-        } else if (p.pose === 'defend') {
-          p.grp.position.y = p.baseY + Math.sin(k * 2) * 0.02;
-          p.arms[0].rotation.z = -1.0 - Math.sin(k) * 0.12;
-          p.arms[1].rotation.z = 1.0 + Math.sin(k + 1) * 0.12;
-        } else {
-          p.grp.position.y = Math.sin(k) * 0.01;
-          p.arms[0].rotation.x = Math.sin(k * 0.7) * 0.1;
-        }
-      });
-
-      // crowd phone flashes
-      flashTimer += dt;
-      if (flashTimer > 0.08) {
-        flashTimer = 0;
-        const c = W0.flashCol;
-        for (let i = 0; i < W0.flashN; i++) {
-          const v = Math.random() < 0.025 ? 1 : c[i * 3] * 0.6;
-          c[i * 3] = c[i * 3 + 1] = c[i * 3 + 2] = v;
-        }
-        W0.flashes.geometry.attributes.color.needsUpdate = true;
-      }
       if (composer) { gradePass.uniforms.uTime.value = time; composer.render(dt); }
       else renderer.render(scene, camera);
 

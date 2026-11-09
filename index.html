@@ -226,6 +226,72 @@ main{position:relative;z-index:2}
 .drawer details p{padding-bottom:6px}
 template{display:none}
 
+/* ---------- fixtures board ---------- */
+.links{display:flex;flex-wrap:wrap;gap:0 28px}
+.fx{position:fixed;inset:0;z-index:45;display:flex;flex-direction:column;background:rgba(13,11,10,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;visibility:hidden;transform:translateY(28px);transition:opacity .45s var(--ease),transform .6s var(--ease),visibility .6s}
+.fx-open .fx{opacity:1;visibility:visible;transform:none}
+.fx::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--ball)}
+.fx-head,.fx-body{padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
+.fx-head{display:grid;gap:20px;padding-block:calc(30px + env(safe-area-inset-top, 0px)) 0}
+.fx-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.fx-title{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(3rem,7vw,6rem);line-height:.84}
+.fx-meta{font-size:var(--t-small);color:var(--hardwood);margin-top:12px}
+.fx-meta b{font-family:var(--f-data);font-weight:500;color:var(--led)}
+.fx-x{flex:none;width:44px;height:44px;border:1px solid var(--seam-strong);border-radius:2px;font-size:22px;line-height:1;transition:border-color .2s,color .2s}
+.fx-x:hover{border-color:var(--ball);color:var(--ball)}
+.fx-days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--seam-strong);max-width:760px}
+.fx-day{display:grid;gap:4px;text-align:left;padding:12px 16px;border-right:1px solid var(--seam);transition:background .2s,color .2s;min-width:0}
+.fx-day:last-child{border-right:0}
+.fx-day b{font-family:var(--f-display);font-weight:800;font-size:1.7rem;line-height:1;text-transform:uppercase}
+.fx-day span{font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--hardwood);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fx-day em{font-style:normal}
+.fx-day:hover{background:rgba(241,235,225,.06)}
+.fx-day[aria-selected="true"]{background:var(--chalk);color:var(--night)}
+.fx-day[aria-selected="true"] span{color:rgba(13,11,10,.66)}
+.fx-tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-bottom:18px;border-bottom:1px solid var(--seam-strong)}
+.fx-divs{display:flex;flex-wrap:wrap;gap:6px;border:0;min-width:0}
+.fx-divs legend{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.fx-divs label{position:relative}
+.fx-divs input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.fx-divs span{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--seam-strong);border-radius:2px;font-size:var(--t-small);font-weight:500;transition:background .2s,color .2s,border-color .2s}
+.fx-divs label:hover span{border-color:var(--chalk)}
+.fx-divs input:checked+span{background:var(--chalk);border-color:var(--chalk);color:var(--night);font-weight:600}
+.fx-divs input:focus-visible+span{outline:2px solid var(--led);outline-offset:3px}
+.fx-search{margin-left:auto;display:grid;width:min(280px,100%)}
+.fx-search input{width:100%;font:inherit;font-size:16px;color:var(--chalk);background:rgba(8,7,6,.7);border:1px solid var(--seam-strong);border-radius:2px;padding:9px 12px;outline:none}
+.fx-search input:focus{border-color:var(--led)}
+.fx-search input::placeholder{color:rgba(179,167,150,.6)}
+.fx-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding-block:4px calc(40px + env(safe-area-inset-bottom, 0px))}
+.fx-note{font-size:var(--t-small);color:var(--hardwood);padding:14px 0 6px;max-width:60em}
+.fx-note b{color:var(--chalk);font-weight:600}
+.fx-group{display:grid;grid-template-columns:118px minmax(0,1fr);gap:0 24px;border-bottom:1px solid var(--seam);padding:10px 0}
+.fx-time{font-family:var(--f-data);font-weight:500;font-size:1.05rem;color:var(--led);padding-top:13px;font-variant-numeric:tabular-nums;align-self:start;position:sticky;top:0}
+.fx-time small{display:block;font-size:var(--t-label);color:var(--hardwood);letter-spacing:.06em;margin-top:2px}
+.fx-list{list-style:none;min-width:0}
+.fx-row{display:grid;grid-template-columns:104px minmax(0,1fr) 200px 96px;align-items:center;gap:16px;padding:11px 0;border-bottom:1px solid rgba(241,235,225,.06)}
+.fx-row:last-child{border-bottom:0}
+.fx-court{font-family:var(--f-data);font-size:var(--t-label);letter-spacing:.04em;text-transform:uppercase;color:var(--hardwood)}
+.fx-court.cc{color:var(--chalk)}
+.fx-match{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:12px;font-weight:600;min-width:0}
+.fx-match .h{text-align:right}
+.fx-match .vs{font-family:var(--f-data);font-size:var(--t-label);color:var(--hardwood);font-weight:400}
+.fx-match .tbd{color:var(--hardwood);font-weight:500}
+.fx-match mark{background:none;color:var(--ball);box-shadow:inset 0 -2px 0 var(--ball)}
+.fx-row.event .fx-match{grid-template-columns:minmax(0,1fr);font-weight:500;color:var(--chalk)}
+.fx-info{display:grid;gap:1px;font-size:var(--t-small);min-width:0}
+.fx-info b{font-family:var(--f-data);font-weight:500;font-size:var(--t-label);letter-spacing:.04em}
+.fx-info span{color:var(--hardwood)}
+.fx-info .ko{color:var(--chalk);font-weight:600}
+.fx-status{justify-self:end;display:inline-flex;align-items:center;gap:6px;font-family:var(--f-data);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--seam-strong);color:var(--hardwood);white-space:nowrap}
+.fx-status.live{border-color:var(--ball);color:var(--ball)}
+.fx-status.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ball);animation:pulse 1.2s ease-in-out infinite}
+.fx-status.done{opacity:.55}
+.fx-status.stream{border-color:var(--led);color:var(--led)}
+@keyframes pulse{50%{opacity:.25}}
+.fx-empty{padding:44px 0;color:var(--hardwood);max-width:36em}
+.fx-empty b{display:block;font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:1;text-transform:uppercase;color:var(--chalk);margin-bottom:10px}
+.fx-empty button{margin-top:14px}
+
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
   .wordmark small{display:none}
@@ -257,9 +323,25 @@ template{display:none}
   .form{padding:18px}
   .stats>div+div{padding-left:12px}
   .stats>div{padding-right:12px}
+  .fx-head{gap:14px}
+  .fx-day{padding:10px 10px}
+  .fx-day b{font-size:1.3rem}
+  .fx-day em.sub{display:none}
+  .fx-search{margin-left:0;width:100%}
+  .fx-group{grid-template-columns:1fr}
+  .fx-time{position:static;padding:4px 0 2px}
+  .fx-time small{display:inline;margin-left:8px}
+  .fx-row{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"match match match" "court info status";gap:6px 12px}
+  .fx-match{grid-area:match;display:flex;flex-wrap:wrap;gap:2px 8px}
+  .fx-match .h{text-align:left}
+  .fx-court{grid-area:court}
+  .fx-info{grid-area:info;display:flex;flex-wrap:wrap;gap:0 8px}
+  .fx-status{grid-area:status}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+  .fx{transition:opacity .2s,visibility .2s;transform:none}
+  .fx-status.live::before{animation:none}
   .enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
 }
 </style>
@@ -284,8 +366,9 @@ template{display:none}
     <span class="wordmark"><b>Hoop Ready</b><small>Basketball tournament · March 14–16, 2027</small></span>
   </a>
   <nav class="hnav" aria-label="Main">
+    <button type="button" data-fixtures>Fixtures</button>
     <a href="#court">Divisions</a>
-    <a href="#events">Schedule &amp; tickets</a>
+    <a href="#events">Tickets</a>
     <button type="button" id="faqBtn">FAQ</button>
   </nav>
   <a href="#register" class="btn btn-solid">Register a team</a>
@@ -376,7 +459,7 @@ template{display:none}
         <div><dt>Seeding posted</dt><dd class="word">Sat 7 PM</dd></div>
         <div><dt>Knockouts</dt><dd class="word">Sunday</dd></div>
       </dl>
-      <button class="more" data-more="m-matchups">How seeding works</button>
+      <div class="links"><button class="more" data-fixtures>See the fixtures</button><button class="more" data-more="m-matchups">How seeding works</button></div>
       <template id="m-matchups">
         <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
         <h3>Fair brackets, every game.</h3>
@@ -444,7 +527,7 @@ template{display:none}
         <div><dt>Weekend pass</dt><dd>$20</dd></div>
         <div><dt>Under 12</dt><dd class="word">Free</dd></div>
       </dl>
-      <button class="more" data-more="m-events">Full schedule</button>
+      <div class="links"><button class="more" data-fixtures>All fixtures</button><button class="more" data-more="m-events">Tickets &amp; timings</button></div>
       <template id="m-events">
         <p class="tag"><span class="rd">R06</span><span>Events &amp; Tickets</span></p>
         <h3>Schedule &amp; tickets</h3>
@@ -556,6 +639,29 @@ template{display:none}
   <details><summary>What rules do you play by?</summary><p>Youth and high school divisions use standard high school rules. The Open division uses FIBA rules. The full rulebook is emailed after registration.</p></details>
   <p>Still stuck? Email <strong>info@example.com</strong></p>
 </template>
+
+<!-- ======================= FIXTURES BOARD ======================= -->
+<section class="fx" id="fx" role="dialog" aria-modal="true" aria-labelledby="fxTitle" aria-hidden="true">
+  <div class="fx-head">
+    <div class="fx-top">
+      <div>
+        <p class="tag"><span class="rd">FIX</span><span class="meta">Downtown Sports Complex · 8 indoor + 4 outdoor courts</span></p>
+        <h2 class="fx-title" id="fxTitle">Fixtures</h2>
+        <p class="fx-meta" id="fxMeta"></p>
+      </div>
+      <button class="fx-x" id="fxClose" aria-label="Close fixtures">×</button>
+    </div>
+    <div class="fx-days" role="tablist" aria-label="Tournament day" id="fxDays"></div>
+    <div class="fx-tools">
+      <fieldset class="fx-divs" id="fxDivs"><legend>Division</legend></fieldset>
+      <label class="fx-search"><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Find your team</span><input id="fxSearch" type="search" placeholder="Find your team" autocomplete="off"></label>
+    </div>
+  </div>
+  <div class="fx-body" id="fxBody" role="tabpanel" tabindex="-1">
+    <p class="fx-note">Sample fixtures showing the tournament format. Final pools and times are emailed to coaches on <b>March 7</b>. Knockout opponents are set when seeding is posted on Saturday at 7 PM.</p>
+    <div id="fxList"></div>
+  </div>
+</section>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Details" aria-hidden="true">
@@ -732,6 +838,189 @@ template{display:none}
     msg.textContent = `You're registered for ${division}, ${name.split(' ')[0]}. Next steps are on their way to ${email}.`;
     form.reset();
   });
+})();
+</script>
+<script>
+/* ============ fixtures board ============ */
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const root = document.documentElement, body = document.body;
+
+  /* ---- tournament days and divisions ---- */
+  const DAYS = [
+    { date: '2027-03-14', label: 'Fri 14', sub: 'Opening night' },
+    { date: '2027-03-15', label: 'Sat 15', sub: 'Pool play' },
+    { date: '2027-03-16', label: 'Sun 16', sub: 'Finals day' }
+  ];
+  const DIVS = ['U12', 'U14', 'U16', 'U18 Elite', 'Open 5v5', '3v3 Half'];
+
+  /* ---- FIXTURES ----
+     Sample fixtures built from the tournament format (16 teams per division, 4 pools of 4,
+     top two of each pool into the quarterfinals). To publish the real schedule, make
+     buildFixtures() return your own list in this shape:
+       { day: 0, start: 18*60+30, len: 50, court: 'Court 3', div: 'U16', stage: 'Pool A · Round 1', home: 'Team', away: 'Team' }
+     day 0/1/2 = Fri/Sat/Sun, start = minutes after midnight, len = game length in minutes.
+     Schedule items use { day, start, court, event: 'Opening ceremony' } instead of teams. */
+  function buildFixtures() {
+    const AREAS = ['Eastside', 'Northside', 'Southside', 'West End', 'Riverside', 'Harbor', 'Metro', 'Uptown', 'Lakeside', 'Hillcrest', 'Parkview', 'Bayview', 'Midtown', 'Oakwood', 'Fairview', 'Downtown'];
+    const NAMES = ['Elite', 'Kings', 'Storm', 'Heat', 'Ballers', 'Hawks', 'Wolves', 'Flight', 'Blaze', 'Titans', 'Rockets', 'Raptors', 'Knights', 'Comets', 'Bulls', 'Lions'];
+    const teams = {};
+    DIVS.forEach((d, di) => { teams[d] = AREAS.map((a, i) => `${a} ${NAMES[(i * 5 + di * 3) % 16]}`); });
+    const PAIRS = [[[0, 1], [2, 3]], [[0, 2], [1, 3]], [[0, 3], [1, 2]]];
+    const pool = (div, r) => [0, 1, 2, 3].flatMap(p => PAIRS[r].map(([x, y]) => ({ div, stage: `Pool ${'ABCD'[p]} · Round ${r + 1}`, home: teams[div][p * 4 + x], away: teams[div][p * 4 + y] })));
+    const ko = (div, kind) => kind === 'QF'
+      ? [['A', 'B'], ['B', 'A'], ['C', 'D'], ['D', 'C']].map(([a, b], i) => ({ div, ko: true, stage: `Quarterfinal ${i + 1}`, home: `1st Pool ${a}`, away: `2nd Pool ${b}` }))
+      : kind === 'SF'
+        ? [1, 2].map(i => ({ div, ko: true, stage: `Semifinal ${i}`, home: `Winner QF${i * 2 - 1}`, away: `Winner QF${i * 2}` }))
+        : [{ div, ko: true, stage: 'Final', home: 'Winner SF1', away: 'Winner SF2' }];
+    const IN = ['Centre Court', 'Court 2', 'Court 3', 'Court 4', 'Court 5', 'Court 6', 'Court 7', 'Court 8'];
+    const OUT = ['Outdoor 1', 'Outdoor 2', 'Outdoor 3', 'Outdoor 4'];
+    const t = (h, m = 0) => h * 60 + m;
+    const list = [];
+    const place = (games, day, start, slot, courts, len) => games.forEach((g, i) =>
+      list.push(Object.assign(g, { day, start: start + Math.floor(i / courts.length) * slot, court: courts[i % courts.length], len })));
+    const OLDER = ['U16', 'U18 Elite', 'Open 5v5'], YOUTH = ['U12', 'U14'], FIVES = ['U12', 'U14', 'U16', 'U18 Elite', 'Open 5v5'];
+
+    // Friday: opening round for the older divisions
+    place(OLDER.flatMap(d => pool(d, 0)), 0, t(18, 30), 60, IN, 50);
+    // Saturday: youth all three rounds in the morning, older rounds 2–3 in the afternoon, 3v3 outdoors
+    place([0, 1, 2].flatMap(r => YOUTH.flatMap(d => pool(d, r))), 1, t(8), 50, IN, 45);
+    place([1, 2].flatMap(r => OLDER.flatMap(d => pool(d, r))), 1, t(13), 50, IN, 45);
+    place([0, 1, 2].flatMap(r => pool('3v3 Half', r)), 1, t(8), 30, OUT, 25);
+    // Sunday: knockouts, then finals (U18 Elite and Open on Centre Court, streamed)
+    place(FIVES.flatMap(d => ko(d, 'QF')), 2, t(9), 60, IN, 50);
+    place(ko('3v3 Half', 'QF'), 2, t(9), 30, OUT, 25);
+    place(FIVES.flatMap(d => ko(d, 'SF')), 2, t(12, 30), 60, IN, 50);
+    place(ko('3v3 Half', 'SF'), 2, t(12, 30), 30, OUT, 25);
+    [['U12', t(15), 'Court 2'], ['U14', t(15), 'Court 3'], ['U16', t(15), 'Court 4'], ['3v3 Half', t(15), 'Outdoor 1'],
+     ['U18 Elite', t(16), 'Centre Court'], ['Open 5v5', t(17), 'Centre Court']]
+      .forEach(([d, start, court]) => list.push(Object.assign(ko(d, 'F')[0], { day: 2, start, court, len: 50, stream: court === 'Centre Court' })));
+    // schedule items
+    [[0, t(17), 'Main lobby', 'Check-in opens · wristbands and jerseys'], [0, t(18), 'Centre Court', 'Opening ceremony and team introductions'],
+     [0, t(21), 'Centre Court', 'Skills night · 3-point and dunk contests'], [1, t(19), 'Online & lobby', 'Sunday seeding posted'],
+     [2, t(18), 'Centre Court', 'Awards ceremony · trophies, rings and MVP']]
+      .forEach(([day, start, court, event]) => list.push({ day, start, court, event, len: 45 }));
+
+    const order = [...IN, ...OUT, 'Main lobby', 'Online & lobby'];
+    return list.sort((a, b) => a.day - b.day || a.start - b.start || order.indexOf(a.court) - order.indexOf(b.court));
+  }
+  const FIX = buildFixtures();
+
+  /* ---- helpers ---- */
+  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const clock = (min) => { const h = Math.floor(min / 60), m = min % 60; return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
+  const startOf = (f) => { const [y, mo, d] = DAYS[f.day].date.split('-').map(Number); return new Date(y, mo - 1, d, Math.floor(f.start / 60), f.start % 60).getTime(); };
+  function status(f) {
+    const s = startOf(f), e = s + (f.len || 45) * 60000, now = Date.now();
+    if (now >= e) return ['done', 'Played'];
+    if (now >= s) return ['live', 'Live'];
+    if (f.stream) return ['stream', 'Streamed'];
+    return ['up', 'Upcoming'];
+  }
+  const mark = (name, q) => {
+    if (!q) return esc(name);
+    const i = name.toLowerCase().indexOf(q);
+    return i < 0 ? esc(name) : esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + q.length)) + '</mark>' + esc(name.slice(i + q.length));
+  };
+
+  /* ---- state + controls ---- */
+  const todayIdx = DAYS.findIndex(d => { const n = new Date(); return d.date === `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`; });
+  let day = todayIdx >= 0 ? todayIdx : 0, div = 'All';
+  const fx = $('#fx'), daysEl = $('#fxDays'), divsEl = $('#fxDivs'), search = $('#fxSearch'), listEl = $('#fxList');
+
+  const dayBtns = DAYS.map((d, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'fx-day'; b.id = 'fxDay' + i;
+    b.setAttribute('role', 'tab'); b.setAttribute('aria-controls', 'fxBody');
+    b.innerHTML = `<b>${d.label}</b><span></span>`;
+    b.addEventListener('click', () => { day = i; render(); });
+    b.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); day = (day + (e.key === 'ArrowRight' ? 1 : DAYS.length - 1)) % DAYS.length; render(); dayBtns[day].focus();
+    });
+    daysEl.appendChild(b); return b;
+  });
+  ['All', ...DIVS].forEach((d, i) => {
+    const l = document.createElement('label');
+    l.innerHTML = `<input type="radio" name="fxdiv" id="fxdiv${i}" value="${esc(d)}"${d === 'All' ? ' checked' : ''}><span>${esc(d === 'All' ? 'All divisions' : d)}</span>`;
+    divsEl.appendChild(l);
+  });
+  divsEl.addEventListener('change', (e) => { div = e.target.value; render(); });
+  search.addEventListener('input', () => render());
+
+  const matches = (f, q, d) => !f.event && (d === 'All' || f.div === d) && (!q || (!f.ko && (f.home + ' ' + f.away).toLowerCase().includes(q)));
+
+  function render() {
+    const q = search.value.trim().toLowerCase();
+    const showEvents = div === 'All' && !q;
+    // day tabs with live counts for the current filters
+    dayBtns.forEach((b, i) => {
+      const n = FIX.filter(f => f.day === i && matches(f, q, div)).length;
+      b.setAttribute('aria-selected', String(i === day)); b.tabIndex = i === day ? 0 : -1;
+      $('span', b).innerHTML = `<em class="sub">${DAYS[i].sub} · </em>${n} game${n === 1 ? '' : 's'}`;
+    });
+    const rows = FIX.filter(f => f.day === day && (f.event ? showEvents : matches(f, q, div)));
+    const games = rows.filter(f => !f.event).length;
+    $('#fxMeta').innerHTML = `${DAYS[day].label.replace(' ', ' March ')}, 2027 · <b>${games}</b> game${games === 1 ? '' : 's'}${div === 'All' ? '' : ' · ' + esc(div)}${q ? ' matching “' + esc(search.value.trim()) + '”' : ''}`;
+
+    if (!games && !rows.length) {
+      const other = DAYS.map((d, i) => i).filter(i => i !== day && FIX.some(f => f.day === i && matches(f, q, div)));
+      const title = q ? `No games for “${esc(search.value.trim())}” on ${DAYS[day].label}` : `${esc(div)} doesn't play on ${DAYS[day].label}`;
+      listEl.innerHTML = `<div class="fx-empty"><b>${title}</b>${other.length ? `Their games are on ${other.map(i => DAYS[i].label).join(' and ')}.<br><button class="more" type="button" data-day="${other[0]}">Show ${DAYS[other[0]].label}</button>` : q ? 'Check the spelling, or search for part of the name. Knockout games show opponents once seeding is posted.' : ''}</div>`;
+      const jump = $('[data-day]', listEl); if (jump) jump.addEventListener('click', () => { day = +jump.dataset.day; render(); });
+      return;
+    }
+    const groups = [];
+    rows.forEach(f => { const g = groups[groups.length - 1]; if (g && g.start === f.start) g.items.push(f); else groups.push({ start: f.start, items: [f] }); });
+    listEl.innerHTML = groups.map(g => {
+      const n = g.items.filter(f => !f.event).length;
+      return `<div class="fx-group"><div class="fx-time">${clock(g.start)}${n ? `<small>${n} game${n === 1 ? '' : 's'}</small>` : ''}</div><ul class="fx-list">${g.items.map(f => {
+        const [cls, label] = status(f);
+        const court = `<span class="fx-court${f.court === 'Centre Court' ? ' cc' : ''}">${esc(f.court)}</span>`;
+        if (f.event) return `<li class="fx-row event">${court}<span class="fx-match"><span>${esc(f.event)}</span></span><span class="fx-info"><span>Schedule</span></span><span class="fx-status ${cls === 'stream' ? 'up' : cls}">${cls === 'stream' ? 'Upcoming' : label}</span></li>`;
+        const team = (name) => f.ko ? `<span class="tbd">${esc(name)}</span>` : mark(name, q);
+        return `<li class="fx-row">${court}<span class="fx-match"><span class="h">${team(f.home)}</span><span class="vs">vs</span><span class="a">${team(f.away)}</span></span><span class="fx-info"><b>${esc(f.div)}</b><span class="${f.ko ? 'ko' : ''}">${esc(f.stage)}</span></span><span class="fx-status ${cls}">${label}</span></li>`;
+      }).join('')}</ul></div>`;
+    }).join('');
+  }
+
+  /* ---- open / close (keeps keyboard focus inside while open) ---- */
+  let lastFocus = null, timer = 0;
+  function open() {
+    if (body.classList.contains('fx-open')) return;
+    lastFocus = document.activeElement;
+    render();
+    body.classList.add('fx-open'); fx.setAttribute('aria-hidden', 'false'); root.style.overflow = 'hidden';
+    $('#fxBody').scrollTop = 0;
+    setTimeout(() => $('#fxClose').focus(), 60);
+    timer = setInterval(render, 60000); // keep Live / Played labels current
+    try { history.replaceState(null, '', '#fixtures'); } catch (e) { /* ignore */ }
+  }
+  function close() {
+    if (!body.classList.contains('fx-open')) return;
+    body.classList.remove('fx-open'); fx.setAttribute('aria-hidden', 'true'); root.style.overflow = '';
+    clearInterval(timer);
+    try { if (location.hash === '#fixtures') history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.addEventListener('click', (e) => { if (e.target.closest('[data-fixtures]')) { e.preventDefault(); open(); } });
+  $('#fxClose').addEventListener('click', close);
+  addEventListener('keydown', (e) => {
+    if (!body.classList.contains('fx-open')) return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key === 'Tab') {
+      const f = $$('button, input, [tabindex="0"]', fx).filter(el => el.offsetParent !== null && !el.disabled);
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+  // a link ending in #fixtures opens the board once the arena has loaded
+  const openFromHash = () => { if (location.hash === '#fixtures') { const w = setInterval(() => { if ($('#loader').classList.contains('out')) { clearInterval(w); open(); } }, 200); } };
+  addEventListener('hashchange', openFromHash);
+  openFromHash();
+  window.__hrFixtures = { open, close };
 })();
 </script>
 <script src="vendor/three.min.js"></script>

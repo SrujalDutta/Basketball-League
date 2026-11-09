@@ -1,5 +1,5 @@
 @echo off
-title Hoop Ready - localhost
+title Indian Pro Basketball League - localhost
 cd /d "%~dp0"
 
 echo Checking GitHub for the latest version...

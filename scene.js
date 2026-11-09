@@ -1,12 +1,12 @@
 /* =====================================================================
-   HOOP READY — 3D arena fly-through (three.js r147, no build step)
+   INDIAN PRO BASKETBALL LEAGUE — 3D arena fly-through (three.js r147, no build step)
    Rendering: HDR scene → bloom → cinematic grade (ACES, vignette, grain)
    The camera follows window.__hrT (0 → 7), set by the page script from
    scroll position. Each whole number = one chapter on the page.
    ===================================================================== */
 (function () {
   'use strict';
-  const ORANGE = '#ff5a1f';
+  const ORANGE = '#d4a54a'; // brand gold (name kept so older call sites still read clearly)
   const canvas = document.getElementById('scene');
   const done = () => window.__hrReady && window.__hrReady();
 
@@ -84,29 +84,52 @@
     g.fillText(text.split('').join(String.fromCharCode(8202)), x, y);
   }
 
-  /* logo: italic "HR" monogram + wordmark */
-  function drawLogo(g, cx, cy, s, withText = true, light = '#ececec') {
-    g.save();
-    g.font = `italic 800 ${s}px "Barlow Condensed", Impact, sans-serif`;
-    g.textBaseline = 'alphabetic';
-    g.textAlign = 'left';
-    const wH = g.measureText('H').width, wR = g.measureText('R').width;
-    const x = cx - (wH + wR - s * 0.08) / 2;
-    const grd = g.createLinearGradient(0, cy - s * 0.72, 0, cy);
-    grd.addColorStop(0, light); grd.addColorStop(1, '#8d8d8d');
-    g.fillStyle = grd; g.fillText('H', x, cy);
-    g.fillStyle = ORANGE; g.fillText('R', x + wH - s * 0.08, cy);
+  /* ---------------- brand mark ----------------
+     The league's "B + basketball" mark, redrawn as vectors from the supplied logo.
+     Same geometry as the SVG symbol in index.html (viewBox 250 300 690 630).
+     B in platinum, ball in brushed gold, counters and seams cut through. */
+  const MARK = {
+    b: 'M445 318 H745 C795 318 822 340 845 372 L897 442 C916 470 918 525 902 562 C895 580 886 594 876 606 C902 624 922 656 922 702 C922 750 912 776 897 793 L845 862 C822 892 795 910 745 910 H445 Z',
+    cuts: ['M932 470 C895 430 850 424 808 424 H559 V549 H808', 'M932 758 C895 798 850 804 808 804 H559 V680 H808'],
+    seams: ['M262 614 H440', 'M306 482 Q376 512 440 572', 'M306 746 Q376 716 440 656']
+  };
+  const markCache = {};
+  function markCanvas(bColor) {           // rendered once per B colour; cut-outs are transparent
+    if (markCache[bColor]) return markCache[bColor];
+    const c = document.createElement('canvas'); c.width = 1380; c.height = 1260;
+    const g = c.getContext('2d'); g.scale(2, 2); g.translate(-250, -300);
+    g.save(); g.beginPath(); g.rect(250, 300, 178, 630); g.clip();
+    const gold = g.createLinearGradient(290, 420, 460, 810);
+    [[0, '#f7e7b4'], [0.42, '#d4a54a'], [0.74, '#a5772a'], [1, '#e9c97a']].forEach(([o, col]) => gold.addColorStop(o, col));
+    g.fillStyle = gold; g.beginPath(); g.arc(470, 614, 200, 0, Math.PI * 2); g.fill(); g.restore();
+    if (bColor === 'platinum') {
+      const pl = g.createLinearGradient(445, 318, 760, 910);
+      [[0, '#ffffff'], [0.45, '#e6dfd4'], [0.7, '#cfc7ba'], [1, '#f3eee6']].forEach(([o, col]) => pl.addColorStop(o, col));
+      g.fillStyle = pl;
+    } else g.fillStyle = bColor;
+    g.fill(new Path2D(MARK.b));
+    g.globalCompositeOperation = 'destination-out';
+    g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = 32;
+    MARK.cuts.forEach(d => g.stroke(new Path2D(d)));
+    g.lineCap = 'butt'; g.lineWidth = 15;
+    MARK.seams.forEach(d => g.stroke(new Path2D(d)));
+    return (markCache[bColor] = c);
+  }
+  // draws the mark with its base on cy; s ≈ the old logo's font size. withText adds the league name below.
+  function drawLogo(g, cx, cy, s, withText = true, bColor = 'platinum') {
+    const mh = s * 0.82, mw = mh * 690 / 630;
+    g.drawImage(markCanvas(bColor), cx - mw / 2, cy - mh, mw, mh);
     if (withText) {
-      g.textAlign = 'center';
-      g.font = `italic 700 ${s * 0.2}px "Barlow Condensed", sans-serif`;
-      const t1 = 'HOOP ', t2 = 'READY';
-      const w1 = g.measureText(t1).width + s * 0.04 * 5, w2 = g.measureText(t2).width + s * 0.04 * 5;
-      const sx = cx - (w1 + w2) / 2;
-      g.textAlign = 'left';
-      g.fillStyle = light; spaced(g, t1, sx, cy + s * 0.32, s * 0.04);
-      g.fillStyle = ORANGE; spaced(g, t2, sx + w1, cy + s * 0.32, s * 0.04);
+      g.save();
+      g.textBaseline = 'alphabetic'; g.textAlign = 'left';
+      g.font = `700 ${s * 0.19}px "Barlow Condensed", sans-serif`;
+      const t1 = 'INDIAN PRO ', t2 = 'BASKETBALL LEAGUE', sp = s * 0.035;
+      const w1 = g.measureText(t1).width + sp * t1.length, w2 = g.measureText(t2).width + sp * t2.length;
+      const sx = cx - (w1 + w2) / 2, ty = cy + s * 0.3;
+      g.fillStyle = '#ece7de'; spaced(g, t1, sx, ty, sp);
+      g.fillStyle = ORANGE; spaced(g, t2, sx + w1, ty, sp);
+      g.restore();
     }
-    g.restore();
   }
 
   /* ---------------- shared textures & materials ---------------- */
@@ -130,7 +153,7 @@
   const floorMat = std({ map: concreteTex, color: 0x4a4a4a, roughness: 0.42, metalness: 0.35 });
   const metalMat = std({ color: 0x222222, roughness: 0.4, metalness: 0.8 });
   const blackMat = std({ color: 0x0d0d0d, roughness: 0.6 });
-  const orangeMat = std({ color: 0xff5a1f, roughness: 0.5 });
+  const orangeMat = std({ color: 0xc99a3e, roughness: 0.35, metalness: 0.6 }); // brand gold trim
   const whiteMat = std({ color: 0xe8e8e8, roughness: 0.5 });
 
   const fadeTex = tex(64, 256, (g, w, h) => {
@@ -350,7 +373,7 @@
       g.fillStyle = ORANGE; g.beginPath(); g.arc(x + s * 0.05, y - s * 2.3, s * 0.17, 0, 7); g.fill();
     }
     poster((g, w, h) => {
-      const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#ff5a1f'); gr.addColorStop(1, '#5a1505');
+      const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#c99a3e'); gr.addColorStop(1, '#2a1d08');
       g.fillStyle = gr; g.fillRect(0, 0, w, h);
       drawShooter(g, w * 0.5, h * 0.82, 220, '#1a0a03');
       g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = '800 92px "Barlow Condensed"'; g.fillText('CITY FINALS', w / 2, 110);
@@ -423,7 +446,7 @@
       }
       const keyW = m(4.9), keyL = m(5.8), bx = w / 2;
       // painted keys + centre circle
-      g.fillStyle = 'rgba(214,82,24,.92)';
+      g.fillStyle = 'rgba(16,13,10,.94)';   // black painted keys and centre circle
       g.fillRect(bx - keyW / 2, 0, keyW, keyL); g.fillRect(bx - keyW / 2, h - keyL, keyW, keyL);
       g.beginPath(); g.arc(bx, h / 2, m(1.8), 0, 7); g.fill();
       g.strokeStyle = '#dcd5c8'; g.lineWidth = 5;
@@ -445,10 +468,10 @@
         if (d > 0) g.arc(bx, by, r, a, Math.PI - a); else g.arc(bx, by, r, Math.PI + a, Math.PI * 2 - a);
         g.stroke();
       });
-      drawLogo(g, bx, h / 2 + m(0.35), m(1.6), false, '#f4f0e8');
+      drawLogo(g, bx, h / 2 + m(0.98), m(2.4), false);
       // sideline wordmarks
       g.save(); g.translate(m(0.55), h / 2); g.rotate(-Math.PI / 2);
-      g.fillStyle = 'rgba(20,10,4,.55)'; g.textAlign = 'center'; g.font = `italic 800 ${m(0.7)}px "Barlow Condensed"`; spaced(g, 'HOOP READY', 0, m(0.25), 12); g.restore();
+      g.fillStyle = 'rgba(20,12,4,.55)'; g.textAlign = 'center'; g.font = `800 ${m(0.62)}px "Barlow Condensed"`; spaced(g, 'INDIAN PRO BASKETBALL LEAGUE', 0, m(0.25), 10); g.restore();
     });
     const court = mesh(new THREE.PlaneGeometry(CW, CL), std({ map: courtTex, roughness: 0.34, metalness: 0.05 }), 0, 0.012, CZ);
     court.rotation.x = -Math.PI / 2; court.receiveShadow = true;
@@ -474,8 +497,8 @@
       const z = CZ - 12.5 + k * 5;
       [-1, 1].forEach(sx => {
         const show = k === 1 || k === 4;              // visible cones only over centre court
-        const warm = !(k === 4 && sx > 0);            // one orange accent beam
-        beam([sx * 8.6, 13.75, z], [-sx * (1.5 + (k % 3) * 1.6), 0, z + (k % 2 ? 2.5 : -2.5)], 2.5, warm ? 0xfff1dc : 0xff7a3a, 0.16,
+        const warm = !(k === 4 && sx > 0);            // one gold accent beam
+        beam([sx * 8.6, 13.75, z], [-sx * (1.5 + (k % 3) * 1.6), 0, z + (k % 2 ? 2.5 : -2.5)], 2.5, warm ? 0xfff1dc : 0xffc46a, 0.16,
              show ? { fixture: true, poolK: 0.35 } : { fixture: true, cone: false, pool: false });
       });
     }
@@ -524,19 +547,19 @@
       g.fillStyle = ORANGE; g.font = '800 130px "Barlow Condensed"'; g.fillText('77', w * 0.22, 190);
       g.fillStyle = '#ffffff'; g.fillText('74', w * 0.78, 190);
       g.fillStyle = '#ffb21a'; g.font = '700 56px "Barlow Condensed"'; g.fillText('Q4', w / 2, 120); g.fillText('0:42', w / 2, 180);
-      g.fillStyle = '#d0d0d0'; g.font = '600 26px "Barlow Condensed"'; spaced(g, 'HOOP READY · CHAMPIONSHIP', w / 2, 262, 3);
+      g.fillStyle = '#d0d0d0'; g.font = '600 26px "Barlow Condensed"'; spaced(g, 'IPBL · CHAMPIONSHIP', w / 2, 262, 3);
     });
     const sbScreen = glow({ map: sbTex }, 2.2);
     const sbSide = std({ color: 0x111111, roughness: 0.5, metalness: 0.6 });
     const sb = mesh(new THREE.BoxGeometry(4.6, 2.7, 4.6), [sbScreen, sbScreen, sbSide, sbSide, sbScreen, sbScreen], 0, 10.4, CZ);
     const ringTex = tex(1024, 64, (g, w, h) => {
-      g.fillStyle = '#ff5a1f'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#d4a54a'; g.fillRect(0, 0, w, h);
       g.fillStyle = '#140600'; g.font = 'italic 800 48px "Barlow Condensed"'; g.textBaseline = 'middle';
-      for (let x = 0; x < w; x += 340) spaced(g, 'HOOP READY  ●', x + 10, h / 2 + 2, 4);
+      for (let x = 0; x < w; x += 340) spaced(g, 'IPBL  ●', x + 10, h / 2 + 2, 4);
     });
     box(4.8, 0.32, 4.8, glow({ map: ringTex }, 2.2), 0, 8.9, CZ);
     [-1.8, 1.8].forEach(x => [-1.8, 1.8].forEach(z => box(0.03, 4.3, 0.03, metalMat, x, 13.8, CZ + z)));
-    const sbLight = new THREE.PointLight(0xff7a3a, 1.1, 12, 2); sbLight.position.set(0, 8.2, CZ); scene.add(sbLight);
+    const sbLight = new THREE.PointLight(0xffc46a, 1.1, 12, 2); sbLight.position.set(0, 8.2, CZ); scene.add(sbLight);
 
     /* =============== STANDS, SEATS + CARD STUNT =============== */
     const stepMat = std({ map: concreteTex, color: 0x2a2a2a, roughness: 0.85 });
@@ -564,7 +587,7 @@
       rb.rotation.y = rotY;
     }
     ribbonTex = tex(2048, 96, (g, w, h) => {
-      const segs = [['#ff5a1f', '#140600', 'HOOP READY'], ['#0b0b0b', '#ffffff', 'CHAMPIONSHIP 2027'], ['#0b0b0b', '#ff5a1f', 'GET TICKETS'], ['#ffffff', '#1a1a1a', 'PARTNER']];
+      const segs = [['#d4a54a', '#0d0b0a', 'IPBL'], ['#0b0b0b', '#f1ebe1', 'CHAMPIONSHIP 2027'], ['#0b0b0b', '#d4a54a', 'REGISTER NOW'], ['#ffffff', '#1a1a1a', 'PARTNER']];
       segs.forEach(([bg, fg, txt], i) => {
         const x = (w / segs.length) * i, sw = w / segs.length;
         g.fillStyle = bg; g.fillRect(x, 0, sw, h);
@@ -605,15 +628,17 @@
        Side stands show the HR mark between two white stripes; the end stand shows 16. */
     // pixel lettering (5×7, drawn at double width) reads clearly even from an angle
     const GLYPH = {
-      H: ['10001', '10001', '10001', '11111', '10001', '10001', '10001'],
-      R: ['11110', '10001', '10001', '11110', '10100', '10010', '10001'],
+      I: ['11111', '00100', '00100', '00100', '00100', '00100', '11111'],
+      P: ['11110', '10001', '10001', '11110', '10000', '10000', '10000'],
+      B: ['11110', '10001', '10001', '11110', '10001', '10001', '11110'],
+      L: ['10000', '10000', '10000', '10000', '10000', '10000', '11111'],
       1: ['00100', '01100', '00100', '00100', '00100', '00100', '01110'],
       6: ['00110', '01000', '10000', '11110', '10001', '10001', '01110']
     };
     function mosaic(art, cols, rows) {
-      const ORANGE = [1, 0.36, 0.12], CHALK = [0.95, 0.93, 0.89], INK = [0.08, 0.08, 0.08];
-      const text = art === 'logo' ? 'HR' : '16';
-      const bg = art === 'logo' ? ORANGE : INK, fg = art === 'logo' ? CHALK : ORANGE;
+      const GOLD = [0.86, 0.66, 0.29], CHALK = [0.95, 0.93, 0.89], INK = [0.06, 0.055, 0.05];
+      const text = art === 'logo' ? 'IPBL' : '16';
+      const bg = art === 'logo' ? GOLD : INK, fg = art === 'logo' ? INK : GOLD;
       const W2 = text.length * 10 + (text.length - 1) * 2, left = Math.floor((cols - W2) / 2);
       const top = art === 'logo' ? 2 : 1;                      // rows counted from the top of the stand
       return (col, row) => {
@@ -662,10 +687,10 @@
     // championship banners on the back wall
     ['2023', '2024', '2025', '2026'].forEach((yr, i) => {
       const t = tex(256, 560, (g, w, h) => {
-        g.fillStyle = i % 2 ? '#141414' : '#ff5a1f'; g.fillRect(0, 0, w, h);
-        g.fillStyle = i % 2 ? '#ff5a1f' : '#140600'; g.fillRect(0, h - 70, w, 70);
-        g.fillStyle = i % 2 ? '#ffffff' : '#140600'; g.textAlign = 'center';
-        drawLogo(g, w / 2, 150, 110, false, i % 2 ? '#e8e8e8' : '#140600');
+        g.fillStyle = '#141210'; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#d4a54a'; g.fillRect(0, h - 70, w, 70); g.fillRect(0, 0, w, 10);
+        g.fillStyle = '#f1ebe1'; g.textAlign = 'center';
+        drawLogo(g, w / 2, 165, 125, false);
         g.font = '700 40px "Barlow Condensed"'; spaced(g, 'CHAMPIONS', w / 2, 270, 4);
         g.font = '800 100px "Barlow Condensed"'; g.fillText(yr, w / 2, 390);
       });
@@ -707,7 +732,7 @@
           float rings = ring(d, r1) + ring(d, r2);
           float sweep = exp(-pow((p.y - sin(uTime * 0.32) * 13.0) * 0.5, 2.0));
           float edge = smoothstep(0.0, 0.5, min(min(vUv.x, 1.0 - vUv.x) * 15.0, min(vUv.y, 1.0 - vUv.y) * 28.0));
-          vec3 col = vec3(1.0, 0.36, 0.1) * rings * 0.5 + vec3(1.0, 0.93, 0.82) * sweep * 0.1;
+          vec3 col = vec3(1.0, 0.72, 0.32) * rings * 0.42 + vec3(1.0, 0.93, 0.82) * sweep * 0.1;
           gl_FragColor = vec4(col * edge, 1.0);
         }`,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2
@@ -735,7 +760,7 @@
     hoop(-32, 1, { x: 29.95, rotY: -Math.PI / 2, board: 0.35, stanchion: false });
     box(0.25, 0.12, 0.12, metalMat, 29.8, 3.4, -32);
     // cones + agility ladder
-    const coneMat = std({ color: 0xff6a1f, roughness: 0.6 });
+    const coneMat = std({ color: 0xd9a441, roughness: 0.5 });
     [[22, -28.5], [24, -30], [22, -31.5], [24, -33], [22, -34.5], [24, -36]].forEach(([x, z]) => {
       const c = mesh(new THREE.ConeGeometry(0.11, 0.3, 14), coneMat, x, 0.15, z); c.castShadow = true;
     });
@@ -819,7 +844,7 @@
       g.fillStyle = gr; g.fillRect(0, 0, w, h);
       g.fillStyle = '#bbb'; g.font = '600 18px Barlow'; g.fillText('9:41', 24, 34);
       drawLogo(g, w / 2, 320, 110);
-      g.fillStyle = '#9a9a9a'; g.textAlign = 'center'; g.font = '600 15px "Barlow Condensed"'; spaced(g, 'THE BASKETBALL TOURNAMENT PLATFORM', w / 2, 420, 2);
+      g.fillStyle = '#9a9a9a'; g.textAlign = 'center'; g.font = '600 15px "Barlow Condensed"'; spaced(g, 'INDIAN PRO BASKETBALL LEAGUE', w / 2, 420, 2);
       g.fillStyle = ORANGE; g.fillRect(28, 560, w - 56, 52);
       g.fillStyle = '#140600'; g.font = '700 22px "Barlow Condensed"'; spaced(g, 'REGISTER NOW', w / 2, 594, 3);
       g.strokeStyle = '#555'; g.lineWidth = 2; g.strokeRect(28, 628, (w - 66) / 2, 46); g.strokeRect(w / 2 + 5, 628, (w - 66) / 2, 46);

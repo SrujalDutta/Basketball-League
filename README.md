@@ -1,6 +1,6 @@
-# Hoop Ready Tournament
+# Indian Pro Basketball League
 
-Scroll-driven 3D arena website for the Hoop Ready basketball tournament.
+Scroll-driven 3D arena website for the Indian Pro Basketball League (IPBL) under-16 tournament.
 
 ## Run it on your computer (Windows)
 

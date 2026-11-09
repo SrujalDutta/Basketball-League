@@ -233,7 +233,7 @@ template{display:none}
 .fx-open .fx{opacity:1;visibility:visible;transform:none}
 .fx::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--ball);z-index:2}
 .fx::after{content:"16";position:absolute;right:-3vw;bottom:-14vw;font-family:var(--f-display);font-weight:900;font-size:58vw;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(241,235,225,.07);pointer-events:none;z-index:0}
-.fx-in{position:relative;z-index:1;height:100%;overflow-y:auto;overscroll-behavior:contain;display:grid;align-content:start;grid-auto-rows:max-content;gap:clamp(22px,3.4vh,36px);
+.fx-in{position:relative;z-index:1;height:100%;overflow-y:auto;overscroll-behavior:contain;display:grid;align-content:center;grid-auto-rows:max-content;gap:clamp(22px,3.4vh,36px);
   padding-block:calc(30px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
 .fx-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 .fx-top .tag{margin:10px 0 0}
@@ -250,23 +250,6 @@ template{display:none}
 .fx-drop .k{display:block;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hardwood);margin-bottom:6px}
 .fx-drop b{font-family:var(--f-data);font-weight:500;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1;color:var(--led);text-shadow:0 0 16px rgba(255,181,71,.4);font-variant-numeric:tabular-nums;white-space:nowrap}
 .fx-copy{color:var(--hardwood);max-width:34em;font-size:var(--t-small)}
-.fx-art{overflow-x:auto;max-width:1000px;padding-bottom:4px}
-.fx-art svg{display:block;width:100%;min-width:620px;height:auto}
-.fx-art rect{fill:rgba(23,20,18,.92);stroke:var(--seam-strong);stroke-width:1}
-.fx-art .f rect{stroke:var(--ball);stroke-width:1.5;fill:rgba(255,90,31,.08)}
-.fx-art .l{font-family:var(--f-data);font-size:11px;letter-spacing:.08em;fill:var(--hardwood)}
-.fx-art .t{font-family:var(--f-body);font-weight:600;font-size:15px;fill:rgba(241,235,225,.45)}
-.fx-art .fl{font-family:var(--f-display);font-weight:900;font-size:30px;fill:var(--chalk);letter-spacing:.04em}
-.fx-art .fs{font-family:var(--f-data);font-size:10px;letter-spacing:.08em;fill:var(--led)}
-.fx-art path{fill:none;stroke:var(--ball);stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:1}
-.fx-art .b{opacity:0}
-.fx-open .fx-art .q{animation:pop .5s var(--ease) .25s both}
-.fx-open .fx-art .c1{animation:draw .7s var(--ease) .55s forwards}
-.fx-open .fx-art .s{animation:pop .5s var(--ease) .95s both}
-.fx-open .fx-art .c2{animation:draw .7s var(--ease) 1.15s forwards}
-.fx-open .fx-art .f{animation:pop .6s var(--ease) 1.55s both}
-@keyframes draw{to{stroke-dashoffset:0}}
-@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .fx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
 .fx-cta .more{margin-top:0}
 
@@ -308,9 +291,7 @@ template{display:none}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .fx{transition:opacity .2s,visibility .2s;transform:none}
-  .fx-open .fx-title .f,.fx-open .fx-art *{animation:none}
-  .fx-art .b{opacity:1}
-  .fx-art path{stroke-dashoffset:0}
+  .fx-open .fx-title .f{animation:none}
   .enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
 }
 </style>
@@ -612,7 +593,6 @@ template{display:none}
       <div><span class="k">Released in</span><b id="fxCount">--</b></div>
       <p class="fx-copy">Pools, tip-off times and courts for every team land here one week before the tournament. Registered players get them by email first.</p>
     </div>
-    <div class="fx-art"><svg viewBox="0 0 1000 412" role="img" aria-label="Knockout bracket, teams to be decided"><path class="c1" pathLength="1" d="M160 46 H180 V136 H160 M180 91 H200"/><path class="c1" pathLength="1" d="M160 276 H180 V366 H160 M180 321 H200"/><path class="c2" pathLength="1" d="M350 91 H380 V321 H350 M380 206 H410"/><path class="c1" pathLength="1" d="M840 46 H820 V136 H840 M820 91 H800"/><path class="c1" pathLength="1" d="M840 276 H820 V366 H840 M820 321 H800"/><path class="c2" pathLength="1" d="M650 91 H620 V321 H650 M620 206 H590"/><g class="b q"><rect x="10" y="20" width="150" height="52" rx="2"/><text class="l" x="24" y="40">1ST · POOL A</text><text class="t" x="24" y="60">TBD</text></g><g class="b q"><rect x="840" y="20" width="150" height="52" rx="2"/><text class="l" x="854" y="40">1ST · POOL B</text><text class="t" x="854" y="60">TBD</text></g><g class="b q"><rect x="10" y="110" width="150" height="52" rx="2"/><text class="l" x="24" y="130">2ND · POOL B</text><text class="t" x="24" y="150">TBD</text></g><g class="b q"><rect x="840" y="110" width="150" height="52" rx="2"/><text class="l" x="854" y="130">2ND · POOL A</text><text class="t" x="854" y="150">TBD</text></g><g class="b q"><rect x="10" y="250" width="150" height="52" rx="2"/><text class="l" x="24" y="270">1ST · POOL C</text><text class="t" x="24" y="290">TBD</text></g><g class="b q"><rect x="840" y="250" width="150" height="52" rx="2"/><text class="l" x="854" y="270">1ST · POOL D</text><text class="t" x="854" y="290">TBD</text></g><g class="b q"><rect x="10" y="340" width="150" height="52" rx="2"/><text class="l" x="24" y="360">2ND · POOL D</text><text class="t" x="24" y="380">TBD</text></g><g class="b q"><rect x="840" y="340" width="150" height="52" rx="2"/><text class="l" x="854" y="360">2ND · POOL C</text><text class="t" x="854" y="380">TBD</text></g><g class="b s"><rect x="200" y="65" width="150" height="52" rx="2"/><text class="l" x="214" y="85">WINNER QF1</text><text class="t" x="214" y="105">TBD</text></g><g class="b s"><rect x="650" y="65" width="150" height="52" rx="2"/><text class="l" x="664" y="85">WINNER QF3</text><text class="t" x="664" y="105">TBD</text></g><g class="b s"><rect x="200" y="295" width="150" height="52" rx="2"/><text class="l" x="214" y="315">WINNER QF2</text><text class="t" x="214" y="335">TBD</text></g><g class="b s"><rect x="650" y="295" width="150" height="52" rx="2"/><text class="l" x="664" y="315">WINNER QF4</text><text class="t" x="664" y="335">TBD</text></g><g class="b f"><rect x="410" y="176" width="180" height="60" rx="2"/><text class="fl" x="500.0" y="209" text-anchor="middle">FINAL</text><text class="fs" x="500.0" y="226" text-anchor="middle">SUN 16 · CENTRE COURT</text></g></svg></div>
     <div class="fx-cta">
       <a href="#register" class="btn btn-solid" data-fx-close>Register to play</a>
       <button class="more" type="button" data-more="m-events">See the weekend schedule</button>

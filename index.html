@@ -886,15 +886,17 @@ template{display:none}
   /* ---- player registration: one player per email ----
      On the Claude link, registrations go to the page's shared database:
        emails/<fingerprint>        claim marker (no personal data), so anyone can check an email is free
-       registrations/<fingerprint> the full registration, readable only by the owner and editors
+       registrations/<viewer id>/players/<fingerprint>  the full registration, readable only by the
+                                   person who submitted it and the owner/editors
      Anywhere else (localhost, a local file) there is no shared database, so the check only covers
      registrations made in this browser. A public launch needs a real backend here. */
   const form = $('#regForm'), msg = $('#formMsg'), submitBtn = $('button[type="submit"]', form);
   const CUTOFF = '2010-09-02'; // EDIT: earliest allowed date of birth (under 16 on Sep 1, 2026)
   const Registry = (() => {
-    const dbReady = (async () => {
-      try { return window.claude && typeof window.claude.use === 'function' ? await window.claude.use('db') : null; }
-      catch (e) { return null; }
+    const hasRuntime = () => window.claude && typeof window.claude.use === 'function';
+    const dbReady = (async () => { try { return hasRuntime() ? await window.claude.use('db') : null; } catch (e) { return null; } })();
+    const uidReady = (async () => {
+      try { const u = hasRuntime() ? await window.claude.use('user') : null; return u ? await u.id() : null; } catch (e) { return null; }
     })();
     const holder = 'reg-' + Math.random().toString(36).slice(2);
     async function fingerprint(email) {
@@ -926,8 +928,10 @@ template{display:none}
       if (!lease.acquired) return 'taken';                    // the same email is mid-registration elsewhere
       const snap = await claim.get();
       if (snap.exists && (snap.data() || {}).claimed) return 'taken';
+      const uid = await uidReady;
+      if (!uid) throw new Error('no viewer id');
       const at = new Date().toISOString();
-      await db.doc('registrations/' + key).set({ name: rec.name, dob: rec.dob, position: rec.position, email: rec.email.trim().toLowerCase(), registeredAt: at });
+      await db.collection('registrations/' + uid + '/players').doc(key).set({ name: rec.name, dob: rec.dob, position: rec.position, email: rec.email.trim().toLowerCase(), registeredAt: at });
       await claim.set({ claimed: true, at });
       return 'ok';
     }

@@ -189,7 +189,7 @@
     m.position.copy(a);
     m.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir);
     m.renderOrder = 5;
-    scene.add(m);
+    if (opts.cone !== false) scene.add(m); // cone: false = lamp head / floor pool only, no visible beam
     if (opts.pool !== false) { // soft pool of light where the beam lands
       const pc = new THREE.Color(color).multiplyScalar(intensity * (opts.poolK || 0.16));
       const pool = mesh(new THREE.PlaneGeometry(radius * 2.7, radius * 2.7), new THREE.MeshBasicMaterial({ color: pc, map: radialTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), b.x, opts.poolY || 0.022, b.z);
@@ -202,7 +202,7 @@
       const lens = mesh(new THREE.CircleGeometry(0.22, 24), glow({ color }, 9), a.x, a.y, a.z);
       lens.quaternion.copy(q).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2));
     }
-    BEAMS.push({ a, dir, len, r0, r1: radius });
+    if (opts.cone !== false) BEAMS.push({ a, dir, len, r0, r1: radius });
     return m;
   }
   // vertical beam (kept for the original call sites)
@@ -406,7 +406,6 @@
     const tc = mesh(new THREE.PlaneGeometry(6, 24), darkWallMat, 0, 4, -12); tc.rotation.x = Math.PI / 2;
     [-4, -10, -16, -22].forEach(z => {
       box(1.6, 0.05, 0.12, glow({ color: 0xfff3e2 }, 4), 0, 3.96, z);
-      lightBeam(0, 3.94, z, 3.94, 1.25, 0xffe9cc, 0.03);
       const p = new THREE.PointLight(0xffe6c8, 0.9, 8, 1.5);
       p.position.set(0, 3.6, z); scene.add(p);
     });
@@ -538,14 +537,15 @@
     for (let k = 0; k < 6; k++) {
       const z = CZ - 12.5 + k * 5;
       [-1, 1].forEach(sx => {
-        const warm = (k + (sx > 0 ? 1 : 0)) % 3 !== 0;
-        beam([sx * 8.6, 13.75, z], [-sx * (1.5 + (k % 3) * 1.6), 0, z + (k % 2 ? 2.5 : -2.5)], 2.5, warm ? 0xfff1dc : 0xff7a3a, warm ? 0.13 : 0.13, { fixture: true, poolK: 0.35 });
+        const show = k === 1 || k === 4;              // visible cones only over centre court
+        const warm = !(k === 4 && sx > 0);            // one orange accent beam
+        beam([sx * 8.6, 13.75, z], [-sx * (1.5 + (k % 3) * 1.6), 0, z + (k % 2 ? 2.5 : -2.5)], 2.5, warm ? 0xfff1dc : 0xff7a3a, 0.16,
+             show ? { fixture: true, poolK: 0.35 } : { fixture: true, cone: false, pool: false });
       });
     }
     // straight-down key lights over each basket and centre court
     [CZ - 10.5, CZ, CZ + 10.5].forEach(z => {
       box(1.0, 0.25, 1.0, fixtureMat, 0, 15.6, z);
-      beam([0, 15.45, z], [0, 0, z], 2.8, 0xfff6ea, 0.06, { r0: 0.45, poolK: 0.3 });
       const l = mesh(new THREE.PlaneGeometry(0.9, 0.9), glow({ color: 0xfff6ea }, 7), 0, 15.46, z); l.rotation.x = Math.PI / 2;
     });
 
@@ -858,7 +858,7 @@
       const sh = mesh(new THREE.ConeGeometry(0.45, 0.4, 24, 1, true), shadeMat, 20.5, 6.4, z);
       const bulb = mesh(new THREE.CircleGeometry(0.3, 20), glow({ color: 0xffd9a0 }, 7), 20.5, 6.22, z);
       bulb.rotation.x = Math.PI / 2;
-      lightBeam(20.5, 6.2, z, 6.2, 1.7, 0xffd2a0, 0.035);
+      beam([20.5, 6.2, z], [20.5, 0, z], 1.6, 0xffd2a0, 0.4, { cone: false, poolK: 0.3 });
     });
     spot(0xffd2a0, 4.5, 20, 0.75, 0.8, [20.5, 6.6, -32], [20.5, 0, -32], true);
     // wall slogan
@@ -895,7 +895,8 @@
       pic.rotation.y = Math.PI / 2;
       box(0.14, 0.1, 0.22, metalMat, -29.75, 4.1, z);
       const lens = mesh(new THREE.CircleGeometry(0.07, 16), glow({ color: 0xfff6e8 }, 8), -29.75, 4.045, z); lens.rotation.x = Math.PI / 2;
-      beam([-29.62, 4.0, z], [-28.7, 0, z], 0.75, 0xfff4e6, 0.3, { r0: 0.06, poolK: 0.12 });
+      const wash = mesh(new THREE.PlaneGeometry(1.7, 1.5), new THREE.MeshBasicMaterial({ color: new THREE.Color(0xfff1df).multiplyScalar(0.16), map: radialTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), -29.84, 3.45, z);
+      wash.rotation.y = Math.PI / 2; wash.renderOrder = 4; // picture-light wash on the wall
     });
     spot(0xffffff, 3.2, 18, 0.7, 0.6, [-24.5, 7.5, -31.8], [-29.8, 2.6, -31.8], false);
     // trophy on a plinth
@@ -939,7 +940,7 @@
     const scr = mesh(new THREE.PlaneGeometry(0.082, 0.172), glow({ map: phoneTex }, 1.5), 0, 0.0052, 0, phone);
     scr.rotation.x = -Math.PI / 2;
     spot(0xe6eeff, 4, 10, 0.4, 0.85, [BX, 5.5, BZ + 0.6], [BX, 0.5, BZ], true);
-    beam([BX, 5.4, BZ + 0.6], [BX, 0.5, BZ], 1.25, 0xe6eeff, 0.2, { poolY: 0.53, poolK: 0.1 });
+    beam([BX, 5.4, BZ + 0.6], [BX, 0.5, BZ], 1.25, 0xe6eeff, 0.15, { poolY: 0.53, poolK: 0.12 });
 
     /* =============== DUST (glitters where it crosses a light beam) =============== */
     const dustN = LOW ? 2200 : 5200, dp = new Float32Array(dustN * 3), seed = new Float32Array(dustN);

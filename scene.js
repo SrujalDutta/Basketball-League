@@ -1,5 +1,5 @@
 /* =====================================================================
-   INDIAN PRO BASKETBALL LEAGUE — 3D arena fly-through (three.js r147, no build step)
+   INDIAN BASKETBALL PRO LEAGUE — 3D arena fly-through (three.js r147, no build step)
    Rendering: HDR scene → bloom → cinematic grade (ACES, vignette, grain)
    The camera follows window.__hrT (0 → 7), set by the page script from
    scroll position. Each whole number = one chapter on the page.
@@ -123,7 +123,7 @@
       g.save();
       g.textBaseline = 'alphabetic'; g.textAlign = 'left';
       g.font = `700 ${s * 0.19}px "Barlow Condensed", sans-serif`;
-      const t1 = 'INDIAN PRO ', t2 = 'BASKETBALL LEAGUE', sp = s * 0.035;
+      const t1 = 'INDIAN BASKETBALL ', t2 = 'PRO LEAGUE', sp = s * 0.035;
       const w1 = g.measureText(t1).width + sp * t1.length, w2 = g.measureText(t2).width + sp * t2.length;
       const sx = cx - (w1 + w2) / 2, ty = cy + s * 0.3;
       g.fillStyle = '#ece7de'; spaced(g, t1, sx, ty, sp);
@@ -471,7 +471,7 @@
       drawLogo(g, bx, h / 2 + m(0.98), m(2.4), false);
       // sideline wordmarks
       g.save(); g.translate(m(0.55), h / 2); g.rotate(-Math.PI / 2);
-      g.fillStyle = 'rgba(20,12,4,.55)'; g.textAlign = 'center'; g.font = `800 ${m(0.62)}px "Barlow Condensed"`; spaced(g, 'INDIAN PRO BASKETBALL LEAGUE', 0, m(0.25), 10); g.restore();
+      g.fillStyle = 'rgba(20,12,4,.55)'; g.textAlign = 'center'; g.font = `800 ${m(0.62)}px "Barlow Condensed"`; spaced(g, 'INDIAN BASKETBALL PRO LEAGUE', 0, m(0.25), 10); g.restore();
     });
     const court = mesh(new THREE.PlaneGeometry(CW, CL), std({ map: courtTex, roughness: 0.34, metalness: 0.05 }), 0, 0.012, CZ);
     court.rotation.x = -Math.PI / 2; court.receiveShadow = true;
@@ -547,7 +547,7 @@
       g.fillStyle = ORANGE; g.font = '800 130px "Barlow Condensed"'; g.fillText('77', w * 0.22, 190);
       g.fillStyle = '#ffffff'; g.fillText('74', w * 0.78, 190);
       g.fillStyle = '#ffb21a'; g.font = '700 56px "Barlow Condensed"'; g.fillText('Q4', w / 2, 120); g.fillText('0:42', w / 2, 180);
-      g.fillStyle = '#d0d0d0'; g.font = '600 26px "Barlow Condensed"'; spaced(g, 'IPBL · CHAMPIONSHIP', w / 2, 262, 3);
+      g.fillStyle = '#d0d0d0'; g.font = '600 26px "Barlow Condensed"'; spaced(g, 'IBPL · CHAMPIONSHIP', w / 2, 262, 3);
     });
     const sbScreen = glow({ map: sbTex }, 2.2);
     const sbSide = std({ color: 0x111111, roughness: 0.5, metalness: 0.6 });
@@ -555,7 +555,7 @@
     const ringTex = tex(1024, 64, (g, w, h) => {
       g.fillStyle = '#d4a54a'; g.fillRect(0, 0, w, h);
       g.fillStyle = '#140600'; g.font = 'italic 800 48px "Barlow Condensed"'; g.textBaseline = 'middle';
-      for (let x = 0; x < w; x += 340) spaced(g, 'IPBL  ●', x + 10, h / 2 + 2, 4);
+      for (let x = 0; x < w; x += 340) spaced(g, 'IBPL  ●', x + 10, h / 2 + 2, 4);
     });
     box(4.8, 0.32, 4.8, glow({ map: ringTex }, 2.2), 0, 8.9, CZ);
     [-1.8, 1.8].forEach(x => [-1.8, 1.8].forEach(z => box(0.03, 4.3, 0.03, metalMat, x, 13.8, CZ + z)));
@@ -587,7 +587,7 @@
       rb.rotation.y = rotY;
     }
     ribbonTex = tex(2048, 96, (g, w, h) => {
-      const segs = [['#d4a54a', '#0d0b0a', 'IPBL'], ['#0b0b0b', '#f1ebe1', 'CHAMPIONSHIP 2027'], ['#0b0b0b', '#d4a54a', 'REGISTER NOW'], ['#ffffff', '#1a1a1a', 'PARTNER']];
+      const segs = [['#d4a54a', '#0d0b0a', 'IBPL'], ['#0b0b0b', '#f1ebe1', 'CHAMPIONSHIP 2027'], ['#0b0b0b', '#d4a54a', 'REGISTER NOW'], ['#ffffff', '#1a1a1a', 'PARTNER']];
       segs.forEach(([bg, fg, txt], i) => {
         const x = (w / segs.length) * i, sw = w / segs.length;
         g.fillStyle = bg; g.fillRect(x, 0, sw, h);
@@ -637,7 +637,7 @@
     };
     function mosaic(art, cols, rows) {
       const GOLD = [0.86, 0.66, 0.29], CHALK = [0.95, 0.93, 0.89], INK = [0.06, 0.055, 0.05];
-      const text = art === 'logo' ? 'IPBL' : '16';
+      const text = art === 'logo' ? 'IBPL' : '16';
       const bg = art === 'logo' ? GOLD : INK, fg = art === 'logo' ? INK : GOLD;
       const W2 = text.length * 10 + (text.length - 1) * 2, left = Math.floor((cols - W2) / 2);
       const top = art === 'logo' ? 2 : 1;                      // rows counted from the top of the stand
@@ -844,7 +844,7 @@
       g.fillStyle = gr; g.fillRect(0, 0, w, h);
       g.fillStyle = '#bbb'; g.font = '600 18px Barlow'; g.fillText('9:41', 24, 34);
       drawLogo(g, w / 2, 320, 110);
-      g.fillStyle = '#9a9a9a'; g.textAlign = 'center'; g.font = '600 15px "Barlow Condensed"'; spaced(g, 'INDIAN PRO BASKETBALL LEAGUE', w / 2, 420, 2);
+      g.fillStyle = '#9a9a9a'; g.textAlign = 'center'; g.font = '600 15px "Barlow Condensed"'; spaced(g, 'INDIAN BASKETBALL PRO LEAGUE', w / 2, 420, 2);
       g.fillStyle = ORANGE; g.fillRect(28, 560, w - 56, 52);
       g.fillStyle = '#140600'; g.font = '700 22px "Barlow Condensed"'; spaced(g, 'REGISTER NOW', w / 2, 594, 3);
       g.strokeStyle = '#555'; g.lineWidth = 2; g.strokeRect(28, 628, (w - 66) / 2, 46); g.strokeRect(w / 2 + 5, 628, (w - 66) / 2, 46);

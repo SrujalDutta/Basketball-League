@@ -1,4 +1,4 @@
-"""Local web server for the Indian Pro Basketball League site: http://localhost:8000
+"""Local web server for the Indian Basketball Pro League site: http://localhost:8000
 Sends no-cache headers so the browser always shows the latest files after an update."""
 import functools
 import http.server
@@ -25,5 +25,5 @@ if __name__ == "__main__":
     except OSError:
         print(f"Port {PORT} is busy. The site may already be running: open http://localhost:{PORT}")
         sys.exit(1)
-    print(f"Indian Pro Basketball League is running at http://localhost:{PORT}  (close this window to stop)")
+    print(f"Indian Basketball Pro League is running at http://localhost:{PORT}  (close this window to stop)")
     server.serve_forever()

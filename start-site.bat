@@ -1,5 +1,5 @@
 @echo off
-title Indian Pro Basketball League - localhost
+title Indian Basketball Pro League - localhost
 cd /d "%~dp0"
 
 echo Checking GitHub for the latest version...

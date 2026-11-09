@@ -1,6 +1,6 @@
-# Indian Pro Basketball League
+# Indian Basketball Pro League
 
-Scroll-driven 3D arena website for the Indian Pro Basketball League (IPBL) under-16 tournament.
+Scroll-driven 3D arena website for the Indian Basketball Pro League (IBPL) under-16 tournament.
 
 ## Run it on your computer (Windows)
 

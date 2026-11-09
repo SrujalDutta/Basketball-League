@@ -84,48 +84,48 @@
     g.fillText(text.split('').join(String.fromCharCode(8202)), x, y);
   }
 
-  /* ---------------- brand mark: the IBPL crest ----------------
-     Same geometry as the SVG symbol in index.html (viewBox 0 0 400 480). */
-  const CREST = {
-    shield: 'M36 60 Q200 14 364 60 V262 C364 364 290 424 200 464 C110 424 36 364 36 262 Z',
-    seams: ['M106 186 H294', 'M200 92 V280', 'M134 118 C172 150 172 222 134 254', 'M266 118 C228 150 228 222 266 254']
+  /* ---------------- brand mark ----------------
+     The league's "B + basketball" mark, redrawn as vectors from the supplied logo.
+     Same geometry as the SVG symbol in index.html (viewBox 250 300 690 630).
+     B in platinum, ball in brushed gold, counters and seams cut through. */
+  const MARK = {
+    b: 'M445 318 H745 C795 318 822 340 845 372 L897 442 C916 470 918 525 902 562 C895 580 886 594 876 606 C902 624 922 656 922 702 C922 750 912 776 897 793 L845 862 C822 892 795 910 745 910 H445 Z',
+    cuts: ['M932 470 C895 430 850 424 808 424 H559 V549 H808', 'M932 758 C895 798 850 804 808 804 H559 V680 H808'],
+    seams: ['M262 614 H440', 'M306 482 Q376 512 440 572', 'M306 746 Q376 716 440 656']
   };
-  let crestCache = null;
-  function markCanvas() {
-    if (crestCache) return crestCache;
-    const c = document.createElement('canvas'); c.width = 800; c.height = 960;
-    const g = c.getContext('2d'); g.scale(2, 2);
-    const sh = new Path2D(CREST.shield);
-    const inset = (k, fn) => { g.save(); g.translate(200, 250); g.scale(k, k); g.translate(-200, -250); fn(k); g.restore(); };
-    const gold = g.createLinearGradient(36, 14, 364, 464);
-    [[0, '#fbedc4'], [0.32, '#ddb45e'], [0.6, '#a97a2c'], [0.82, '#f0d28c'], [1, '#b98c38']].forEach(([o, col]) => gold.addColorStop(o, col));
-    g.fillStyle = gold; g.fill(sh);
-    inset(0.925, () => { const en = g.createLinearGradient(0, 30, 0, 470); en.addColorStop(0, '#211d19'); en.addColorStop(1, '#0a0908'); g.fillStyle = en; g.fill(sh); });
-    inset(0.865, (k) => { g.strokeStyle = 'rgba(212,165,74,.75)'; g.lineWidth = 2.5 / k; g.stroke(sh); });
-    g.fillStyle = '#d4a54a'; g.fillRect(52, 303.5, 296, 5);                               // horizon
-    g.fillStyle = '#0f0d0b'; g.beginPath(); g.arc(200, 186, 103, 0, Math.PI * 2); g.fill();
-    const ball = g.createRadialGradient(166, 154, 4, 186, 176, 150);
-    ball.addColorStop(0, '#fbe9b6'); ball.addColorStop(0.45, '#d9ad55'); ball.addColorStop(1, '#8f6420');
-    g.fillStyle = ball; g.beginPath(); g.arc(200, 186, 94, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = '#14110e'; g.lineWidth = 7; g.lineCap = 'round';
-    CREST.seams.forEach(d => g.stroke(new Path2D(d)));
-    const ch = g.createLinearGradient(0, 336, 0, 396); ch.addColorStop(0, '#ffffff'); ch.addColorStop(1, '#d9d1c4');
-    g.fillStyle = ch; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-    g.font = '900 78px "Big Shoulders Display", "Barlow Condensed", Impact, sans-serif';
-    spaced(g, 'IBPL', 200 + 3.5, 396, 7);
-    return (crestCache = c);
+  const markCache = {};
+  function markCanvas(bColor) {           // rendered once per B colour; cut-outs are transparent
+    if (markCache[bColor]) return markCache[bColor];
+    const c = document.createElement('canvas'); c.width = 1380; c.height = 1260;
+    const g = c.getContext('2d'); g.scale(2, 2); g.translate(-250, -300);
+    g.save(); g.beginPath(); g.rect(250, 300, 178, 630); g.clip();
+    const gold = g.createLinearGradient(290, 420, 460, 810);
+    [[0, '#f7e7b4'], [0.42, '#d4a54a'], [0.74, '#a5772a'], [1, '#e9c97a']].forEach(([o, col]) => gold.addColorStop(o, col));
+    g.fillStyle = gold; g.beginPath(); g.arc(470, 614, 200, 0, Math.PI * 2); g.fill(); g.restore();
+    if (bColor === 'platinum') {
+      const pl = g.createLinearGradient(445, 318, 760, 910);
+      [[0, '#ffffff'], [0.45, '#e6dfd4'], [0.7, '#cfc7ba'], [1, '#f3eee6']].forEach(([o, col]) => pl.addColorStop(o, col));
+      g.fillStyle = pl;
+    } else g.fillStyle = bColor;
+    g.fill(new Path2D(MARK.b));
+    g.globalCompositeOperation = 'destination-out';
+    g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = 32;
+    MARK.cuts.forEach(d => g.stroke(new Path2D(d)));
+    g.lineCap = 'butt'; g.lineWidth = 15;
+    MARK.seams.forEach(d => g.stroke(new Path2D(d)));
+    return (markCache[bColor] = c);
   }
   // draws the mark with its base on cy; s ≈ the old logo's font size. withText adds the league name below.
   function drawLogo(g, cx, cy, s, withText = true, bColor = 'platinum') {
-    const mh = s * 0.95, mw = mh * 400 / 480;
-    g.drawImage(markCanvas(), cx - mw / 2, cy - mh, mw, mh);
+    const mh = s * 0.82, mw = mh * 690 / 630;
+    g.drawImage(markCanvas(bColor), cx - mw / 2, cy - mh, mw, mh);
     if (withText) {
       g.save();
       g.textBaseline = 'alphabetic'; g.textAlign = 'left';
       g.font = `700 ${s * 0.19}px "Barlow Condensed", sans-serif`;
       const t1 = 'INDIAN BASKETBALL ', t2 = 'PRO LEAGUE', sp = s * 0.035;
       const w1 = g.measureText(t1).width + sp * t1.length, w2 = g.measureText(t2).width + sp * t2.length;
-      const sx = cx - (w1 + w2) / 2, ty = cy + s * 0.27;
+      const sx = cx - (w1 + w2) / 2, ty = cy + s * 0.3;
       g.fillStyle = '#ece7de'; spaced(g, t1, sx, ty, sp);
       g.fillStyle = ORANGE; spaced(g, t2, sx + w1, ty, sp);
       g.restore();
@@ -468,7 +468,7 @@
         if (d > 0) g.arc(bx, by, r, a, Math.PI - a); else g.arc(bx, by, r, Math.PI + a, Math.PI * 2 - a);
         g.stroke();
       });
-      drawLogo(g, bx, h / 2 + m(1.14), m(2.4), false);
+      drawLogo(g, bx, h / 2 + m(0.98), m(2.4), false);
       // sideline wordmarks
       g.save(); g.translate(m(0.55), h / 2); g.rotate(-Math.PI / 2);
       g.fillStyle = 'rgba(20,12,4,.55)'; g.textAlign = 'center'; g.font = `800 ${m(0.62)}px "Barlow Condensed"`; spaced(g, 'INDIAN BASKETBALL PRO LEAGUE', 0, m(0.25), 10); g.restore();
@@ -689,7 +689,7 @@
       const t = tex(256, 560, (g, w, h) => {
         g.fillStyle = '#141210'; g.fillRect(0, 0, w, h);
         g.fillStyle = '#d4a54a'; g.fillRect(0, h - 70, w, 70); g.fillRect(0, 0, w, 10);
-        drawLogo(g, w / 2, 190, 140, false);
+        drawLogo(g, w / 2, 185, 150, false);
         g.textAlign = 'center';
         g.fillStyle = '#d4a54a'; g.font = '700 30px "Barlow Condensed"'; spaced(g, 'STEP ' + n, w / 2, 270, 5);
         g.fillStyle = '#f1ebe1'; g.font = '800 58px "Big Shoulders Display", "Barlow Condensed"'; spaced(g, word, w / 2, 350, 2);

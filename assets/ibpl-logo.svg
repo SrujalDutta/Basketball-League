@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="250 300 690 630" width="1380" height="1260">
+  <title>Indian Basketball Pro League logo</title>
+  <defs>
+    <linearGradient id="ibpl-gold" x1="290" y1="420" x2="460" y2="810" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7e7b4"/><stop offset=".42" stop-color="#d4a54a"/><stop offset=".74" stop-color="#a5772a"/><stop offset="1" stop-color="#e9c97a"/></linearGradient>
+    <linearGradient id="ibpl-plat" x1="445" y1="318" x2="760" y2="910" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6dfd4"/><stop offset=".7" stop-color="#cfc7ba"/><stop offset="1" stop-color="#f3eee6"/></linearGradient>
+    <mask id="ibpl-cut" maskUnits="userSpaceOnUse" x="250" y="300" width="690" height="630">
+      <rect x="250" y="300" width="690" height="630" fill="#fff"/>
+      <g fill="none" stroke="#000" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M932 470 C895 430 850 424 808 424 H559 V549 H808"/><path d="M932 758 C895 798 850 804 808 804 H559 V680 H808"/></g>
+      <g fill="none" stroke="#000" stroke-width="15"><path d="M262 614 H440"/><path d="M306 482 Q376 512 440 572"/><path d="M306 746 Q376 716 440 656"/></g>
+    </mask>
+    <clipPath id="ibpl-ball"><rect x="250" y="300" width="178" height="630"/></clipPath>
+  </defs>
+
+      <g mask="url(#ibpl-cut)">
+        <circle cx="470" cy="614" r="200" fill="url(#ibpl-gold)" clip-path="url(#ibpl-ball)"/>
+        <path fill="url(#ibpl-plat)" d="M445 318 H745 C795 318 822 340 845 372 L897 442 C916 470 918 525 902 562 C895 580 886 594 876 606 C902 624 922 656 922 702 C922 750 912 776 897 793 L845 862 C822 892 795 910 745 910 H445 Z"/>
+      </g>
+    </svg>

@@ -60,7 +60,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .no-webgl body{background:radial-gradient(ellipse at 72% 38%,#4a210d 0%,var(--night) 62%)}
 
 /* ---------- logo mark (matches the arena signage) ---------- */
-.mark{display:inline-block;height:1em;width:.8333em;flex:none;overflow:visible;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.mark{display:inline-block;height:1em;width:1.095em;flex:none;overflow:visible;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
 
 /* ---------- loader: a shot clock counting down ---------- */
 #loader{position:fixed;inset:0;z-index:100;background:var(--night);display:grid;place-items:center;transition:opacity .8s ease,visibility .8s}
@@ -70,14 +70,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .clock-face::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--ball)}
 .clock-face b{font-family:var(--f-data);font-weight:600;font-size:min(9.5rem,30vw);line-height:1;color:var(--led);text-shadow:0 0 18px rgba(240,215,156,.55),0 0 2px #fff3dc;font-variant-numeric:tabular-nums}
 .clock-label{font-family:var(--f-data);font-size:var(--t-label);letter-spacing:.24em;text-transform:uppercase;color:var(--hardwood)}
-.clock .mark{font-size:92px;margin-top:6px}
+.clock .mark{font-size:64px;margin-top:8px}
 
 /* ---------- header ---------- */
 .hdr{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:clamp(16px,3vw,40px);
   padding:calc(18px + env(safe-area-inset-top, 0px)) max(var(--gut-r),clamp(16px,3.4vw,48px)) 18px max(var(--gut-l),clamp(16px,3.4vw,48px));
   background:linear-gradient(rgba(13,11,10,.82),rgba(13,11,10,0))}
 .brand{display:flex;align-items:center;gap:12px;margin-right:auto}
-.brand .mark{font-size:54px}
+.brand .mark{font-size:44px}
 .wordmark{display:grid;line-height:1.1}
 .wordmark b{font-family:var(--f-display);font-weight:800;font-size:1.15rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .wordmark b em{font-style:normal;color:var(--ball)}
@@ -193,7 +193,7 @@ main{position:relative;z-index:2}
 .foot{position:relative;z-index:2;background:linear-gradient(rgba(13,11,10,0),var(--night) 26%);padding-block:80px 120px;padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
 .foot-in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px;border-top:1px solid var(--seam);padding-top:32px}
 .foot-brand{display:grid;gap:8px;font-size:var(--t-small);color:var(--hardwood)}
-.foot-brand .mark{font-size:96px}
+.foot-brand .mark{font-size:64px}
 .foot-brand .addr{user-select:all;color:var(--chalk)}
 .foot-links{list-style:none;display:flex;flex-wrap:wrap;gap:12px 28px;font-size:var(--t-small);font-weight:500;align-content:start}
 .foot-links a:hover{color:var(--ball)}
@@ -202,7 +202,7 @@ main{position:relative;z-index:2}
 /* ---------- the scorebug ---------- */
 .bug{position:fixed;z-index:15;left:max(var(--gut-l),clamp(16px,2.2vw,32px));bottom:calc(clamp(14px,2.2vw,26px) + env(safe-area-inset-bottom, 0px));display:flex;align-items:stretch;height:54px;background:var(--glass);border:1px solid var(--seam);box-shadow:0 22px 50px -18px rgba(0,0,0,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);max-width:calc(100% - 32px)}
 .bug-mark{display:grid;place-items:center;width:56px;background:#080706;border-right:1px solid var(--seam)}
-.bug-mark .mark{font-size:42px}
+.bug-mark .mark{font-size:32px}
 .bug-rd{display:grid;place-content:center;justify-items:center;min-width:58px;padding:0 10px;background:var(--ball);color:var(--night);font-family:var(--f-data);line-height:1}
 .bug-rd span{font-size:.62rem;font-weight:600;letter-spacing:.14em}
 .bug-rd b{font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums}
@@ -290,7 +290,7 @@ template{display:none}
 }
 @media (max-width:700px){
   .hdr{gap:12px;padding-top:calc(12px + env(safe-area-inset-top, 0px));padding-bottom:12px}
-  .brand .mark{font-size:42px}
+  .brand .mark{font-size:36px}
   .wordmark{display:none}
   .chap{align-items:flex-end;padding-block:96px 104px}
   .chap.reg{padding-top:96px}
@@ -330,24 +330,24 @@ template{display:none}
 </style>
 
 <!-- ======================= BRAND MARK =======================
-     The IBPL crest: black-enamel shield with a polished gold rim and keyline, a gold ball rising
-     over a gold horizon, IBPL beneath. Use it anywhere with
-     <svg class="mark"><use href="#ibpl-mark"/></svg>. Same geometry as CREST in scene.js. -->
+     Indian Basketball Pro League mark, redrawn as vectors from the supplied logo:
+     platinum B, brushed-gold ball, counters and seams cut through. Use it anywhere with
+     <svg class="mark"><use href="#ibpl-mark"/></svg>. Same geometry as MARK in scene.js. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <linearGradient id="ibpl-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbedc4"/><stop offset=".32" stop-color="#ddb45e"/><stop offset=".6" stop-color="#a97a2c"/><stop offset=".82" stop-color="#f0d28c"/><stop offset="1" stop-color="#b98c38"/></linearGradient>
-    <linearGradient id="ibpl-enamel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#211d19"/><stop offset="1" stop-color="#0a0908"/></linearGradient>
-    <linearGradient id="ibpl-chalk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d1c4"/></linearGradient>
-    <radialGradient id="ibpl-ball" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#fbe9b6"/><stop offset=".45" stop-color="#d9ad55"/><stop offset="1" stop-color="#8f6420"/></radialGradient>
-    <symbol id="ibpl-mark" viewBox="0 0 400 480">
-      <path d="M36 60 Q200 14 364 60 V262 C364 364 290 424 200 464 C110 424 36 364 36 262 Z" fill="url(#ibpl-gold)"/>
-      <path d="M36 60 Q200 14 364 60 V262 C364 364 290 424 200 464 C110 424 36 364 36 262 Z" fill="url(#ibpl-enamel)" transform="translate(200 250) scale(.925) translate(-200 -250)"/>
-      <path d="M36 60 Q200 14 364 60 V262 C364 364 290 424 200 464 C110 424 36 364 36 262 Z" fill="none" stroke="#d4a54a" stroke-opacity=".75" stroke-width="2.5" transform="translate(200 250) scale(.865) translate(-200 -250)"/>
-      <rect x="52" y="303.5" width="296" height="5" fill="#d4a54a"/>
-      <circle cx="200" cy="186" r="103" fill="#0f0d0b"/>
-      <circle cx="200" cy="186" r="94" fill="url(#ibpl-ball)"/>
-      <g fill="none" stroke="#14110e" stroke-width="7" stroke-linecap="round"><path d="M106 186 H294"/><path d="M200 92 V280"/><path d="M134 118 C172 150 172 222 134 254"/><path d="M266 118 C228 150 228 222 266 254"/></g>
-      <text x="200" y="396" text-anchor="middle" font-family="'Big Shoulders Display','Barlow Condensed',Impact,sans-serif" font-weight="900" font-size="78" letter-spacing="7" fill="url(#ibpl-chalk)">IBPL</text>
+    <linearGradient id="ibpl-gold" x1="290" y1="420" x2="460" y2="810" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7e7b4"/><stop offset=".42" stop-color="#d4a54a"/><stop offset=".74" stop-color="#a5772a"/><stop offset="1" stop-color="#e9c97a"/></linearGradient>
+    <linearGradient id="ibpl-plat" x1="445" y1="318" x2="760" y2="910" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6dfd4"/><stop offset=".7" stop-color="#cfc7ba"/><stop offset="1" stop-color="#f3eee6"/></linearGradient>
+    <mask id="ibpl-cut" maskUnits="userSpaceOnUse" x="250" y="300" width="690" height="630">
+      <rect x="250" y="300" width="690" height="630" fill="#fff"/>
+      <g fill="none" stroke="#000" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M932 470 C895 430 850 424 808 424 H559 V549 H808"/><path d="M932 758 C895 798 850 804 808 804 H559 V680 H808"/></g>
+      <g fill="none" stroke="#000" stroke-width="15"><path d="M262 614 H440"/><path d="M306 482 Q376 512 440 572"/><path d="M306 746 Q376 716 440 656"/></g>
+    </mask>
+    <clipPath id="ibpl-ball"><rect x="250" y="300" width="178" height="630"/></clipPath>
+    <symbol id="ibpl-mark" viewBox="250 300 690 630">
+      <g mask="url(#ibpl-cut)">
+        <circle cx="470" cy="614" r="200" fill="url(#ibpl-gold)" clip-path="url(#ibpl-ball)"/>
+        <path fill="url(#ibpl-plat)" d="M445 318 H745 C795 318 822 340 845 372 L897 442 C916 470 918 525 902 562 C895 580 886 594 876 606 C902 624 922 656 922 702 C922 750 912 776 897 793 L845 862 C822 892 795 910 745 910 H445 Z"/>
+      </g>
     </symbol>
   </defs>
 </svg>

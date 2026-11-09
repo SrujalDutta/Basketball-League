@@ -48,6 +48,7 @@
   const U_TIME = { value: 0 };           // shared clock for every animated shader
   const BEAMS = [];                      // every visible light cone (dust uses these to sparkle)
   let ribbonTex = null;
+  let PARTNER = null; // supporting partner logo (assets/iba-logo.jpg)
 
   /* ---------------- helpers ---------------- */
   function tex(w, h, draw, opts = {}) {
@@ -362,12 +363,27 @@
       g.fillStyle = '#fff'; g.font = '600 40px "Barlow Condensed"'; spaced(g, 'CHAMPIONSHIP SUNDAY', w / 2, 450, 3);
       g.font = '800 64px "Barlow Condensed"'; g.fillText('MAR 16', w / 2, 600);
     }, -13);
-    poster((g, w, h) => {
-      g.fillStyle = '#e9e5dc'; g.fillRect(0, 0, w, h);
-      drawShooter(g, w * 0.5, h * 0.9, 210, '#111');
-      g.fillStyle = '#111'; g.textAlign = 'center'; g.font = '800 140px "Barlow Condensed"'; g.fillText('#23', w / 2, 160);
-      g.font = '600 34px "Barlow Condensed"'; spaced(g, 'TOURNAMENT MVP', w / 2, 210, 4);
-    }, -18);
+    // supporting partner lightbox: a backlit white panel in an aluminium frame
+    {
+      const z = -18;
+      const lt = tex(600, 820, (g, w, h) => {
+        g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#6b655d'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.font = '700 30px "Barlow Condensed", sans-serif'; spaced(g, 'SUPPORTING PARTNER', w / 2, 62, 7);
+        g.fillStyle = ORANGE; g.fillRect(w / 2 - 28, 96, 56, 4);
+        if (PARTNER) {
+          const s = Math.min(500 / PARTNER.width, 600 / PARTNER.height), iw = PARTNER.width * s, ih = PARTNER.height * s;
+          g.drawImage(PARTNER, (w - iw) / 2, 140 + (620 - ih) / 2, iw, ih);
+        } else {
+          g.fillStyle = '#111'; g.font = '800 64px "Barlow Condensed", sans-serif';
+          ['INDIAN', 'BASKETBALL', 'ALLIANCE'].forEach((t, i) => g.fillText(t, w / 2, 360 + i * 72));
+        }
+      });
+      const frame = box(0.06, 2.3, 1.72, std({ color: 0x9a9a9a, roughness: 0.3, metalness: 0.9 }), 2.97, 1.95, z);
+      const panel = mesh(new THREE.PlaneGeometry(1.56, 2.13), glow({ map: lt }, 1.08), 2.935, 1.95, z);
+      panel.rotation.y = -Math.PI / 2;
+      const spill = new THREE.PointLight(0xffffff, 0.9, 4.5, 2); spill.position.set(2.2, 1.95, z); scene.add(spill);
+    }
 
     // neon on the left wall
     const neonTex = tex(1024, 256, (g, w, h) => {
@@ -548,14 +564,22 @@
       rb.rotation.y = rotY;
     }
     ribbonTex = tex(2048, 96, (g, w, h) => {
-      const segs = [['#ff5a1f', '#140600', 'HOOP READY'], ['#0b0b0b', '#ffffff', 'CHAMPIONSHIP 2027'], ['#0b0b0b', '#ff5a1f', 'GET TICKETS'], ['#f2f2f2', '#111111', 'HOOP READY']];
+      const segs = [['#ff5a1f', '#140600', 'HOOP READY'], ['#0b0b0b', '#ffffff', 'CHAMPIONSHIP 2027'], ['#0b0b0b', '#ff5a1f', 'GET TICKETS'], ['#ffffff', '#1a1a1a', 'PARTNER']];
       segs.forEach(([bg, fg, txt], i) => {
         const x = (w / segs.length) * i, sw = w / segs.length;
         g.fillStyle = bg; g.fillRect(x, 0, sw, h);
-        g.fillStyle = fg; g.font = 'italic 800 64px "Barlow Condensed"'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillStyle = fg; g.textAlign = 'center'; g.textBaseline = 'middle';
+        if (txt === 'PARTNER') {            // supporting partner panel: logo + credit
+          if (PARTNER) { const ih = h - 8, iw = PARTNER.width * ih / PARTNER.height; g.drawImage(PARTNER, x + 34, 4, iw, ih); }
+          g.textAlign = 'left'; g.font = '700 26px "Barlow Condensed"';
+          spaced(g, 'SUPPORTING PARTNER', x + (PARTNER ? 136 : 40), h / 2 - 15, 4);
+          g.font = '800 27px "Barlow Condensed"'; spaced(g, 'INDIAN BASKETBALL ALLIANCE', x + (PARTNER ? 136 : 40), h / 2 + 17, 1);
+          return;
+        }
+        g.font = 'italic 800 64px "Barlow Condensed"';
         spaced(g, txt, x + sw / 2, h / 2 + 3, 6);
       });
-      g.fillStyle = 'rgba(0,0,0,.35)'; for (let x = 0; x < w; x += 4) g.fillRect(x, 0, 1, h); // LED pixel grid
+      g.fillStyle = 'rgba(0,0,0,.22)'; for (let x = 0; x < w; x += 4) g.fillRect(x, 0, 1, h); // LED pixel grid
     }, { repeat: true });
     const ribbonMat = glow({ map: ribbonTex }, 1.8);
     stand({ x0: 9.6, z0: CZ, len: 30, dirX: 1, dirZ: 0, rows: 11, art: 'logo' });
@@ -1003,8 +1027,18 @@
   const fontLoads = ['italic 800 100px "Barlow Condensed"', '800 100px "Barlow Condensed"', '700 100px "Barlow Condensed"', '600 100px "Barlow Condensed"', 'italic 700 100px "Barlow Condensed"']
     .map(f => document.fonts ? document.fonts.load(f) : Promise.resolve());
   const timeout = new Promise(r => setTimeout(r, 3000));
+  const logoLoad = new Promise(r => {
+    const im = new Image();
+    im.onload = () => {
+      try { const c = document.createElement('canvas'); c.width = c.height = 1; const g = c.getContext('2d'); g.drawImage(im, 0, 0, 1, 1); g.getImageData(0, 0, 1, 1); r(im); }
+      catch (e) { r(null); } // a local file:// page can't use images in WebGL; the signs fall back to text
+    };
+    im.onerror = () => r(null);
+    im.src = 'assets/iba-logo.jpg';
+  });
 
-  Promise.race([Promise.all(fontLoads), timeout]).then(() => {
+  Promise.all([Promise.race([Promise.all(fontLoads), timeout]), Promise.race([logoLoad, new Promise(r => setTimeout(() => r(null), 5000))])]).then(([, logo]) => {
+    PARTNER = logo;
     const W0 = build();
     setupPost();
     resize();

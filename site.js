@@ -17,6 +17,27 @@ const IBPL = {
   const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
+  /* ---------------- every page opens at the very top ----------------
+     Browsers (Back button) and some viewers (the Claude link) restore the previous scroll position,
+     so a page could open halfway down. Reset to the top unless the link points at a section
+     (league.html#format) or the visitor has already started scrolling. */
+  try { history.scrollRestoration = 'manual'; } catch (e) { /* ignore */ }
+  let userMoved = false;
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));
+  const toTop = () => {
+    if (userMoved) return;
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = id && document.getElementById(id);
+    const prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    if (target) target.scrollIntoView({ block: 'start' }); else scrollTo(0, 0);
+    root.style.scrollBehavior = prev;
+  };
+  toTop();
+  addEventListener('DOMContentLoaded', toTop);
+  addEventListener('load', () => { toTop(); setTimeout(toTop, 120); setTimeout(toTop, 450); });
+  addEventListener('pageshow', (e) => { if (e.persisted) { userMoved = false; toTop(); } });
+
   /* ---------------- storage: the Claude link's shared database, if this page has one ---------------- */
   const hasRuntime = () => window.claude && typeof window.claude.use === 'function';
   const dbReady = (async () => { try { return hasRuntime() ? await window.claude.use('db') : null; } catch (e) { return null; } })();

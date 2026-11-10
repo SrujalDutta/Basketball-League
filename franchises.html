@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Franchises · IBPL</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Own one of sixteen IBPL franchises: exclusive district rights, a seat at the player auction and a team on the national youth stage.">
+<meta property="og:title" content="Franchises · IBPL">
+<meta property="og:description" content="Own one of sixteen IBPL franchises: exclusive district rights, a seat at the player auction and a team on the national youth stage.">
+<meta property="og:image" content="assets/stills/franchises.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0d0b0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Big Shoulders Display = headlines, Archivo = text, Chivo Mono = scoreboard data.
+     Barlow Condensed stays loaded: the logo mark and the 3D arena signage are drawn with it. -->
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700&family=Chivo+Mono:wght@400;500;600&family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="inner">
+<!-- ======================= BRAND MARK =======================
+     Indian Basketball Pro League mark, redrawn as vectors from the supplied logo:
+     platinum B, brushed-gold ball, counters and seams cut through. Use it anywhere with
+     <svg class="mark"><use href="#ibpl-mark"/></svg>. Same geometry as MARK in scene.js. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ibpl-gold" x1="290" y1="420" x2="460" y2="810" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7e7b4"/><stop offset=".42" stop-color="#d4a54a"/><stop offset=".74" stop-color="#a5772a"/><stop offset="1" stop-color="#e9c97a"/></linearGradient>
+    <linearGradient id="ibpl-plat" x1="445" y1="318" x2="760" y2="910" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6dfd4"/><stop offset=".7" stop-color="#cfc7ba"/><stop offset="1" stop-color="#f3eee6"/></linearGradient>
+    <mask id="ibpl-cut" maskUnits="userSpaceOnUse" x="250" y="300" width="690" height="630">
+      <rect x="250" y="300" width="690" height="630" fill="#fff"/>
+      <g fill="none" stroke="#000" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M932 470 C895 430 850 424 808 424 H559 V549 H808"/><path d="M932 758 C895 798 850 804 808 804 H559 V680 H808"/></g>
+      <g fill="none" stroke="#000" stroke-width="15"><path d="M262 614 H440"/><path d="M306 482 Q376 512 440 572"/><path d="M306 746 Q376 716 440 656"/></g>
+    </mask>
+    <clipPath id="ibpl-ball"><rect x="250" y="300" width="178" height="630"/></clipPath>
+    <symbol id="ibpl-mark" viewBox="250 300 690 630">
+      <g mask="url(#ibpl-cut)">
+        <circle cx="470" cy="614" r="200" fill="url(#ibpl-gold)" clip-path="url(#ibpl-ball)"/>
+        <path fill="url(#ibpl-plat)" d="M445 318 H745 C795 318 822 340 845 372 L897 442 C916 470 918 525 902 562 C895 580 886 594 876 606 C902 624 922 656 922 702 C922 750 912 776 897 793 L845 862 C822 892 795 910 745 910 H445 Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="hdr">
+  <a href="./" class="brand" aria-label="Indian Basketball Pro League, home">
+    <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
+    <span class="wordmark"><b>Indian Basketball <em>Pro League</em></b><small>Season 1 · March 2027 · U-16 boys</small></span>
+  </a>
+  <nav class="hnav" id="hnav" aria-label="Main">
+    <a href="./">Home</a>
+    <a href="about.html">About</a>
+    <a href="league.html">League</a>
+    <a href="franchises.html" aria-current="page">Franchises</a>
+    <a href="development.html">Development</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="partners.html">Partners</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a href="register.html" class="btn btn-solid">Register now</a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="hnav">Menu</button>
+</header>
+<main>
+  <section class="pg-hero" style="--still:url(assets/stills/franchises.jpg)">
+    <div class="pg-hero-in">
+      <p class="tag"><span class="rd">IBPL</span><span>Franchises</span></p>
+      <h1 class="headline"><span class="ln"><span>Become a</span></span><span class="ln"><span class="gold">franchise owner<span class="pt">.</span></span></span></h1>
+      <p class="sub">Sixteen franchises. Exclusive district rights. A seat at the player auction. Own a team on India's new youth basketball stage.</p><div class="actions"><a href="#enquire" class="btn btn-solid">Explore franchise ownership</a></div>
+    </div>
+  </section>
+  <nav class="toc" aria-label="On this page"><a href="#why">Why IBPL</a><a href="#model">Ownership model</a><a href="#rights">District rights</a><a href="#benefits">Benefits</a><a href="#commercial">Commercial</a><a href="#schools">Schools &amp; investors</a><a href="#slots">The 16</a><a href="#enquire">Enquire</a><a href="#faq">FAQ</a></nav>
+  <div class="blocks">
+    <section class="blk" id="why">
+      <div class="blk-k"><span class="n">01</span><h2>Why IBPL?</h2></div>
+      <div class="blk-b">
+        <p class="lede">Get in at the start. Season 1 is the league's launch, and its founding franchises shape what it becomes.</p>
+        <ul class="ticks"><li>A franchise in a structured, officiated national youth league.</li><li>Your own squad, built at the player auction.</li><li>Exclusive rights to represent your district.</li><li>Brand presence across matches, media and community events.</li></ul>
+      </div>
+    </section>
+    <section class="blk" id="model">
+      <div class="blk-k"><span class="n">02</span><h2>Franchise ownership model</h2></div>
+      <div class="blk-b">
+        <p>Each owner holds one of sixteen franchises for Season 1, builds a squad at the player auction and represents a district.</p>
+        <div class="tbc-box"><b>Shared privately</b>Franchise fees and the financial model are shared after your enquiry, not published on the website.</div>
+      </div>
+    </section>
+    <section class="blk" id="rights">
+      <div class="blk-k"><span class="n">03</span><h2>Exclusive district rights</h2></div>
+      <div class="blk-b">
+<p>Every franchise represents its own district exclusively: no other IBPL franchise in the same territory. Districts are confirmed when the franchise agreement is signed.</p>
+      </div>
+    </section>
+    <section class="blk" id="benefits">
+      <div class="blk-k"><span class="n">04</span><h2>Franchise benefits</h2></div>
+      <div class="blk-b">
+        <div class="cards"><div class="card"><span class="n">01</span><b>A seat at the auction</b><p>Bid for registered players and build your squad.</p></div><div class="card"><span class="n">02</span><b>Your team, your brand</b><p>Name and colours, subject to league approval.</p></div><div class="card"><span class="n">03</span><b>Matchday presence</b><p>Your team on court across the league stage and knockouts.</p></div><div class="card"><span class="n">04</span><b>The league behind you</b><p>Officials, venue, scheduling and production run by the league.</p></div></div>
+      </div>
+    </section>
+    <section class="blk" id="commercial">
+      <div class="blk-k"><span class="n">05</span><h2>Commercial opportunities</h2></div>
+      <div class="blk-b">
+<ul class="ticks"><li>Team jersey and kit sponsorship.</li><li>Local business partnerships in your district.</li><li>Brand presence at matches and in league media.</li></ul>
+      </div>
+    </section>
+    <section class="blk" id="schools">
+      <div class="blk-k"><span class="n">06</span><h2>School &amp; investor participation</h2></div>
+      <div class="blk-b">
+<p>Franchises can be owned by individuals, companies, investor groups, or schools and academies who want a team in the league. Tell us who you are in the enquiry form.</p>
+      </div>
+    </section>
+    <section class="blk" id="slots">
+      <div class="blk-k"><span class="n">07</span><h2>The 16 franchise slots</h2></div>
+      <div class="blk-b">
+        <p>Sixteen slots. No names, no logos, not yet. Each is revealed when its owner is confirmed.</p>
+        <ul class="slots big" aria-label="Sixteen franchise slots, identities to be revealed"><li class="slot" style="--i:0"><span>01</span><em>Available</em></li><li class="slot" style="--i:1"><span>02</span><em>Available</em></li><li class="slot" style="--i:2"><span>03</span><em>Available</em></li><li class="slot" style="--i:3"><span>04</span><em>Available</em></li><li class="slot" style="--i:4"><span>05</span><em>Available</em></li><li class="slot" style="--i:5"><span>06</span><em>Available</em></li><li class="slot" style="--i:6"><span>07</span><em>Available</em></li><li class="slot" style="--i:7"><span>08</span><em>Available</em></li><li class="slot" style="--i:8"><span>09</span><em>Available</em></li><li class="slot" style="--i:9"><span>10</span><em>Available</em></li><li class="slot" style="--i:10"><span>11</span><em>Available</em></li><li class="slot" style="--i:11"><span>12</span><em>Available</em></li><li class="slot" style="--i:12"><span>13</span><em>Available</em></li><li class="slot" style="--i:13"><span>14</span><em>Available</em></li><li class="slot" style="--i:14"><span>15</span><em>Available</em></li><li class="slot" style="--i:15"><span>16</span><em>Available</em></li></ul>
+      </div>
+    </section>
+    <section class="blk" id="enquire">
+      <div class="blk-k"><span class="n">08</span><h2>Franchise enquiry</h2></div>
+      <div class="blk-b">
+        <form class="form enq" id="frForm" data-type="Franchise enquiry" novalidate>
+          <div class="row2"><label class="field"><span>Your name</span><input id="fr-name" name="name" type="text" data-req="your name" autocomplete="name" placeholder="First and last name"></label><label class="field"><span>Email</span><input id="fr-email" name="email" type="email" data-req="a valid email" autocomplete="email" placeholder="you@company.com"></label></div>
+          <div class="row2"><label class="field"><span>Phone</span><input id="fr-phone" name="phone" type="tel" data-req="a phone number" autocomplete="tel" placeholder="+91"></label><label class="field"><span>City / district of interest</span><input id="fr-district" name="district" type="text" data-req="a city or district" placeholder="e.g. Bhubaneswar"></label></div>
+          <label class="field"><span>Organisation <em>optional</em></span><input id="fr-org" name="organisation" type="text" autocomplete="organization" placeholder="Company, school or investor group"></label>
+          <label class="field"><span>Message <em>optional</em></span><textarea id="fr-msg" name="message" placeholder="Tell us a little about your interest"></textarea></label>
+          <div class="submit-row"><button class="btn btn-solid" type="submit">Send franchise enquiry</button><p class="fine">Pricing and the ownership model are shared privately after your enquiry.</p></div>
+          <p class="msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+    <section class="blk" id="faq">
+      <div class="blk-k"><span class="n">09</span><h2>Frequently asked questions</h2></div>
+      <div class="blk-b">
+        <div class="faq">
+          <details open><summary>How much does a franchise cost?</summary><p>Pricing is shared privately with serious enquiries. Send the form above and the league team will get in touch.</p></details>
+          <details><summary>How are players chosen?</summary><p>Through the player auction. Every registered player enters the pool, and franchises bid to build their squads.</p></details>
+          <details><summary>Can a school or academy own a franchise?</summary><p>Yes. Schools, academies, companies and investor groups can all enquire.</p></details>
+          <details><summary>What does exclusive district rights mean?</summary><p>Your franchise is the only IBPL team representing your district.</p></details>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</main>
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
+      <span>Indian Basketball Pro League · Season 1 · March 2027</span>
+      <span class="addr">info@example.com</span>
+    </div>
+    <div class="foot-partner">
+      <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
+      <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div>
+    </div>
+    <div class="foot-cols">
+      <div><b>League</b><ul><li><a href="about.html">About</a></li><li><a href="league.html">The League</a></li><li><a href="franchises.html">Franchises</a></li><li><a href="development.html">Development</a></li></ul></div>
+      <div><b>Media</b><ul><li><a href="gallery.html">Gallery</a></li><li><a href="partners.html">Partners</a></li><li><a href="./#news">Announcements</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div><b>Get involved</b><ul><li><a href="register.html#player">Player registration</a></li><li><a href="register.html#franchise">Franchise enquiry</a></li><li><a href="register.html#sponsorship">Sponsorship enquiry</a></li><li><a href="register.html#school">School collaboration</a></li></ul></div>
+    </div>
+  </div>
+  <p class="copy">© <span data-year></span> Indian Basketball Pro League · <a href="#">Privacy policy</a> · <a href="#">Terms</a></p>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

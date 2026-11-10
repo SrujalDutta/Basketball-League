@@ -10,6 +10,25 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
+    def send_head(self):
+        # index.html and scroll.html are written without <!doctype html> (the Claude link adds it);
+        # add it here too so browsers render them in standards mode on localhost.
+        path = self.translate_path(self.path)
+        if os.path.isdir(path):
+            path = os.path.join(path, "index.html")
+        if path.endswith(".html") and os.path.isfile(path):
+            with open(path, "rb") as f:
+                data = f.read()
+            if not data.lstrip()[:15].lower().startswith(b"<!doctype"):
+                data = b"<!doctype html>\n" + data
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            import io
+            return io.BytesIO(data)
+        return super().send_head()
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, must-revalidate")
         super().end_headers()

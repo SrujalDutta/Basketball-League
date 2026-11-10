@@ -2,469 +2,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Indian Basketball Pro League (IBPL): an under-16 basketball tournament. Register, get picked at the player auction, then play. March 14–16, 2027.">
+<meta name="description" content="Indian Basketball Pro League (IBPL): the next generation, the biggest stage. Season 1, March 2027, U-16 boys, sixteen franchises.">
+<meta property="og:title" content="Indian Basketball Pro League">
+<meta property="og:description" content="Indian Basketball Pro League (IBPL): the next generation, the biggest stage. Season 1, March 2027, U-16 boys, sixteen franchises.">
+<meta property="og:image" content="assets/stills/home.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0d0b0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Big Shoulders Display = headlines, Archivo = text, Chivo Mono = scoreboard data.
      Barlow Condensed stays loaded: the logo mark and the 3D arena signage are drawn with it. -->
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700&family=Chivo+Mono:wght@400;500;600&family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
-<style>
-/* Layout: a TV broadcast package over the live 3D arena. Copy sits like lower-thirds on the left;
-   one fixed scorebug (round, quarters bar, tip-off clock) is the single bold element. */
-:root{
-  color-scheme:dark; /* deliberately dark-only: the page is an arena at night */
-  --night:#0d0b0a;      /* warm arena black */
-  --panel:#171412;      /* broadcast graphics panel */
-  --chalk:#f1ebe1;      /* court-line white */
-  --hardwood:#b3a796;   /* secondary text, warm grey */
-  --ball:#d4a54a;       /* brand gold: actions and accents */
-  --led:#f0d79c;        /* champagne: data and clocks */
-  --seam:rgba(241,235,225,.14);
-  --seam-strong:rgba(241,235,225,.3);
-  --glass:rgba(23,20,18,.84);
-
-  --f-display:'Big Shoulders Display','Barlow Condensed',Impact,'Arial Narrow',sans-serif;
-  --f-body:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  --f-data:'Chivo Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --f-mark:'Barlow Condensed',Impact,'Arial Narrow',sans-serif;
-
-  /* type scale */
-  --t-label:.75rem;
-  --t-small:.875rem;
-  --t-body:1.0625rem;
-  --t-lead:clamp(1.0625rem,1.3vw,1.25rem);
-  --t-stat:clamp(2rem,3.2vw,2.75rem);
-  --t-h:clamp(3.1rem,7.4vw,7.75rem);
-  --t-hero:clamp(3.4rem,min(7.4vw,11.5vh),8rem);
-
-  --gut-l:max(16px, env(safe-area-inset-left, 0px));
-  --gut-r:max(16px, env(safe-area-inset-right, 0px));
-  --edge:clamp(16px,7vw,112px);
-  --ease:cubic-bezier(.2,.8,.2,1);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;background:var(--night)}
-body{background:var(--night);color:var(--chalk);font-family:var(--f-body);font-size:var(--t-body);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:clip}
-a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-:focus-visible{outline:2px solid var(--led);outline-offset:3px}
-::selection{background:var(--ball);color:var(--night)}
-
-/* ---------- 3D canvas + legibility shading ---------- */
-#scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
-.shade{position:fixed;inset:0;z-index:1;pointer-events:none;background:
-  linear-gradient(90deg,rgba(13,11,10,.8) 0%,rgba(13,11,10,.42) 38%,rgba(13,11,10,0) 64%),
-  linear-gradient(0deg,rgba(13,11,10,.65) 0%,rgba(13,11,10,0) 22%),
-  radial-gradient(ellipse at 55% 45%,rgba(13,11,10,0) 52%,rgba(13,11,10,.55) 100%)}
-.no-webgl #scene{display:none}
-.no-webgl body{background:radial-gradient(ellipse at 72% 38%,#4a210d 0%,var(--night) 62%)}
-
-/* ---------- logo mark (matches the arena signage) ---------- */
-.mark{display:inline-block;height:1em;width:1.095em;flex:none;overflow:visible;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
-
-/* ---------- loader: a shot clock counting down ---------- */
-#loader{position:fixed;inset:0;z-index:100;background:var(--night);display:grid;place-items:center;transition:opacity .8s ease,visibility .8s}
-#loader.out{opacity:0;visibility:hidden}
-.clock{display:grid;justify-items:center;gap:14px}
-.clock-face{position:relative;width:min(300px,64vw);aspect-ratio:1.25;max-width:100%;background:#080706;border:1px solid var(--seam);display:grid;place-items:center;box-shadow:inset 0 0 60px rgba(0,0,0,.8)}
-.clock-face::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--ball)}
-.clock-face b{font-family:var(--f-data);font-weight:600;font-size:min(9.5rem,30vw);line-height:1;color:var(--led);text-shadow:0 0 18px rgba(240,215,156,.55),0 0 2px #fff3dc;font-variant-numeric:tabular-nums}
-.clock-label{font-family:var(--f-data);font-size:var(--t-label);letter-spacing:.24em;text-transform:uppercase;color:var(--hardwood)}
-.clock .mark{font-size:64px;margin-top:8px}
-
-/* ---------- header ---------- */
-.hdr{position:fixed;top:0;left:0;right:0;z-index:38;display:flex;align-items:center;gap:clamp(16px,3vw,40px);
-  padding:calc(18px + env(safe-area-inset-top, 0px)) max(var(--gut-r),clamp(16px,3.4vw,48px)) 18px max(var(--gut-l),clamp(16px,3.4vw,48px));
-  background:linear-gradient(rgba(13,11,10,.82),rgba(13,11,10,0))}
-.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
-.brand .mark{font-size:44px}
-.wordmark{display:grid;line-height:1.1}
-.wordmark b{font-family:var(--f-display);font-weight:800;font-size:1.15rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
-.wordmark b em{font-style:normal;color:var(--ball)}
-.wordmark small{font-size:var(--t-label);color:var(--hardwood);letter-spacing:.04em}
-.hnav{display:flex;align-items:center;gap:clamp(14px,2.2vw,30px)}
-.hnav a,.hnav button{font-size:var(--t-small);font-weight:500;color:var(--chalk);padding:8px 0;background-image:linear-gradient(var(--ball),var(--ball));background-size:0 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .3s var(--ease)}
-.hnav a:hover,.hnav button:hover{background-size:100% 2px}
-.hnav a[aria-current]{color:var(--ball);background-size:100% 2px}
-.hdr .btn[aria-current]{background:var(--chalk)}
-.menu-btn{display:none;align-items:center;min-height:42px;padding:0 14px;border:1px solid var(--seam-strong);border-radius:2px;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
-.menu-btn:hover{border-color:var(--chalk)}
-
-/* ---------- buttons ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:2px;font-family:var(--f-body);font-weight:600;font-size:var(--t-small);letter-spacing:.08em;text-transform:uppercase;transition:background .25s,color .25s,border-color .25s,transform .25s var(--ease)}
-.btn-solid{background:var(--ball);color:var(--night)}
-.btn-solid:hover{background:var(--chalk);transform:translateY(-1px)}
-.btn-line{border:1px solid var(--seam-strong);color:var(--chalk);background:rgba(13,11,10,.35)}
-.btn-line:hover{border-color:var(--chalk)}
-.hdr .btn{min-height:42px;padding:0 18px}
-.more{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-weight:600;font-size:var(--t-small);letter-spacing:.06em;text-transform:uppercase;color:var(--chalk);padding:6px 0;border-bottom:1px solid var(--seam-strong);transition:color .2s,border-color .2s,gap .3s var(--ease)}
-.more::after{content:"→";color:var(--ball);font-size:1.05em}
-.more:hover{color:var(--ball);border-color:var(--ball);gap:16px}
-
-/* ---------- chapters (lower-thirds) ---------- */
-main{position:relative;z-index:2}
-.chap{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding-block:120px 132px;padding-left:max(var(--gut-l),var(--edge));padding-right:var(--gut-r);position:relative}
-.chap-in{width:100%;max-width:680px;will-change:opacity,transform}
-.gap{height:85vh}
-.tag{display:flex;align-items:center;gap:12px;margin-bottom:22px;font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--chalk)}
-.tag .rd{font-family:var(--f-data);font-weight:600;letter-spacing:.04em;background:var(--ball);color:var(--night);padding:4px 7px 3px}
-.tag .meta{color:var(--hardwood);font-weight:500;letter-spacing:.1em}
-.headline{font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:var(--t-h);line-height:.86;letter-spacing:.004em;color:var(--chalk);text-wrap:balance;text-shadow:0 8px 40px rgba(0,0,0,.45)}
-.hero .headline{font-size:var(--t-hero);font-weight:900;line-height:.82}
-.headline .pt{color:var(--ball)}
-.headline .gold{background:linear-gradient(100deg,#f7e7b4 0%,#d4a54a 45%,#a5772a 75%,#e9c97a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.headline .gold .pt{-webkit-text-fill-color:var(--ball)}
-.ln{display:block;overflow:hidden;padding-bottom:.04em}
-.ln>span{display:block}
-.sub{font-size:var(--t-lead);color:var(--hardwood);max-width:34em;margin-top:24px;line-height:1.55}
-.sub strong{color:var(--chalk);font-weight:600}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.fine{font-size:var(--t-small);color:var(--hardwood);margin-top:14px}
-.fine b{color:var(--led);font-family:var(--f-data);font-weight:500;font-size:.95em}
-
-/* data strip: real figures pulled forward from the detail panels */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));margin-top:30px;border-top:1px solid var(--seam-strong);max-width:600px}
-.stats>div{padding:14px 18px 0 0;display:grid;gap:2px;align-content:start;min-width:0}
-.stats>div+div{padding-left:18px;border-left:1px solid var(--seam)}
-.stats dd{font-family:var(--f-display);font-weight:800;font-size:var(--t-stat);line-height:1;color:var(--chalk);font-variant-numeric:tabular-nums;order:-1}
-.stats dd.word{font-size:clamp(1.5rem,2.2vw,1.9rem);padding-block:.12em}
-.stats dt{font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hardwood)}
-
-/* price board / dated list */
-.board{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:30px;max-width:600px;border-top:1px solid var(--seam-strong);border-left:1px solid var(--seam)}
-.board li{display:grid;gap:4px;padding:12px 14px;border-right:1px solid var(--seam);border-bottom:1px solid var(--seam);background:rgba(13,11,10,.38)}
-.board .k{font-size:var(--t-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hardwood)}
-.board .v{font-family:var(--f-data);font-weight:500;font-size:1.25rem;color:var(--led);font-variant-numeric:tabular-nums}
-.board.dates{grid-template-columns:repeat(4,minmax(0,1fr))}
-.board.dates .v{font-family:var(--f-body);font-weight:600;font-size:var(--t-body);color:var(--chalk)}
-.board.dates .k{font-family:var(--f-data);letter-spacing:.04em;color:var(--led);font-weight:500}
-
-/* scroll cue */
-.enter{position:absolute;right:max(var(--gut-r),clamp(16px,3.4vw,48px));bottom:34px;display:flex;flex-direction:column;align-items:center;gap:12px;font-size:var(--t-label);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--hardwood)}
-.enter i{width:1px;height:44px;background:linear-gradient(var(--ball),transparent);transform-origin:top;animation:drip 1.8s var(--ease) infinite}
-@keyframes drip{0%{transform:scaleY(0)}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
-
-/* ---------- headline reveal (plays once per chapter) ---------- */
-@keyframes rise{from{transform:translateY(108%)}to{transform:none}}
-@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.play .ln>span{animation:rise .95s var(--ease) both}
-.play .ln:nth-child(2)>span{animation-delay:.09s}
-.play .ln:nth-child(3)>span{animation-delay:.18s}
-.play .tag{animation:fadeup .7s var(--ease) both}
-.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:fadeup .8s var(--ease) both;animation-delay:.25s}
-
-/* ---------- register ---------- */
-.chap.reg{align-items:flex-start;padding-top:max(120px,16vh)}
-.form{margin-top:30px;max-width:620px;display:grid;gap:22px;padding:24px;background:rgba(13,11,10,.66);border:1px solid var(--seam);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.form fieldset{border:0;display:grid;gap:10px;min-width:0}
-.form legend,.field>span{font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hardwood);margin-bottom:10px;padding:0}
-.field>span em{font-style:normal;letter-spacing:.06em;text-transform:none;color:rgba(179,167,150,.7);margin-left:6px}
-.form .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chips legend{width:100%}
-.chips label{position:relative}
-.chips input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.chips span{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--seam-strong);border-radius:2px;font-size:var(--t-small);font-weight:500;color:var(--chalk);transition:background .2s,color .2s,border-color .2s}
-.chips label:hover span{border-color:var(--chalk)}
-.chips input:checked+span{background:var(--chalk);border-color:var(--chalk);color:var(--night);font-weight:600}
-.chips input:focus-visible+span{outline:2px solid var(--led);outline-offset:3px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.field{display:grid;min-width:0}
-.field input,.field textarea{width:100%;font:inherit;font-size:16px;color:var(--chalk);background:rgba(8,7,6,.7);border:1px solid var(--seam-strong);border-radius:2px;padding:13px 14px;outline:none;transition:border-color .2s}
-.field textarea{min-height:130px;resize:vertical;line-height:1.5}
-.field input::placeholder,.field textarea::placeholder{color:rgba(179,167,150,.55)}
-.field input:focus,.field textarea:focus{border-color:var(--led)}
-.bad span{border-color:var(--ball)!important}
-.field.bad input{border-color:var(--ball)}
-.submit-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
-.submit-row .fine{margin:0}
-.msg{min-height:0;font-size:var(--t-small)}
-.msg:empty{display:none}
-.msg{padding:12px 14px;border-left:3px solid var(--ball);background:rgba(8,7,6,.75);color:var(--chalk)}
-.msg.ok{border-left-color:var(--led)}
-
-/* ---------- supporting partner ---------- */
-.plate{display:inline-grid;place-items:center;background:#fff;border-radius:2px;box-shadow:0 18px 40px -20px rgba(0,0,0,.8)}
-.plate img{display:block;width:auto;max-width:100%}
-.ld-partner{display:grid;justify-items:center;gap:8px;margin-top:6px}
-.ld-partner .plate{padding:5px 8px}
-.ld-partner img{height:56px}
-.foot-partner{display:flex;align-items:center;gap:18px;min-width:0}
-.foot-partner .plate{padding:8px 10px;flex:none}
-.foot-partner img{height:96px}
-.foot-partner .k{display:block;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hardwood);margin-bottom:4px}
-.foot-partner b{display:block;font-family:var(--f-display);font-weight:800;font-size:1.5rem;line-height:1;text-transform:uppercase}
-
-/* ---------- footer ---------- */
-.foot{position:relative;z-index:2;background:linear-gradient(rgba(13,11,10,0),var(--night) 26%);padding-block:80px 120px;padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
-.foot-in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px;border-top:1px solid var(--seam);padding-top:32px}
-.foot-brand{display:grid;gap:8px;font-size:var(--t-small);color:var(--hardwood)}
-.foot-brand .mark{font-size:64px}
-.foot-brand .addr{user-select:all;color:var(--chalk)}
-.foot-links{list-style:none;display:flex;flex-wrap:wrap;gap:12px 28px;font-size:var(--t-small);font-weight:500;align-content:start}
-.foot-links a:hover{color:var(--ball)}
-.copy{margin-top:28px;font-size:var(--t-label);color:rgba(179,167,150,.7);letter-spacing:.04em}
-
-/* ---------- the scorebug ---------- */
-.bug{position:fixed;z-index:15;left:max(var(--gut-l),clamp(16px,2.2vw,32px));bottom:calc(clamp(14px,2.2vw,26px) + env(safe-area-inset-bottom, 0px));display:flex;align-items:stretch;height:54px;background:var(--glass);border:1px solid var(--seam);box-shadow:0 22px 50px -18px rgba(0,0,0,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);max-width:calc(100% - 32px)}
-.bug-mark{display:grid;place-items:center;width:56px;background:#080706;border-right:1px solid var(--seam)}
-.bug-mark .mark{font-size:32px}
-.bug-rd{display:grid;place-content:center;justify-items:center;min-width:58px;padding:0 10px;background:var(--ball);color:var(--night);font-family:var(--f-data);line-height:1}
-.bug-rd span{font-size:.62rem;font-weight:600;letter-spacing:.14em}
-.bug-rd b{font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums}
-.bug-name{display:flex;align-items:center;min-width:176px;padding:0 18px;font-size:var(--t-small);font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.bug-q{list-style:none;display:flex;align-items:center;gap:4px;padding:0 16px;border-left:1px solid var(--seam)}
-.bug-q button{display:grid;align-items:center;width:22px;height:34px;position:relative}
-.bug-q button i{display:block;height:4px;background:rgba(241,235,225,.18);position:relative;overflow:hidden;transition:height .2s}
-.bug-q button i::after{content:"";position:absolute;inset:0;background:var(--chalk);transform-origin:left;transform:scaleX(var(--f,0))}
-.bug-q button.now i::after{background:var(--ball)}
-.bug-q button:hover i{height:8px}
-.bug-clock{display:grid;place-content:center;padding:0 18px;border-left:1px solid var(--seam);line-height:1.1}
-.bug-clock span{font-family:var(--f-data);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--hardwood)}
-.bug-clock b{font-family:var(--f-data);font-weight:500;font-size:1rem;color:var(--led);font-variant-numeric:tabular-nums;text-shadow:0 0 12px rgba(240,215,156,.45);white-space:nowrap}
-
-/* ---------- detail drawer ---------- */
-.scrim{position:fixed;inset:0;z-index:40;background:rgba(8,7,6,.6);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
-.drawer{position:fixed;top:0;right:0;bottom:0;z-index:41;width:min(560px,100%);background:var(--panel);border-left:1px solid var(--seam);transform:translateX(102%);visibility:hidden;transition:transform .55s var(--ease),visibility .55s;overflow-y:auto;
-  padding-block:calc(84px + env(safe-area-inset-top, 0px)) calc(48px + env(safe-area-inset-bottom, 0px));padding-left:clamp(22px,4vw,48px);padding-right:max(var(--gut-r),clamp(22px,4vw,48px))}
-.drawer::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--ball)}
-.drawer-open .scrim{opacity:1;visibility:visible}
-.drawer-open .drawer{transform:none;visibility:visible}
-.drawer-x{position:absolute;top:calc(22px + env(safe-area-inset-top, 0px));right:max(var(--gut-r),22px);width:44px;height:44px;border:1px solid var(--seam-strong);border-radius:2px;font-size:22px;line-height:1;transition:border-color .2s,color .2s}
-.drawer-x:hover{border-color:var(--ball);color:var(--ball)}
-.drawer h3{font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,6vw,3.6rem);line-height:.9;text-transform:uppercase;margin:6px 0 20px;text-wrap:balance}
-.drawer p{color:var(--hardwood);margin-bottom:14px;max-width:38em}
-.drawer ul{list-style:none;margin:22px 0;border-top:1px solid var(--seam-strong)}
-.drawer li{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:13px 0;border-bottom:1px solid var(--seam)}
-.drawer li span:last-child{font-family:var(--f-data);font-weight:500;color:var(--led);white-space:nowrap;font-variant-numeric:tabular-nums}
-.drawer details{border-bottom:1px solid var(--seam)}
-.drawer details:first-of-type{border-top:1px solid var(--seam-strong)}
-.drawer summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;display:flex;justify-content:space-between;gap:16px}
-.drawer summary::-webkit-details-marker{display:none}
-.drawer summary::after{content:"+";font-family:var(--f-data);color:var(--ball);font-size:1.2rem;line-height:1}
-.drawer details[open] summary::after{content:"−"}
-.drawer details p{padding-bottom:6px}
-template{display:none}
-
-/* ---------- road to the final: the four steps, in order ---------- */
-.road{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:30px;max-width:640px;border-top:1px solid var(--seam-strong)}
-.road li{position:relative;display:grid;gap:5px;align-content:start;padding:13px 14px 0 0;min-width:0}
-.road li+li{padding-left:14px;border-left:1px solid var(--seam)}
-.road .n{font-family:var(--f-data);font-size:var(--t-label);letter-spacing:.06em;color:var(--hardwood)}
-.road b{font-family:var(--f-display);font-weight:800;font-size:1.45rem;line-height:1;text-transform:uppercase}
-.road .st{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--hardwood)}
-.road .now::before{content:"";position:absolute;left:0;right:14px;top:-1px;height:2px;background:var(--ball)}
-.road .now .n,.road .now .st{color:var(--ball)}
-.play .road{animation:fadeup .8s var(--ease) both;animation-delay:.3s}
-
-/* ---------- fixtures: coming soon ---------- */
-.links{display:flex;flex-wrap:wrap;gap:0 28px}
-.soon{font-family:var(--f-data);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--night);background:var(--led);padding:2px 5px;margin-left:4px;vertical-align:2px;border-radius:1px}
-.fx{position:fixed;inset:0;z-index:45;background:rgba(13,11,10,.93);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;visibility:hidden;transform:translateY(28px);transition:opacity .45s var(--ease),transform .6s var(--ease),visibility .6s;overflow:hidden}
-.fx-open .fx{opacity:1;visibility:visible;transform:none}
-.fx::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--ball);z-index:2}
-.fx::after{content:"16";position:absolute;right:-3vw;bottom:-14vw;font-family:var(--f-display);font-weight:900;font-size:58vw;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(241,235,225,.07);pointer-events:none;z-index:0}
-.fx-in{position:relative;z-index:1;height:100%;overflow-y:auto;overscroll-behavior:contain;display:grid;align-content:center;grid-auto-rows:max-content;gap:clamp(22px,3.4vh,36px);
-  padding-block:calc(30px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));padding-left:max(var(--gut-l),var(--edge));padding-right:max(var(--gut-r),var(--edge))}
-.fx-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
-.fx-top .tag{margin:10px 0 0}
-.fx-x{flex:none;width:44px;height:44px;border:1px solid var(--seam-strong);border-radius:2px;font-size:22px;line-height:1;transition:border-color .2s,color .2s}
-.fx-x:hover{border-color:var(--ball);color:var(--ball)}
-.fx-title{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(3.6rem,10.5vw,10.5rem);line-height:.82;letter-spacing:.005em}
-.fx-title>span{display:block}
-.fx-title .o{color:transparent;-webkit-text-stroke:2px rgba(241,235,225,.75)}
-.fx-title .f{background:linear-gradient(100deg,var(--chalk) 42%,#fff8ea 50%,var(--chalk) 58%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent}
-.fx-open .fx-title .f{animation:sheen 4.5s ease-in-out 1s infinite}
-.fx-title .pt{color:var(--ball);-webkit-text-fill-color:var(--ball)}
-@keyframes sheen{0%{background-position:100% 0}45%,100%{background-position:0 0}}
-.fx-drop{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:18px 40px;align-items:end;border-top:1px solid var(--seam-strong);padding-top:18px;max-width:1000px}
-.fx-drop .k{display:block;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hardwood);margin-bottom:6px}
-.fx-drop b{font-family:var(--f-data);font-weight:500;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1;color:var(--led);text-shadow:0 0 16px rgba(240,215,156,.4);font-variant-numeric:tabular-nums;white-space:nowrap}
-.fx-copy{color:var(--hardwood);max-width:34em;font-size:var(--t-small)}
-.fx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
-.fx-cta .more{margin-top:0}
-
-/* ---------- site pages (About, League, Franchisee, …) ----------
-   Each page is a full-screen layer over the live arena; the camera flies to the page's spot. */
-  background:linear-gradient(90deg,rgba(13,11,10,.95) 0%,rgba(13,11,10,.88) 44%,rgba(13,11,10,.35) 70%,rgba(13,11,10,.05) 100%)}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--seam-strong);border-left:1px solid var(--seam)}
-.card{display:grid;gap:8px;align-content:start;padding:18px 18px 22px;border-right:1px solid var(--seam);border-bottom:1px solid var(--seam);background:rgba(13,11,10,.42);min-width:0}
-.card .n{font-family:var(--f-data);font-size:var(--t-label);color:var(--ball)}
-.card b{font-family:var(--f-display);font-weight:800;font-size:1.55rem;line-height:1;text-transform:uppercase}
-.card p{color:var(--hardwood);font-size:var(--t-small);line-height:1.55}
-.card .avail{justify-self:start;font-family:var(--f-data);font-size:.64rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--night);background:var(--led);padding:2px 6px}
-.list{list-style:none;border-top:1px solid var(--seam-strong)}
-.list li{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:13px 0;border-bottom:1px solid var(--seam)}
-.list li>span:last-child{font-family:var(--f-data);font-weight:500;color:var(--led);text-align:right;font-variant-numeric:tabular-nums}
-.list .sel{user-select:all;-webkit-user-select:all}
-.pg-partner{display:flex;flex-wrap:wrap;align-items:center;gap:20px 28px;padding:22px;border:1px solid var(--seam);background:rgba(13,11,10,.45)}
-.pg-partner img{height:150px}
-.pg-partner .k{display:block;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ball);margin-bottom:6px}
-.pg-partner b{display:block;font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:.95;text-transform:uppercase}
-.pg-partner p{color:var(--hardwood);font-size:var(--t-small);margin-top:10px;max-width:28em}
-.frames{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.frame{position:relative;aspect-ratio:4/5;max-width:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:14px;overflow:hidden;border:1px solid var(--seam);
-  background:repeating-linear-gradient(135deg,rgba(241,235,225,.035) 0 10px,transparent 10px 20px),rgba(13,11,10,.55)}
-.frame::before{content:"";position:absolute;left:14px;top:14px;width:22px;height:22px;border-left:2px solid var(--ball);border-top:2px solid var(--ball)}
-.frame b{position:relative;font-family:var(--f-display);font-weight:800;font-size:1.25rem;line-height:1;text-transform:uppercase}
-.frame span{position:relative;font-family:var(--f-data);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hardwood)}
-.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.frame.photo::before{display:none}
-.frame.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(13,11,10,.85))}
-.frame.photo b,.frame.photo span{z-index:1}
-.form textarea{font:inherit}
-.chap .frames,.chap .pg-partner,.chap .list{margin-top:26px;max-width:600px}
-.chap .frames{max-width:500px;gap:8px}
-.chap .frame{aspect-ratio:3/2;padding:10px}
-.chap .frame::before{left:10px;top:10px;width:16px;height:16px}
-.chap .frame b{font-size:1rem}
-.chap .pg-partner{padding:14px 16px;gap:14px 20px;max-width:480px}
-.chap .pg-partner img{height:80px}
-.chap .pg-partner b{font-size:1.6rem}
-.chap .road{max-width:600px}
-.drawer .cards{margin:22px 0}
-.drawer .card{padding:14px 14px 18px}
-.drawer .list{margin:22px 0}
-.drawer .form{padding:0;border:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;max-width:none}
-.drawer .faq{margin-top:10px}
-.panel-k{display:block;margin-top:34px;font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ball)}
-.faq details{border-bottom:1px solid var(--seam)}
-.faq details:first-of-type{border-top:1px solid var(--seam-strong)}
-.faq summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;display:flex;justify-content:space-between;gap:16px}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";font-family:var(--f-data);color:var(--ball);font-size:1.2rem;line-height:1}
-.faq details[open] summary::after{content:"−"}
-.faq details p,.faq>p{color:var(--hardwood);padding-bottom:14px;max-width:38em}
-
-/* ---------- leadership ---------- */
-.chap.tall{align-items:flex-start;padding-top:104px}
-.chap.tall .headline{font-size:clamp(3rem,min(6vw,9.5vh),6rem)}
-.chap.tall .sub{margin-top:16px}
-.team-k{margin-top:22px;font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ball)}
-.team{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px;max-width:min(470px,58vh)}
-.person{display:grid;gap:4px;width:100%;text-align:left;align-content:start}
-.person .ph{position:relative;display:block;aspect-ratio:1;max-width:100%;overflow:hidden;margin-bottom:8px;
-  background:linear-gradient(160deg,#f2dca0 0%,#d4a54a 45%,#8f6420 100%);box-shadow:inset 0 0 0 1px rgba(241,235,225,.18)}
-.person .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(13,11,10,.55));transition:opacity .4s}
-.person .ph::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--ball);z-index:1;transform:scaleX(.25);transform-origin:left;transition:transform .5s var(--ease)}
-.person img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(1.04);mix-blend-mode:multiply;transform:scale(1.02);transition:filter .5s var(--ease),transform .6s var(--ease),mix-blend-mode .5s}
-.person:hover img,.person:focus-visible img{filter:none;mix-blend-mode:normal;transform:scale(1.06)}
-.person:hover .ph::before,.person:focus-visible .ph::before{transform:scaleX(1)}
-.person:hover .ph::after,.person:focus-visible .ph::after{opacity:0}
-.person b{font-family:var(--f-display);font-weight:800;font-size:1.15rem;line-height:1;text-transform:uppercase;text-wrap:balance}
-.person .role{display:grid;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--hardwood);line-height:1.4}
-.person .role em{font-style:normal;color:var(--ball)}
-.play .team,.play .team-k{animation:fadeup .8s var(--ease) both;animation-delay:.3s}
-.bio-ph{width:132px;aspect-ratio:1;max-width:100%;overflow:hidden;margin-bottom:22px;border-bottom:3px solid var(--ball)}
-.bio-ph img{display:block;width:100%;height:100%;object-fit:cover}
-.drawer .bio-role{color:var(--chalk);font-weight:600;margin-top:-8px}
-.drawer .bio-role span{color:var(--hardwood);font-weight:400;font-size:var(--t-small)}
-.drawer .ticks{border-top:0;margin:12px 0 0}
-.drawer .ticks li{justify-content:flex-start;gap:12px;border-bottom:1px solid var(--seam)}
-.drawer .ticks li::before{content:"";flex:none;width:8px;height:8px;margin-top:7px;background:var(--ball);transform:rotate(45deg)}
-.drawer .stats{margin:20px 0}
-
-/* ---------- responsive ---------- */
-@media (max-width:1320px){
-  .wordmark{display:none}
-}
-@media (max-width:1080px){
-  .menu-btn{display:inline-flex}
-  .hnav{position:fixed;inset:0;z-index:-1;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;
-    padding:calc(90px + env(safe-area-inset-top, 0px)) max(var(--gut-r),28px) calc(40px + env(safe-area-inset-bottom, 0px)) max(var(--gut-l),28px);
-    background:var(--night);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;overflow-y:auto}
-  .menu-open .hnav{opacity:1;visibility:visible}
-  .hnav a{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,6.5vw,3rem);line-height:1.05;text-transform:uppercase;padding:4px 0;background-image:none}
-}
-@media (max-width:1100px){
-  .wordmark small{display:none}
-  .bug-name{min-width:0}
-}
-@media (max-width:900px){
-  .shade{background:linear-gradient(180deg,rgba(13,11,10,.3) 0%,rgba(13,11,10,.55) 42%,rgba(13,11,10,.86) 100%)}
-  .board.dates{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media (max-width:700px){
-  .hdr{gap:12px;padding-top:calc(12px + env(safe-area-inset-top, 0px));padding-bottom:12px}
-  .brand .mark{font-size:36px}
-  .wordmark{display:none}
-  .chap{align-items:flex-end;padding-block:96px 104px}
-  .chap .frames{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .chap .frame{padding:8px}
-  .chap .frame b{font-size:.95rem}
-  .chap .frame span{display:none}
-  .team{gap:8px}
-  .person b{font-size:.92rem}
-  .person .role{font-size:.6rem;letter-spacing:.06em}
-  .team-k{margin-top:18px}
-  .chap.reg{padding-top:96px}
-  .gap{height:70vh}
-  .enter{display:none}
-  .bug{left:var(--gut-l);right:var(--gut-r);max-width:none;height:50px}
-  .bug-mark,.bug-name{display:none}
-  .bug-q{flex:1;justify-content:space-between;padding:0 10px;gap:3px;border-left:0}
-  .bug-q li{flex:1;display:flex}
-  .bug-q button{width:100%}
-  .hdr .btn{min-height:38px;padding:0 12px;font-size:.75rem}
-  .bug-clock{padding:0 12px}
-  .bug-clock b{font-size:.85rem}
-  .board{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .row2{grid-template-columns:1fr}
-  .cards{grid-template-columns:1fr}
-  .frames{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .pg-partner img{height:110px}
-  .form{padding:18px}
-  .stats>div+div{padding-left:12px}
-  .stats>div{padding-right:12px}
-  .road{margin-top:24px}
-  .road li{padding:10px 6px 0 0;gap:3px}
-  .road li+li{padding-left:8px}
-  .road .now::before{right:6px}
-  .road b{font-size:1.02rem}
-  .road .st{font-size:.58rem;letter-spacing:.06em}
-  .hero .actions{margin-top:24px}
-  .fx-drop{grid-template-columns:1fr 1fr}
-  .fx-drop b{white-space:normal;font-size:1.3rem}
-  .fx-copy{grid-column:1 / -1}
-  .fx-title .o{-webkit-text-stroke-width:1.5px}
-}
-/* ---------- registration success: the swish ---------- */
-.form .btn[disabled]{opacity:.6;cursor:progress;transform:none}
-.swish{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:rgba(13,11,10,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  padding-block:calc(24px + env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-bottom, 0px));padding-left:var(--gut-l);padding-right:var(--gut-r);opacity:0;transition:opacity .35s}
-.swish[hidden]{display:none}
-.swish.on{opacity:1}
-.swish-in{display:grid;justify-items:center;gap:6px;width:min(620px,100%);text-align:center}
-.swish svg{width:100%;height:auto;max-width:100%;overflow:visible}
-.swish .bbd{fill:rgba(241,235,225,.05);stroke:rgba(241,235,225,.6);stroke-width:3}
-.swish .rim-b{fill:none;stroke:#a8701f;stroke-width:5}
-.swish .rim-f{fill:none;stroke:#e3a43c;stroke-width:5.5;stroke-linecap:round}
-.swish .net{fill:none;stroke:rgba(241,235,225,.82);stroke-width:1.6;stroke-linejoin:round;transform-box:view-box;transform-origin:485px 160px}
-.swish .net.go{animation:swishNet .75s cubic-bezier(.3,.7,.3,1)}
-@keyframes swishNet{0%{transform:scale(1,1)}28%{transform:scale(.86,1.42)}55%{transform:scale(1.05,.9) skewX(-4deg)}78%{transform:scale(.98,1.05) skewX(2deg)}100%{transform:none}}
-.swish .spark{fill:var(--ball);opacity:0;transform-box:fill-box;transform-origin:center}
-.swish .spark.go{animation:spark .8s ease-out forwards}
-@keyframes spark{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
-.swish .word{font-family:var(--f-display);font-weight:900;font-size:64px;letter-spacing:.06em;fill:var(--ball);opacity:0;transform-box:fill-box;transform-origin:center}
-.swish .word.go{animation:word 1s var(--ease) forwards}
-@keyframes word{0%{opacity:0;transform:scale(.6)}30%{opacity:1;transform:scale(1.08)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1) translateY(-12px)}}
-.swish-copy{display:grid;justify-items:center;gap:10px;opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
-.swish-copy.on{opacity:1;transform:none}
-.swish-copy h2{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(3rem,9vw,5.5rem);line-height:.85}
-.swish-copy h2 .pt{color:var(--ball)}
-.swish-copy p{color:var(--hardwood);max-width:30em}
-.swish-copy p b{color:var(--chalk);font-weight:600}
-.swish-copy .btn{margin-top:10px}
-
-@media (prefers-reduced-motion:reduce){
-  .swish .net.go,.swish .spark.go,.swish .word.go{animation:none}
-  .swish-copy{transition:none}
-  html{scroll-behavior:auto}
-  .fx{transition:opacity .2s,visibility .2s;transform:none}
-  .fx-open .fx-title .f{animation:none}
-  .person img{transition:none}
-  .play .team,.play .team-k,.play .road,.enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
-}
-</style>
+<link rel="stylesheet" href="site.css">
 
 <!-- ======================= BRAND MARK =======================
      Indian Basketball Pro League mark, redrawn as vectors from the supplied logo:
@@ -503,56 +52,98 @@ template{display:none}
 <canvas id="scene" aria-hidden="true"></canvas>
 <div class="shade"></div>
 
-<!-- ======================= HEADER ======================= -->
+
+<!-- Design B · Home. The 10 sections below are the camera stops of the 'home' route in scene.js. -->
 <header class="hdr">
-  <a href="#home" class="brand" aria-label="Indian Basketball Pro League, home">
+  <a href="./" class="brand" aria-label="Indian Basketball Pro League, home">
     <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
-    <span class="wordmark"><b>Indian Basketball <em>Pro League</em></b><small>Under-16 · March 14–16, 2027</small></span>
+    <span class="wordmark"><b>Indian Basketball <em>Pro League</em></b><small>Season 1 · March 2027 · U-16 boys</small></span>
   </a>
   <nav class="hnav" id="hnav" aria-label="Main">
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#league">League</a>
-    <a href="#franchisee">Franchisee</a>
-    <a href="#development">Development</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#partners">Partners</a>
-    <a href="#contact">Contact</a>
+    <a href="./" aria-current="page">Home</a>
+    <a href="about.html">About</a>
+    <a href="league.html">League</a>
+    <a href="franchises.html">Franchises</a>
+    <a href="development.html">Development</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="partners.html">Partners</a>
+    <a href="contact.html">Contact</a>
   </nav>
-  <a href="#register" class="btn btn-solid">Register now</a>
+  <a href="register.html" class="btn btn-solid">Register now</a>
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="hnav">Menu</button>
 </header>
 
 <main>
 
-  <!-- Keep these 9 sections in this order: each one is a camera stop in scene.js (KEYS t = 0…8). -->
-  <section class="chap hero" id="home" data-name="Home">
+  <!-- 00 · Hero -->
+  <section class="chap hero" id="top" data-name="Home">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R00</span><span class="meta">March 14–16, 2027 · Downtown Sports Complex</span></p>
-      <h1 class="headline"><span class="ln"><span>Indian</span></span><span class="ln"><span>Basketball</span></span><span class="ln"><span class="gold">Pro League<span class="pt">.</span></span></span></h1>
-      <p class="sub">India's under-16 pro league. Register, get picked at the player auction, then play with certified refs and <strong>at least three games for every team</strong>.</p>
+      <p class="tag"><span class="rd">IBPL</span><span class="meta">Indian Basketball Pro League · Season 1 · March 2027</span></p>
+      <h1 class="headline hero-h"><span class="ln"><span>The next generation<span class="pt">.</span></span></span><span class="ln"><span class="gold">The biggest stage<span class="pt">.</span></span></span></h1>
+      <p class="sub">An ambitious new chapter in Indian basketball is taking shape.</p>
       <div class="actions">
-        <a href="#register" class="btn btn-solid">Register now</a>
-        <a href="#league" class="btn btn-line">How the league works</a>
+        <a href="league.html" class="btn btn-solid">Explore the league</a>
+        <a href="partners.html" class="btn btn-line">Become a partner</a>
       </div>
-      <ol class="road" aria-label="How the tournament works">
-        <li class="now"><span class="n">01</span><b>Register</b><span class="st">Open now</span></li>
-        <li><span class="n">02</span><b>Auction</b><span class="st">Date to be announced</span></li>
-        <li><span class="n">03</span><b>Fixtures</b><span class="st">After the auction</span></li>
-        <li><span class="n">04</span><b>Matches</b><span class="st">Mar 14–16, 2027</span></li>
-      </ol>
+      <p class="fine">Player registration for U-16 boys is <b>OPEN NOW</b> · <a class="more" href="register.html#player">Register</a></p>
     </div>
-    <a href="#about" class="enter">Scroll to enter the arena<i></i></a>
+    <a href="#intro" class="enter">Scroll to enter the arena<i></i></a>
   </section>
   <div class="gap"></div>
 
-  <!-- R01 · About -->
-  <section class="chap tall" id="about" data-name="About">
+  <!-- 01 · The League -->
+  <section class="chap" id="intro" data-name="The League">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R01</span><span>About</span></p>
-      <h2 class="headline"><span class="ln"><span>Built for the</span></span><span class="ln"><span>next generation<span class="pt">.</span></span></span></h2>
-      <p class="sub">An under-16 league giving young players a professional stage, led by people who have lived the game.</p>
-      <p class="team-k">Leadership</p>
+      <p class="tag"><span class="rd">01</span><span>League introduction</span></p>
+      <h2 class="headline"><span class="ln"><span>A new league</span></span><span class="ln"><span>for India's young<span class="pt">.</span></span></span></h2>
+      <p class="sub">IBPL is a franchise league for under-16 boys, built to give the country's best young players a professional stage: an auction, real teams, certified officials and a title to play for.</p>
+      <a class="more" href="about.html">About IBPL</a>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- 02 · Season 1 -->
+  <section class="chap" id="season-1" data-name="Season 1">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">02</span><span>Season 1</span></p>
+      <h2 class="headline"><span class="ln"><span>Season 1</span></span><span class="ln"><span>March 2027<span class="pt">.</span></span></span></h2>
+      <p class="sub">The launch season. Sixteen franchises build their squads at the player auction, then compete for the first IBPL title.</p>
+      <dl class="stats"><div><dt>Tip-off</dt><dd class="word">Mar 2027</dd></div><div><dt>Players</dt><dd class="word">U-16 boys</dd></div><div><dt>Franchises</dt><dd>16</dd></div></dl>
+      <a class="more" href="league.html#season-1">Season 1 details</a>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- 03 · The 16 -->
+  <section class="chap tall" id="the-16" data-name="The 16">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">03</span><span>The 16</span></p>
+      <h2 class="headline"><span class="ln"><span>Sixteen slots</span></span><span class="ln"><span>No names yet<span class="pt">.</span></span></span></h2>
+      <p class="sub">Sixteen franchises will carry the league. Who they are, and where they play, stays hidden until the reveal.</p>
+      <ul class="slots" aria-label="Sixteen franchise slots, identities to be revealed"><li class="slot" style="--i:0"><span>01</span></li><li class="slot" style="--i:1"><span>02</span></li><li class="slot" style="--i:2"><span>03</span></li><li class="slot" style="--i:3"><span>04</span></li><li class="slot" style="--i:4"><span>05</span></li><li class="slot" style="--i:5"><span>06</span></li><li class="slot" style="--i:6"><span>07</span></li><li class="slot" style="--i:7"><span>08</span></li><li class="slot" style="--i:8"><span>09</span></li><li class="slot" style="--i:9"><span>10</span></li><li class="slot" style="--i:10"><span>11</span></li><li class="slot" style="--i:11"><span>12</span></li><li class="slot" style="--i:12"><span>13</span></li><li class="slot" style="--i:13"><span>14</span></li><li class="slot" style="--i:14"><span>15</span></li><li class="slot" style="--i:15"><span>16</span></li></ul>
+      <div class="actions"><a href="franchises.html" class="btn btn-solid">Explore franchise ownership</a></div>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- 04 · Competition -->
+  <section class="chap" id="competition" data-name="Competition">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">04</span><span>Competition</span></p>
+      <h2 class="headline"><span class="ln"><span>League stage</span></span><span class="ln"><span>to champion<span class="pt">.</span></span></span></h2>
+      <p class="sub">Every franchise plays the league stage. The best go through to knockouts, and one team lifts the Season 1 title.</p>
+      <ol class="road" aria-label="Competition journey"><li class="now"><span class="n">01</span><b>League</b><span class="st">Group stage</span></li><li><span class="n">02</span><b>Knockouts</b><span class="st">QF → SF</span></li><li><span class="n">03</span><b>Final</b><span class="st">One game</span></li><li><span class="n">04</span><b>Champion</b><span class="st">Season 1</span></li></ol>
+      <a class="more" href="league.html#format">Competition format</a>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- 05 · Leadership -->
+  <section class="chap tall" id="leadership" data-name="Leadership">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">05</span><span>Leadership</span></p>
+      <h2 class="headline"><span class="ln"><span>Led by people</span></span><span class="ln"><span>who know the game<span class="pt">.</span></span></span></h2>
+      <p class="sub">The office bearers behind IBPL, including a former Indian international as Technical Director.</p>
       <ul class="team" aria-label="Leadership">
         <li><button class="person" type="button" data-more="m-team-abhinash">
           <span class="ph"><img src="assets/team/abhinash-nayak.jpg" alt="" loading="lazy" width="600" height="600"></span>
@@ -567,24 +158,7 @@ template{display:none}
           <b>Retd. Capt. Suresh Chandra Mali</b><span class="role">Technical Director<em>Head Coach, IBA</em></span>
         </button></li>
       </ul>
-      <button class="more" data-more="m-about">What we stand for</button>
-      <template id="m-about">
-        <p class="tag"><span class="rd">R01</span><span>About</span></p>
-        <h3>What we stand for</h3>
-        <p>The Indian Basketball Pro League gives under-16 players a professional stage, from the player auction to the finals weekend.</p>
-        <div class="cards">
-          <div class="card"><span class="n">01</span><b>Every game counts</b><p>At least three games for every team, with pools set by level so the best games happen late.</p></div>
-          <div class="card"><span class="n">02</span><b>Fair play</b><p>Certified referees, a live scoreboard and a 24-second shot clock in every game.</p></div>
-          <div class="card"><span class="n">03</span><b>Real teams</b><p>Squads are built at the player auction, so every player earns their place on a team.</p></div>
-          <div class="card"><span class="n">04</span><b>A pathway</b><p>Coach-led clinics before tip-off help every player arrive ready to compete.</p></div>
-        </div>
-        <dl class="stats">
-          <div><dt>Age limit</dt><dd>U16</dd></div>
-          <div><dt>Format</dt><dd class="word">5v5 full</dd></div>
-          <div><dt>Games guaranteed</dt><dd>3+</dd></div>
-        </dl>
-        <p>Supported by the Indian Basketball Alliance.</p>
-      </template>
+      <a class="more" href="about.html#leadership">Meet the office bearers</a>
       <template id="m-team-abhinash">
         <figure class="bio-ph"><img src="assets/team/abhinash-nayak.jpg" alt="Portrait of Abhinash Nayak" width="600" height="600"></figure>
         <p class="tag"><span class="rd">IBPL</span><span>Leadership</span></p>
@@ -616,204 +190,52 @@ template{display:none}
   </section>
   <div class="gap"></div>
 
-  <!-- R02 · League -->
-  <section class="chap" id="league" data-name="League">
-    <div class="chap-in">
-      <p class="tag"><span class="rd">R02</span><span>League</span></p>
-      <h2 class="headline"><span class="ln"><span>One division</span></span><span class="ln"><span>One crown<span class="pt">.</span></span></span></h2>
-      <p class="sub">Under-16s only, five-on-five, full court. Register, get picked at the player auction, then play the finals weekend.</p>
-      <dl class="stats">
-        <div><dt>Finals weekend</dt><dd class="word">Mar 14–16</dd></div>
-        <div><dt>Day pass</dt><dd>$10</dd></div>
-        <div><dt>Weekend pass</dt><dd>$20</dd></div>
-      </dl>
-      <div class="links"><button class="more" data-fixtures>Fixtures · coming soon</button><button class="more" data-more="m-league">Format, rules &amp; schedule</button></div>
-      <template id="m-league">
-        <p class="tag"><span class="rd">R02</span><span>League</span></p>
-        <h3>Format &amp; rules</h3>
-        <ul class="list">
-          <li><span>Eligibility</span><span>Under 16 on Sep 1, 2026</span></li>
-          <li><span>Format</span><span>5v5 full court</span></li>
-          <li><span>Game length</span><span>4 × 10 min</span></li>
-          <li><span>Shot clock</span><span>24 sec</span></li>
-          <li><span>Rules</span><span>High school</span></li>
-          <li><span>Roster</span><span>Up to 12 players</span></li>
-          <li><span>Games guaranteed</span><span>3+</span></li>
-        </ul>
-        <span class="panel-k">How the season works</span>
-        <ul class="list">
-          <li><span>01 · Register</span><span>Open now</span></li>
-          <li><span>02 · Player auction</span><span>Date TBA</span></li>
-          <li><span>03 · Fixtures announced</span><span>After the auction</span></li>
-          <li><span>04 · Matches</span><span>Mar 14–16</span></li>
-        </ul>
-        <span class="panel-k">Finals weekend</span>
-        <ul class="list">
-          <li><span>Fri · Opening night + skills contest</span><span>5 PM</span></li>
-          <li><span>Sat · Pool play, all teams</span><span>8 AM</span></li>
-          <li><span>Sun · Quarterfinals → Final</span><span>9 AM</span></li>
-          <li><span>Sun · Awards ceremony</span><span>6 PM</span></li>
-          <li><span>Day pass · Weekend pass</span><span>$10 · $20</span></li>
-          <li><span>Kids under 12</span><span>Free</span></li>
-        </ul>
-        <p>After the auction, teams are drawn into pools by level. Pool records and point differential set Sunday's seeding, and the championship games are streamed live to ticket holders.</p>
-      </template>
-    </div>
-  </section>
-  <div class="gap"></div>
-
-  <!-- R03 · Franchisee -->
-  <section class="chap" id="franchisee" data-name="Franchisee">
-    <div class="chap-in">
-      <p class="tag"><span class="rd">R03</span><span>Franchisee</span></p>
-      <h2 class="headline"><span class="ln"><span>Own a team</span></span><span class="ln"><span>Shape the game<span class="pt">.</span></span></span></h2>
-      <p class="sub">Franchise owners build their squads at the player auction and carry their team's name through the season.</p>
-      <ol class="road" aria-label="How to become a franchisee">
-        <li class="now"><span class="n">01</span><b>Enquire</b><span class="st">Send a message</span></li>
-        <li><span class="n">02</span><b>Meet</b><span class="st">With the league</span></li>
-        <li><span class="n">03</span><b>Sign</b><span class="st">Agree terms</span></li>
-        <li><span class="n">04</span><b>Bid</b><span class="st">At the auction</span></li>
-      </ol>
-      <div class="actions"><button class="btn btn-solid" type="button" data-contact="Franchise">Enquire about a franchise</button></div>
-      <button class="more" data-more="m-franchisee">What a franchise includes</button>
-      <template id="m-franchisee">
-        <p class="tag"><span class="rd">R03</span><span>Franchisee</span></p>
-        <h3>What a franchise includes</h3>
-        <div class="cards">
-          <div class="card"><span class="n">01</span><b>A seat at the auction</b><p>Bid for registered players and build your squad on auction night.</p></div>
-          <div class="card"><span class="n">02</span><b>Your team, your brand</b><p>Name your team and choose its colours, subject to league approval.</p></div>
-          <div class="card"><span class="n">03</span><b>Matchday presence</b><p>Your team on court through pool play and, if you go deep, Sunday's knockouts.</p></div>
-          <div class="card"><span class="n">04</span><b>The league behind you</b><p>Officials, venue, scheduling and the championship stream are run by the league.</p></div>
-        </div>
-        <p>Franchise fees and terms are shared on request.</p>
-      </template>
-    </div>
-  </section>
-  <div class="gap"></div>
-
-  <!-- R04 · Development -->
+  <!-- 06 · Development -->
   <section class="chap" id="development" data-name="Development">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R04</span><span>Development</span></p>
-      <h2 class="headline"><span class="ln"><span>Get game</span></span><span class="ln"><span>ready<span class="pt">.</span></span></span></h2>
-      <p class="sub">Registered players get four coach-led clinics in the weeks before tip-off, so every team arrives ready.</p>
-      <ul class="board dates" aria-label="Clinic dates">
-        <li><span class="k">FEB 15</span><span class="v">Shooting</span></li>
-        <li><span class="k">FEB 22</span><span class="v">Handles</span></li>
-        <li><span class="k">MAR 01</span><span class="v">Team defence</span></li>
-        <li><span class="k">MAR 08</span><span class="v">Film session</span></li>
-      </ul>
-      <button class="more" data-more="m-development">What players work on</button>
-      <template id="m-development">
-        <p class="tag"><span class="rd">R04</span><span>Development</span></p>
-        <h3>What players work on</h3>
-        <div class="cards">
-          <div class="card"><span class="n">01</span><b>Skills</b><p>Shooting form, ball handling and finishing at the rim.</p></div>
-          <div class="card"><span class="n">02</span><b>Team play</b><p>Team defence, spacing and simple sets that work five-on-five.</p></div>
-          <div class="card"><span class="n">03</span><b>Film study</b><p>Learning to read the game from footage, the way the pros prepare.</p></div>
-          <div class="card"><span class="n">04</span><b>Game day</b><p>Warm-ups, rotations and how to stay ready on the bench.</p></div>
-        </div>
-        <span class="panel-k">Schools, clubs &amp; academies</span>
-        <p>We'd like to hear from schools, clubs and academies who want to bring their under-16 players into the league. Use Contact and choose Development.</p>
-      </template>
+      <p class="tag"><span class="rd">06</span><span>Development</span></p>
+      <h2 class="headline"><span class="ln"><span>Building the</span></span><span class="ln"><span>next generation<span class="pt">.</span></span></span></h2>
+      <p class="sub">Grassroots basketball, school programmes and coach-led clinics alongside the competition.</p>
+      <ul class="board dates" aria-label="Clinic dates"><li><span class="k">FEB 15</span><span class="v">Shooting</span></li><li><span class="k">FEB 22</span><span class="v">Handles</span></li><li><span class="k">MAR 01</span><span class="v">Team defence</span></li><li><span class="k">MAR 08</span><span class="v">Film session</span></li></ul>
+      <a class="more" href="development.html">Development programmes</a>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- R05 · Gallery -->
-  <section class="chap" id="gallery" data-name="Gallery">
+  <!-- 07 · Announcements -->
+  <section class="chap" id="news" data-name="Announcements">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R05</span><span>Gallery</span></p>
-      <h2 class="headline"><span class="ln"><span>Moments</span></span><span class="ln"><span>in the making<span class="pt">.</span></span></span></h2>
-      <p class="sub">Photos from the auction, the clinics and the finals weekend will appear here as the season unfolds.</p>
-      <div class="frames" id="galGrid"></div>
+      <p class="tag"><span class="rd">07</span><span>Announcements</span></p>
+      <h2 class="headline"><span class="ln"><span>Latest from</span></span><span class="ln"><span>the league<span class="pt">.</span></span></span></h2>
+      <p class="sub">Official news and upcoming reveals.</p>
+      <ul class="news" data-news="3"></ul>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- R06 · Partners -->
+  <!-- 08 · Partners -->
   <section class="chap" id="partners" data-name="Partners">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R06</span><span>Partners</span></p>
+      <p class="tag"><span class="rd">08</span><span>Partners</span></p>
       <h2 class="headline"><span class="ln"><span>Stronger</span></span><span class="ln"><span>together<span class="pt">.</span></span></span></h2>
-      <p class="sub">IBPL is backed by partners who believe young players deserve a professional stage.</p>
-      <div class="pg-partner">
-        <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
-        <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div>
+      <p class="sub">IBPL is supported by the Indian Basketball Alliance. Partnerships for Season 1 are open.</p>
+      <div class="pg-partner"><span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span><div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div></div>
+      <div class="actions"><a href="partners.html" class="btn btn-solid">Become a partner</a></div>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- 09 · Join -->
+  <section class="chap reg" id="join" data-name="Join">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">09</span><span>Get involved</span></p>
+      <h2 class="headline"><span class="ln"><span>Own a team</span></span><span class="ln"><span>Back the league<span class="pt">.</span></span></span></h2>
+      <p class="sub">Franchise and sponsorship enquiries for Season 1 are open. Players can register now.</p>
+      <div class="cta2">
+        <a href="register.html#franchise"><span class="k">Franchises</span><b>Franchise enquiry</b><span>Own one of the sixteen.</span></a>
+        <a href="register.html#sponsorship"><span class="k">Partners</span><b>Sponsorship enquiry</b><span>Partner with Season 1.</span></a>
       </div>
-      <div class="actions"><button class="btn btn-solid" type="button" data-contact="Partnership">Become a partner</button></div>
-      <button class="more" data-more="m-partners">Partnership opportunities</button>
-      <template id="m-partners">
-        <p class="tag"><span class="rd">R06</span><span>Partners</span></p>
-        <h3>Partnership opportunities</h3>
-        <div class="cards">
-          <div class="card"><span class="avail">Available</span><b>Title partner</b><p>Your name alongside the league's, across the season and the finals weekend.</p></div>
-          <div class="card"><span class="avail">Available</span><b>Associate partner</b><p>Courtside LED boards and matchday presence at every game.</p></div>
-          <div class="card"><span class="avail">Available</span><b>Official partners</b><p>Category partners for apparel, equipment, hydration and media.</p></div>
-          <div class="card"><span class="avail">Available</span><b>Community partner</b><p>Support the clinics and help bring more young players into the game.</p></div>
-        </div>
-        <p>To talk about a partnership, use Contact and choose Partnership.</p>
-      </template>
-    </div>
-  </section>
-  <div class="gap"></div>
-
-  <!-- R07 · Contact -->
-  <section class="chap" id="contact" data-name="Contact">
-    <div class="chap-in">
-      <p class="tag"><span class="rd">R07</span><span>Contact</span></p>
-      <h2 class="headline"><span class="ln"><span>Talk to</span></span><span class="ln"><span>the league<span class="pt">.</span></span></span></h2>
-      <p class="sub">Questions about registering, franchises or partnerships? Send a message and the right person will get back to you.</p>
-      <ul class="list">
-        <li><span>Email</span><span class="sel">info@example.com</span></li>
-        <li><span>Finals venue</span><span>Downtown Sports Complex, 123 Court Street</span></li>
-        <li><span>Finals weekend</span><span>Mar 14–16, 2027</span></li>
-      </ul>
-      <div class="actions"><button class="btn btn-solid" type="button" data-contact="General">Send a message</button><button class="btn btn-line" type="button" data-more="m-faq">FAQ</button></div>
-    </div>
-  </section>
-  <div class="gap"></div>
-
-  <!-- R08 · Register now -->
-  <section class="chap reg" id="register" data-name="Register now">
-    <div class="chap-in">
-      <p class="tag"><span class="rd">R08</span><span>Register now</span></p>
-      <h2 class="headline"><span class="ln"><span>Your shot</span></span><span class="ln"><span>starts here<span class="pt">.</span></span></span></h2>
-      <p class="sub">Registration is for players under 16. Registering puts you in the player auction pool, and we'll email you the auction date and next steps.</p>
-      <!-- To receive sign-ups, send this form's data to your form service (Formspree, Google Forms, etc.) in the submit handler below. -->
-      <form class="form" id="regForm" novalidate>
-        <div class="row2">
-          <label class="field" id="nameField"><span>Player's full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="dobField"><span>Date of birth</span><input id="f-dob" name="dob" type="date" min="2010-09-02" max="2022-12-31"></label>
-        </div>
-        <fieldset class="chips" id="posSet">
-          <legend>Position</legend>
-          <label><input type="radio" name="position" id="p-guard" value="Guard"><span>Guard</span></label>
-          <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
-          <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
-        </fieldset>
-        <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
-        <div class="submit-row">
-          <button class="btn btn-solid" type="submit">Register now</button>
-          <p class="fine">Under 16 on <b>SEP 01 2026</b> · Early-bird ends <b>FEB 01</b></p>
-        </div>
-        <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
-      </form>
-      <button class="more" data-more="m-who">Who can register</button>
-      <template id="m-who">
-        <p class="tag"><span class="rd">R08</span><span>Register now</span></p>
-        <h3>Who can register</h3>
-        <ul>
-          <li><span>Who</span><span>Players only</span></li>
-          <li><span>Age</span><span>Under 16 on Sep 1, 2026</span></li>
-          <li><span>Born on or after</span><span>Sep 2, 2010</span></li>
-          <li><span>One registration per</span><span>Email address</span></li>
-          <li><span>Next step</span><span>Player auction</span></li>
-          <li><span>Early-bird ends</span><span>Feb 1</span></li>
-          <li><span>Full refunds until</span><span>Feb 15</span></li>
-        </ul>
-        <p>Coaches, parents and fans don't need to register. Spectators can buy day or weekend passes at the door.</p>
-      </template>
+      <p class="fine">Under-16 boy? <a class="more" href="register.html#player">Register as a player</a></p>
     </div>
   </section>
 
@@ -823,562 +245,40 @@ template{display:none}
   <div class="foot-in">
     <div class="foot-brand">
       <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
-      <span>Indian Basketball Pro League · Downtown Sports Complex, 123 Court Street</span>
+      <span>Indian Basketball Pro League · Season 1 · March 2027</span>
       <span class="addr">info@example.com</span>
     </div>
     <div class="foot-partner">
       <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
       <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div>
     </div>
-    <ul class="foot-links">
-      <li><a href="#">Rulebook</a></li>
-      <li><a href="#">Privacy policy</a></li>
-      <li><a href="#">Terms &amp; conditions</a></li>
-      <li><button type="button" data-more="m-faq">FAQ</button></li>
-    </ul>
+    <div class="foot-cols">
+      <div><b>League</b><ul><li><a href="about.html">About</a></li><li><a href="league.html">The League</a></li><li><a href="franchises.html">Franchises</a></li><li><a href="development.html">Development</a></li></ul></div>
+      <div><b>Media</b><ul><li><a href="gallery.html">Gallery</a></li><li><a href="partners.html">Partners</a></li><li><a href="./#news">Announcements</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div><b>Get involved</b><ul><li><a href="register.html#player">Player registration</a></li><li><a href="register.html#franchise">Franchise enquiry</a></li><li><a href="register.html#sponsorship">Sponsorship enquiry</a></li><li><a href="register.html#school">School collaboration</a></li></ul></div>
+    </div>
   </div>
-  <p class="copy">© <span id="yr"></span> Indian Basketball Pro League</p>
+  <p class="copy">© <span data-year></span> Indian Basketball Pro League · <a href="#">Privacy policy</a> · <a href="#">Terms</a></p>
 </footer>
 
 <!-- ======================= SCOREBUG (round + quarters + tip-off clock) ======================= -->
 <nav class="bug" aria-label="Arena rounds">
-  <a class="bug-mark" href="#home" aria-label="Back to start"><svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg></a>
+  <a class="bug-mark" href="#top" aria-label="Back to start"><svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg></a>
   <div class="bug-rd"><span>RD</span><b id="bugRd">00</b></div>
   <div class="bug-name" id="bugName">Overview</div>
   <ol class="bug-q" id="bugQ"></ol>
   <div class="bug-clock"><span>Tip-off in</span><b id="bugClock">--</b></div>
 </nav>
 
-<template id="m-faq">
-  <p class="tag"><span class="rd">FAQ</span><span>Questions</span></p>
-  <h3>Before you register</h3>
-  <details open><summary>Who can play?</summary><p>Players who are under 16 on September 1, 2026, which means born on or after September 2, 2010. Proof of age is checked at Friday check-in.</p></details>
-  <details><summary>Do I need a team to register?</summary><p>No. Teams are formed at the player auction. Register on your own and you'll enter the auction pool.</p></details>
-  <details><summary>How does the auction work?</summary><p>Every registered player enters the auction pool. Teams bid for players, and each player joins the team that wins them. The auction date will be announced and emailed to registered players.</p></details>
-  <details><summary>How many players are on a roster?</summary><p>Up to 12 players per team, and at least 5 to start a game.</p></details>
-  <details><summary>Is there a refund policy?</summary><p>Full refunds until February 15. After that, entry can be moved to next season.</p></details>
-  <details><summary>Do spectators need tickets?</summary><p>Day passes are $10, weekend passes $20, and kids under 12 get in free. Coaches and parents don't register.</p></details>
-  <details><summary>What rules do you play by?</summary><p>Standard high school rules: four 10-minute quarters and a 24-second shot clock. The full rulebook is emailed after registration.</p></details>
-  <p>Still stuck? Email <strong>info@example.com</strong></p>
-</template>
-
-<!-- ======================= FIXTURES (coming soon) ======================= -->
-<section class="fx" id="fx" role="dialog" aria-modal="true" aria-labelledby="fxTitle" aria-hidden="true">
-  <div class="fx-in">
-    <div class="fx-top">
-      <p class="tag"><span class="rd">FIX</span><span class="meta">Under-16 · Downtown Sports Complex · March 14–16, 2027</span></p>
-      <button class="fx-x" id="fxClose" aria-label="Close fixtures">×</button>
-    </div>
-    <h2 class="fx-title" id="fxTitle"><span class="o">Fixtures</span><span class="f">Coming soon<span class="pt">.</span></span></h2>
-    <div class="fx-drop">
-      <div><span class="k">Announced</span><b>AFTER THE AUCTION</b></div>
-      <div><span class="k">Matches</span><b>MAR 14–16</b></div>
-      <p class="fx-copy">Once the player auction sets every team, pools, tip-off times and courts land here. Registered players get them by email first.</p>
-    </div>
-    <div class="fx-cta">
-      <a href="#register" class="btn btn-solid" data-fx-close>Register to play</a>
-      <button class="more" type="button" data-more="m-league">See the weekend schedule</button>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= REGISTRATION SUCCESS (ball swishes through the hoop) ======================= -->
-<div class="swish" id="swish" role="dialog" aria-modal="true" aria-labelledby="swishTitle" hidden>
-  <div class="swish-in">
-    <svg viewBox="0 0 600 400" aria-hidden="true">
-      <defs>
-        <radialGradient id="sw-ball" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#f3a35c"/><stop offset=".55" stop-color="#d4692a"/><stop offset="1" stop-color="#7a3010"/></radialGradient>
-      </defs>
-      <rect class="bbd" x="402" y="24" width="166" height="112" rx="4"/>
-      <rect class="bbd" x="461" y="70" width="48" height="40" rx="1" style="fill:none"/>
-      <rect x="480" y="136" width="10" height="20" fill="#2a2622"/>
-      <path class="rim-b" d="M443 160 A42 9 0 0 1 527 160"/>
-      <g id="swBall">
-        <circle r="24" fill="url(#sw-ball)"/>
-        <g fill="none" stroke="#2a1206" stroke-width="2.2"><path d="M-24 0 H24"/><path d="M0 -24 V24"/><path d="M-16 -18 C-6 -8 -6 8 -16 18"/><path d="M16 -18 C6 -8 6 8 16 18"/></g>
-      </g>
-      <path class="net" id="swNet"/>
-      <path class="rim-f" d="M443 160 A42 9 0 0 0 527 160"/>
-      <g id="swSparks"></g>
-      <text class="word" id="swWord" x="485" y="300" text-anchor="middle">SWISH</text>
-    </svg>
-    <div class="swish-copy" id="swishCopy">
-      <p class="tag"><span class="rd">IBPL</span><span>Registration complete</span></p>
-      <h2 id="swishTitle">You're in<span class="pt">.</span></h2>
-      <p id="swishMsg"></p>
-      <button class="btn btn-solid" type="button" id="swishDone">Done</button>
-    </div>
-  </div>
-</div>
-
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Details" aria-hidden="true">
   <button class="drawer-x" id="drawerX" aria-label="Close">×</button>
   <div id="drawerBody"></div>
-  <div class="drawer-panel" id="panel-contact" hidden>
-    <p class="tag"><span class="rd">R07</span><span>Contact</span></p>
-    <h3>Send a message</h3>
-    <p>Choose a topic and the right person will reply by email.</p>
-      <form class="form" id="cForm" novalidate>
-        <fieldset class="chips" id="cTopicSet">
-          <legend>Topic</legend>
-          <label><input type="radio" name="topic" id="t-general" value="General" checked><span>General</span></label>
-          <label><input type="radio" name="topic" id="t-franchise" value="Franchise"><span>Franchise</span></label>
-          <label><input type="radio" name="topic" id="t-partner" value="Partnership"><span>Partnership</span></label>
-          <label><input type="radio" name="topic" id="t-dev" value="Development"><span>Development</span></label>
-          <label><input type="radio" name="topic" id="t-media" value="Media"><span>Media</span></label>
-        </fieldset>
-        <div class="row2">
-          <label class="field" id="cNameField"><span>Your name</span><input id="c-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="cEmailField"><span>Email</span><input id="c-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
-        </div>
-        <label class="field" id="cMsgField"><span>Message</span><textarea id="c-msg" name="message" placeholder="How can we help?"></textarea></label>
-        <div class="submit-row"><button class="btn btn-solid" type="submit">Send message</button></div>
-        <p class="msg" id="cMsg" role="status" aria-live="polite"></p>
-      </form>
-  </div>
 </aside>
 
-<script>
-/* ============ page logic: scroll → camera progress (window.__hrT), scorebug, UI ============ */
-(() => {
-  const $ = (s, c = document) => c.querySelector(s);
-  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
-  const root = document.documentElement;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const TIPOFF = new Date('2027-03-14T17:00:00'); // EDIT: tournament start
-  $('#yr').textContent = new Date().getFullYear();
-
-  /* ---- loader: shot clock runs 24 → 0 while the arena loads ---- */
-  let pct = 0, ready = false;
-  const ldClock = $('#ldClock'), ldMsg = $('#ldMsg');
-  const ldTimer = setInterval(() => {
-    pct = Math.min(ready ? 100 : 92, pct + (ready ? 10 : Math.max(0.5, (92 - pct) * 0.06)));
-    ldClock.textContent = Math.max(0, Math.ceil(24 * (1 - pct / 100)));
-    if (pct >= 100) {
-      clearInterval(ldTimer); ldMsg.textContent = 'Tip-off';
-      setTimeout(() => { $('#loader').classList.add('out'); play(chaps[0]); }, 300);
-    }
-  }, 60);
-  window.__hrReady = () => { ready = true; };
-  setTimeout(() => { ready = true; }, 9000); // never get stuck on the loader
-
-  /* ---- chapters → camera position ---- */
-  const chaps = $$('.chap');
-  let anchors = [];
-  const measure = () => { anchors = chaps.map(c => c.offsetTop); };
-  const ease = (s) => s * s * (3 - 2 * s);
-  window.__hrT = 0;
-
-  /* ---- scorebug: one segment per round ---- */
-  const bugQ = $('#bugQ'), bugRd = $('#bugRd'), bugName = $('#bugName');
-  const segs = chaps.map((c, i) => {
-    const li = document.createElement('li');
-    const b = document.createElement('button');
-    b.type = 'button';
-    const name = c.dataset.name.replace('&amp;', '&');
-    b.setAttribute('aria-label', `Round ${String(i).padStart(2, '0')}: ${name}`);
-    b.title = name;
-    b.innerHTML = '<i></i>';
-    b.addEventListener('click', () => scrollTo({ top: anchors[i], behavior: reduce ? 'auto' : 'smooth' }));
-    li.appendChild(b); bugQ.appendChild(li);
-    return b;
-  });
-  let lastIdx = -1;
-
-  function play(c) { if (c && !c.dataset.played && !reduce) { c.dataset.played = '1'; c.firstElementChild.classList.add('play'); } }
-
-  function update() {
-    const y = scrollY, H = innerHeight;
-    let t = 0;
-    if (y >= anchors[anchors.length - 1]) t = anchors.length - 1;
-    else for (let i = 0; i < anchors.length - 1; i++) {
-      if (y >= anchors[i] && y < anchors[i + 1]) { t = i + ease((y - anchors[i]) / (anchors[i + 1] - anchors[i])); break; }
-    }
-    window.__hrT = t;
-
-    const idx = Math.min(chaps.length - 1, Math.round(t));
-    segs.forEach((b, i) => {
-      const atEnd = t >= chaps.length - 1 - 1e-3;
-      b.style.setProperty('--f', atEnd || i < Math.floor(t) ? 1 : i === Math.floor(t) ? Math.max(0.12, t - i) : 0);
-      b.classList.toggle('now', i === idx);
-      if (i === idx) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
-    });
-    if (idx !== lastIdx) {
-      lastIdx = idx;
-      document.querySelectorAll('#hnav a, .hdr .btn').forEach(a => {
-        if (a.getAttribute('href') === '#' + chaps[idx].id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
-      });
-      bugRd.textContent = String(idx).padStart(2, '0');
-      bugName.textContent = chaps[idx].dataset.name.replace('&amp;', '&');
-    }
-
-    // lower-thirds fade with distance from the centre of the screen; headline reveal plays once
-    chaps.forEach((c) => {
-      const inner = c.firstElementChild;
-      const r = c.getBoundingClientRect();
-      const isReg = c.classList.contains('reg');
-      const center = isReg ? r.top + H * 0.5 : r.top + r.height / 2;
-      const d = (center - H / 2) / H;
-      let o = 1 - Math.max(0, Math.abs(d) - 0.12) / 0.38;
-      if (isReg && d < 0) o = 1;
-      o = Math.max(0, Math.min(1, o));
-      inner.style.opacity = o;
-      inner.style.transform = reduce ? '' : `translateY(${d * -36}px)`;
-      inner.style.pointerEvents = o > 0.3 ? '' : 'none';
-      if (o > 0.15 && $('#loader').classList.contains('out')) play(c);
-    });
-    const enter = $('.enter'); if (enter) enter.style.opacity = Math.max(0, 1 - y / (H * 0.3));
-  }
-  let raf = 0;
-  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
-  addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', () => { measure(); update(); });
-  addEventListener('load', () => { measure(); update(); });
-  measure(); update();
-
-  /* ---- tip-off countdown in the scorebug ---- */
-  const bugClock = $('#bugClock');
-  const pad = (n) => String(n).padStart(2, '0');
-  function tick() {
-    let s = Math.max(0, Math.floor((TIPOFF - Date.now()) / 1000));
-    const d = Math.floor(s / 86400); s %= 86400;
-    const h = Math.floor(s / 3600); s %= 3600;
-    const m = Math.floor(s / 60); s %= 60;
-    bugClock.textContent = d > 0 ? `${d}D ${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(h)}:${pad(m)}:${pad(s)}`;
-  }
-  tick(); setInterval(tick, 1000);
-
-  /* ---- mouse parallax for the 3D camera ---- */
-  addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'mouse') return;
-    window.__hrMouseX = (e.clientX / innerWidth - 0.5) * 2;
-    window.__hrMouseY = (e.clientY / innerHeight - 0.5) * 2;
-  });
-
-  /* ---- detail drawer (keeps keyboard focus inside while open) ---- */
-  const drawer = $('#drawer'), body = document.body;
-  let lastFocus = null;
-  function openDrawer(id) {
-    const panel = document.getElementById('panel-' + id), tpl = $('#' + id);
-    if (!panel && !tpl) return;
-    lastFocus = document.activeElement;
-    $$('.drawer-panel').forEach(pn => { pn.hidden = pn !== panel; });
-    $('#drawerBody').hidden = !!panel;
-    if (!panel) $('#drawerBody').innerHTML = tpl.innerHTML;
-    const h = panel ? $('h3', panel) : $('h3', $('#drawerBody')); drawer.setAttribute('aria-label', h ? h.textContent : 'Details');
-    body.classList.add('drawer-open'); drawer.setAttribute('aria-hidden', 'false');
-    drawer.scrollTop = 0;
-    setTimeout(() => $('#drawerX').focus(), 50);
-  }
-  function closeDrawer() {
-    if (!body.classList.contains('drawer-open')) return;
-    body.classList.remove('drawer-open'); drawer.setAttribute('aria-hidden', 'true');
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  $$('[data-more]').forEach(b => b.addEventListener('click', () => openDrawer(b.dataset.more)));
-  window.__hrOpenDrawer = openDrawer;
-  const faqBtn = $('#faqBtn'); if (faqBtn) faqBtn.addEventListener('click', () => openDrawer('m-faq'));
-  $('#scrim').addEventListener('click', closeDrawer);
-  $('#drawerX').addEventListener('click', closeDrawer);
-  addEventListener('keydown', (e) => {
-    if (!body.classList.contains('drawer-open')) return;
-    if (e.key === 'Escape') { closeDrawer(); return; }
-    if (e.key === 'Tab') {
-      const f = $$('button, a[href], summary, input, textarea', drawer).filter(el => el.offsetParent !== null);
-      if (!f.length) return;
-      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
-      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
-    }
-  });
-
-  /* ---- player registration: one player per email ----
-     On the Claude link, registrations go to the page's shared database:
-       emails/<fingerprint>        claim marker (no personal data), so anyone can check an email is free
-       registrations/<viewer id>/players/<fingerprint>  the full registration, readable only by the
-                                   person who submitted it and the owner/editors
-     Anywhere else (localhost, a local file) there is no shared database, so the check only covers
-     registrations made in this browser. A public launch needs a real backend here. */
-  const form = $('#regForm'), msg = $('#formMsg'), submitBtn = $('button[type="submit"]', form);
-  const CUTOFF = '2010-09-02'; // EDIT: earliest allowed date of birth (under 16 on Sep 1, 2026)
-  const Registry = (() => {
-    const hasRuntime = () => window.claude && typeof window.claude.use === 'function';
-    const dbReady = (async () => { try { return hasRuntime() ? await window.claude.use('db') : null; } catch (e) { return null; } })();
-    const uidReady = (async () => {
-      try { const u = hasRuntime() ? await window.claude.use('user') : null; return u ? await u.id() : null; } catch (e) { return null; }
-    })();
-    const holder = 'reg-' + Math.random().toString(36).slice(2);
-    async function fingerprint(email) {
-      const norm = email.trim().toLowerCase();
-      try {
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('ibpl:' + norm));
-        return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-      } catch (e) {                                  // very old browsers / insecure contexts
-        let h1 = 0x811c9dc5, h2 = 0x01000193;
-        for (const ch of norm) { h1 = Math.imul(h1 ^ ch.charCodeAt(0), 16777619); h2 = Math.imul(h2 + ch.charCodeAt(0), 2246822507); }
-        return 'f' + (h1 >>> 0).toString(16) + (h2 >>> 0).toString(16);
-      }
-    }
-    const local = {
-      read() { try { return JSON.parse(localStorage.getItem('ibpl-registered-emails') || '[]'); } catch (e) { return []; } },
-      write(list) { try { localStorage.setItem('ibpl-registered-emails', JSON.stringify(list)); } catch (e) { /* storage blocked */ } }
-    };
-    async function register(rec) {
-      const key = await fingerprint(rec.email);
-      const db = await dbReady;
-      if (!db) {
-        const list = local.read();
-        if (list.includes(key)) return 'taken';
-        list.push(key); local.write(list);
-        return 'ok';
-      }
-      const claim = db.doc('emails/' + key);
-      const lease = await claim.acquire({ holder, ttlMs: 10000 });
-      if (!lease.acquired) return 'taken';                    // the same email is mid-registration elsewhere
-      const snap = await claim.get();
-      if (snap.exists && (snap.data() || {}).claimed) return 'taken';
-      const uid = await uidReady;
-      if (!uid) throw new Error('no viewer id');
-      const at = new Date().toISOString();
-      await db.collection('registrations/' + uid + '/players').doc(key).set({ name: rec.name, dob: rec.dob, position: rec.position, email: rec.email.trim().toLowerCase(), registeredAt: at });
-      await claim.set({ claimed: true, at });
-      await db.doc('registrations/' + uid).set({ lastAt: at }); // lets the owner find each submitter's registrations
-      return 'ok';
-    }
-    return { register, dbReady, uidReady };
-  })();
-
-  form.addEventListener('change', (e) => { const fs = e.target.closest('fieldset'); if (fs) fs.classList.remove('bad'); });
-  form.addEventListener('input', (e) => { const fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (submitBtn.disabled) return;
-    const name = form.name.value.trim(), dob = form.dob.value, position = form.position.value, email = form.email.value.trim();
-    const missing = [];
-    $('#nameField').classList.toggle('bad', !name); if (!name) missing.push("the player's name");
-    $('#dobField').classList.toggle('bad', !dob); if (!dob) missing.push('a date of birth');
-    $('#posSet').classList.toggle('bad', !position); if (!position) missing.push('a position');
-    const okEmail = /^\S+@\S+\.\S+$/.test(email);
-    $('#emailField').classList.toggle('bad', !okEmail); if (!okEmail) missing.push('a valid email');
-    msg.classList.remove('ok');
-    if (missing.length) {
-      msg.textContent = 'Add ' + missing.join(', ').replace(/, ([^,]*)$/, ' and $1') + ' to register.';
-      return;
-    }
-    if (dob < CUTOFF) {
-      $('#dobField').classList.add('bad');
-      msg.textContent = 'This tournament is for players under 16 on September 1, 2026, so the player must be born on or after September 2, 2010.';
-      return;
-    }
-    const label = submitBtn.textContent;
-    submitBtn.disabled = true; submitBtn.textContent = 'Registering…'; msg.textContent = '';
-    try {
-      const result = await Registry.register({ name, dob, position, email });
-      if (result === 'taken') {
-        $('#emailField').classList.add('bad');
-        msg.textContent = `${email} has already been used to register a player. Each email can register one player only, so use a different email.`;
-        return;
-      }
-      form.reset();
-      msg.classList.add('ok');
-      msg.textContent = `${name.split(' ')[0]} is registered and in the player auction pool.`;
-      celebrate(name.split(' ')[0], email);
-    } catch (err) {
-      msg.textContent = "We couldn't save the registration just now. Check your connection and try again.";
-    } finally {
-      submitBtn.disabled = false; submitBtn.textContent = label;
-    }
-  });
-
-  /* ---- success: the ball swishes through the hoop ---- */
-  const sw = $('#swish'), swBall = $('#swBall'), swNet = $('#swNet'), swWord = $('#swWord'), swSparks = $('#swSparks'), swCopy = $('#swishCopy');
-  // net: strings from the rim (443–527 at y 161) down to the bottom ring (462–508 at y 232), plus diamond mesh
-  (() => {
-    const top = i => [443 + i * 12, 161], bot = i => [462 + i * (46 / 7), 232];
-    const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
-    let d = '';
-    for (let i = 0; i < 7; i++) {
-      const a1 = lerp(top(i), bot(i), 0), m1 = lerp(top(i + 1), bot(i + 1), 0.33), a2 = lerp(top(i), bot(i), 0.66), b = lerp(top(i + 1), bot(i + 1), 1);
-      const c1 = lerp(top(i + 1), bot(i + 1), 0), n1 = lerp(top(i), bot(i), 0.33), c2 = lerp(top(i + 1), bot(i + 1), 0.66), e = lerp(top(i), bot(i), 1);
-      d += `M${a1} L${m1} L${a2} L${b} M${c1} L${n1} L${c2} L${e} `;
-    }
-    d += 'M462 232 L508 232';
-    swNet.setAttribute('d', d.replace(/,/g, ' '));
-  })();
-  let swFocus = null, swTimers = [], swRaf = 0;
-  const later = (fn, ms) => swTimers.push(setTimeout(fn, ms));
-  function placeBall(x, y, rot, op = 1) { swBall.setAttribute('transform', `translate(${x} ${y}) rotate(${rot})`); swBall.style.opacity = op; }
-  function sparks() {
-    swSparks.innerHTML = '';
-    for (let i = 0; i < 10; i++) {
-      const a = (i / 10) * Math.PI * 2 + Math.random() * 0.4, r = 40 + Math.random() * 45;
-      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      c.setAttribute('cx', 485); c.setAttribute('cy', 160); c.setAttribute('r', 2.2 + Math.random() * 2.2);
-      c.setAttribute('class', 'spark'); c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px');
-      swSparks.appendChild(c);
-      requestAnimationFrame(() => c.classList.add('go'));
-    }
-  }
-  function celebrate(first, email) {
-    $('#swishMsg').innerHTML = '';
-    const m = $('#swishMsg');
-    m.append(`${first}, you're in the IBPL player auction pool. The auction date and next steps are on their way to `);
-    const b = document.createElement('b'); b.textContent = email; m.append(b, '.');
-    swFocus = document.activeElement;
-    swTimers.forEach(clearTimeout); swTimers = []; cancelAnimationFrame(swRaf);
-    swNet.classList.remove('go'); swWord.classList.remove('go'); swCopy.classList.remove('on'); swSparks.innerHTML = '';
-    sw.hidden = false; requestAnimationFrame(() => sw.classList.add('on'));
-    document.documentElement.style.overflow = 'hidden';
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { placeBall(485, 300, 0, 0); swCopy.classList.add('on'); $('#swishDone').focus(); return; }
-    // flight: a quadratic arc from bottom-left into the rim, then a drop through the net
-    const P0 = [70, 360], P1 = [280, -190], P2 = [485, 150], FLY = 1050, DROP = 420;
-    let t0 = 0;
-    placeBall(...P0, 0);
-    const step = (now) => {
-      if (!t0) t0 = now;
-      const e = now - t0;
-      if (e < FLY) {
-        const t = e / FLY, u = 1 - t;
-        const x = u * u * P0[0] + 2 * u * t * P1[0] + t * t * P2[0];
-        const y = u * u * P0[1] + 2 * u * t * P1[1] + t * t * P2[1];
-        placeBall(x, y, t * 600);
-      } else if (e < FLY + DROP) {
-        const t = (e - FLY) / DROP;
-        placeBall(485, 150 + 160 * t * t + 30 * t, 600 + t * 90, t < 0.6 ? 1 : 1 - (t - 0.6) / 0.4);
-      } else { placeBall(485, 340, 690, 0); return; }
-      swRaf = requestAnimationFrame(step);
-    };
-    swRaf = requestAnimationFrame(step);
-    later(() => { swNet.classList.add('go'); sparks(); swWord.classList.add('go'); }, FLY + 40);
-    later(() => { swCopy.classList.add('on'); $('#swishDone').focus(); }, FLY + 900);
-  }
-  function closeSwish() {
-    if (sw.hidden) return;
-    swTimers.forEach(clearTimeout); cancelAnimationFrame(swRaf);
-    sw.classList.remove('on'); document.documentElement.style.overflow = '';
-    setTimeout(() => { sw.hidden = true; }, 350);
-    if (swFocus && swFocus.focus) swFocus.focus();
-  }
-  $('#swishDone').addEventListener('click', closeSwish);
-  addEventListener('keydown', (e) => {
-    if (sw.hidden) return;
-    if (e.key === 'Escape') closeSwish();
-    if (e.key === 'Tab') { e.preventDefault(); $('#swishDone').focus(); }
-  });
-})();
-</script>
-<script>
-/* ============ fixtures: coming soon ============ */
-(() => {
-  const $ = (s, c = document) => c.querySelector(s);
-  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
-  const root = document.documentElement, body = document.body, fx = $('#fx');
-
-  let lastFocus = null, prevHash = '';
-  function open() {
-    if (body.classList.contains('fx-open')) return;
-    lastFocus = document.activeElement;
-    body.classList.add('fx-open'); fx.setAttribute('aria-hidden', 'false'); root.style.overflow = 'hidden';
-    setTimeout(() => $('#fxClose').focus(), 60);
-    prevHash = location.hash === '#fixtures' ? '' : location.hash;
-    try { history.replaceState(null, '', '#fixtures'); } catch (e) { /* ignore */ }
-  }
-  function close(restore = true) {
-    if (!body.classList.contains('fx-open')) return;
-    body.classList.remove('fx-open'); fx.setAttribute('aria-hidden', 'true'); root.style.overflow = '';
-    try { if (location.hash === '#fixtures') history.replaceState(null, '', prevHash || (location.pathname + location.search)); } catch (e) { /* ignore */ }
-    if (restore && lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('[data-fixtures]')) { e.preventDefault(); open(); return; }
-    if (e.target.closest('#fxClose')) { close(); return; }
-    // links inside the board close it first (register link scrolls, detail panel opens on top)
-    if (e.target.closest('#fx [data-fx-close], #fx [data-more]')) close(false);
-  });
-  addEventListener('keydown', (e) => {
-    if (!body.classList.contains('fx-open')) return;
-    if (e.key === 'Escape') { close(); return; }
-    if (e.key === 'Tab') {
-      const f = $$('button, a[href]', fx).filter(el => el.offsetParent !== null);
-      if (!f.length) return;
-      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
-      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
-    }
-  });
-  // a link ending in #fixtures opens it once the arena has loaded
-  const fromHash = () => { if (location.hash === '#fixtures') { const w = setInterval(() => { if ($('#loader').classList.contains('out')) { clearInterval(w); open(); } }, 200); } };
-  addEventListener('hashchange', fromHash);
-  fromHash();
-  window.__hrFixtures = { open, close };
-})();
-</script>
-<script>
-/* ============ menu, gallery, contact form ============ */
-(() => {
-  const $ = (s, c = document) => c.querySelector(s);
-  const body = document.body;
-
-  /* ---- menu (small screens) ---- */
-  const menuBtn = $('#menuBtn');
-  const setMenu = (open) => { body.classList.toggle('menu-open', open); menuBtn.setAttribute('aria-expanded', String(open)); menuBtn.textContent = open ? 'Close' : 'Menu'; };
-  menuBtn.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
-  document.querySelectorAll('.hdr a').forEach(a => a.addEventListener('click', () => setMenu(false)));
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && body.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
-
-  /* ---- GALLERY ----
-     Add photos as the season happens, e.g.
-       { src: 'assets/gallery/auction-night-01.jpg', title: 'Auction night', note: 'Mumbai' }
-     Put the image files in assets/gallery/. While the list is empty, the section shows the planned albums. */
-  const GALLERY = [];
-  const gal = $('#galGrid');
-  const frame = (title, note, src) => {
-    const f = document.createElement('figure'); f.className = 'frame' + (src ? ' photo' : '');
-    if (src) { const im = document.createElement('img'); im.src = src; im.alt = title; im.loading = 'lazy'; f.appendChild(im); }
-    const b = document.createElement('b'); b.textContent = title; const n = document.createElement('span'); n.textContent = note;
-    f.append(b, n); return f;
-  };
-  if (GALLERY.length) GALLERY.slice(0, 6).forEach(g => gal.appendChild(frame(g.title || '', g.note || '', g.src)));
-  else ['Auction night', 'Clinics', 'Pool play', 'Finals weekend', 'Behind the scenes', 'Champions'].forEach(t => gal.appendChild(frame(t, 'Coming soon')));
-
-  /* ---- contact: buttons open the message panel with a topic picked ---- */
-  document.addEventListener('click', (e) => {
-    const b = e.target.closest('[data-contact]'); if (!b) return;
-    const r = document.querySelector(`#cTopicSet input[value="${b.dataset.contact}"]`); if (r) r.checked = true;
-    if (window.__hrOpenDrawer) window.__hrOpenDrawer('contact');
-  });
-
-  const cForm = $('#cForm'), cMsg = $('#cMsg'), cBtn = $('button[type="submit"]', cForm);
-  const hasRuntime = () => window.claude && typeof window.claude.use === 'function';
-  const dbReady = (async () => { try { return hasRuntime() ? await window.claude.use('db') : null; } catch (e) { return null; } })();
-  const uidReady = (async () => { try { const u = hasRuntime() ? await window.claude.use('user') : null; return u ? await u.id() : null; } catch (e) { return null; } })();
-  cForm.addEventListener('input', (e) => { const fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
-  cForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (cBtn.disabled) return;
-    const topic = cForm.topic.value || 'General', name = cForm.name.value.trim(), email = cForm.email.value.trim(), message = cForm.message.value.trim();
-    const missing = [];
-    $('#cNameField').classList.toggle('bad', !name); if (!name) missing.push('your name');
-    const okEmail = /^\S+@\S+\.\S+$/.test(email);
-    $('#cEmailField').classList.toggle('bad', !okEmail); if (!okEmail) missing.push('a valid email');
-    $('#cMsgField').classList.toggle('bad', !message); if (!message) missing.push('a message');
-    cMsg.classList.remove('ok');
-    if (missing.length) { cMsg.textContent = 'Add ' + missing.join(', ').replace(/, ([^,]*)$/, ' and $1') + ' to send your message.'; return; }
-    const db = await dbReady, uid = await uidReady;
-    if (!db || !uid) { cMsg.textContent = "Messages can't be sent from this copy of the site yet. Please email info@example.com instead."; return; }
-    const label = cBtn.textContent; cBtn.disabled = true; cBtn.textContent = 'Sending…'; cMsg.textContent = '';
-    try {
-      const at = new Date().toISOString();
-      await db.collection('enquiries/' + uid + '/messages').doc(String(Date.now())).set({ topic, name, email: email.toLowerCase(), message: message.slice(0, 4000), sentAt: at });
-      await db.doc('enquiries/' + uid).set({ lastAt: at });
-      cForm.reset(); cMsg.classList.add('ok');
-      cMsg.textContent = `Thanks, ${name.split(' ')[0]}. Your message has reached the league team, and we'll reply to ${email}.`;
-    } catch (err) {
-      cMsg.textContent = "We couldn't send your message just now. Check your connection and try again.";
-    } finally { cBtn.disabled = false; cBtn.textContent = label; }
-  });
-})();
-</script>
+<script>window.__hrRoute = 'home';</script>
+<script src="site.js"></script>
+<script src="arena.js"></script>
 <script src="vendor/three.min.js"></script>
 <script src="vendor/three-post.js"></script>
 <script src="scene.js"></script>

@@ -1,6 +1,11 @@
-# Indian Basketball Pro League
+# Indian Basketball Pro League (IBPL) website
 
-Scroll-driven 3D arena website for the Indian Basketball Pro League (IBPL) under-16 tournament.
+Two designs for the client to compare, sharing one stylesheet, one script and the 3D arena.
+
+| Design | Open | What it is |
+|---|---|---|
+| **B · Home + pages** (main) | `index.html` → http://localhost:8000 | Home is a 10-section arena scroll; About, League, Franchises, Development, Gallery, Partners, Contact and Register Now are separate pages |
+| **A · All in one scroll** | `scroll.html` → http://localhost:8000/scroll.html | Every page is a section of one arena scroll |
 
 ## Run it on your computer (Windows)
 
@@ -8,14 +13,21 @@ Scroll-driven 3D arena website for the Indian Basketball Pro League (IBPL) under
 2. Download this repository once: green **Code** button → **Download ZIP**, then right-click → **Extract All**.
 3. Double-click **`start-site.bat`**. It downloads the latest version from GitHub, then opens http://localhost:8000.
 
-Every later double-click updates the site automatically before starting it.
+## Where to change things
+
+- **Settings** (registration open/closed, age cut-off, contact email): top of `site.js` (`IBPL = { … }`)
+- **Announcements**: `content/news.json` · **Gallery**: `content/gallery.json` (photos in `assets/gallery/`)
+- **Page text**: the `.html` files · **Styles**: `site.css`
+- **3D arena**: `scene.js` (camera routes for each design are in `ROUTES`)
+- **Placeholders**: anything marked "Awaiting details" on the site is waiting for confirmed facts from the client
 
 ## Files
 
-- `index.html`: page layout, text, styles and scroll logic
-- `scene.js`: the 3D arena (three.js)
-- `vendor/`: three.js r147 and its post-processing helpers (MIT licence)
+- `site.css`, `site.js`: shared styles and behaviour (menu, panels, forms, registration, swish)
+- `arena.js`: scroll → camera, loader, scorebug (scroll pages only)
+- `scene.js` + `vendor/`: the 3D arena (three.js r147, MIT licence)
+- `assets/`: logos, leadership photos, arena stills used as page heroes
 - `serve.py` + `start-site.bat`: local server with auto-update
-- `classic.html`: the earlier non-3D version
+- `sitemap.xml`, `robots.txt`: replace `https://www.example.com` with the real domain at launch
 
-Add `#lite` to the address (`http://localhost:8000/#lite`) for a lighter mode on slower computers.
+Add `#lite` to the address for a lighter 3D mode on slower computers.

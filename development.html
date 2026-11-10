@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Development · IBPL</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Building the next generation of basketball: grassroots, youth talent, school programmes, coaching and player identification.">
+<meta property="og:title" content="Development · IBPL">
+<meta property="og:description" content="Building the next generation of basketball: grassroots, youth talent, school programmes, coaching and player identification.">
+<meta property="og:image" content="assets/stills/development.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0d0b0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Big Shoulders Display = headlines, Archivo = text, Chivo Mono = scoreboard data.
+     Barlow Condensed stays loaded: the logo mark and the 3D arena signage are drawn with it. -->
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700&family=Chivo+Mono:wght@400;500;600&family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="inner">
+<!-- ======================= BRAND MARK =======================
+     Indian Basketball Pro League mark, redrawn as vectors from the supplied logo:
+     platinum B, brushed-gold ball, counters and seams cut through. Use it anywhere with
+     <svg class="mark"><use href="#ibpl-mark"/></svg>. Same geometry as MARK in scene.js. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ibpl-gold" x1="290" y1="420" x2="460" y2="810" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f7e7b4"/><stop offset=".42" stop-color="#d4a54a"/><stop offset=".74" stop-color="#a5772a"/><stop offset="1" stop-color="#e9c97a"/></linearGradient>
+    <linearGradient id="ibpl-plat" x1="445" y1="318" x2="760" y2="910" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6dfd4"/><stop offset=".7" stop-color="#cfc7ba"/><stop offset="1" stop-color="#f3eee6"/></linearGradient>
+    <mask id="ibpl-cut" maskUnits="userSpaceOnUse" x="250" y="300" width="690" height="630">
+      <rect x="250" y="300" width="690" height="630" fill="#fff"/>
+      <g fill="none" stroke="#000" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M932 470 C895 430 850 424 808 424 H559 V549 H808"/><path d="M932 758 C895 798 850 804 808 804 H559 V680 H808"/></g>
+      <g fill="none" stroke="#000" stroke-width="15"><path d="M262 614 H440"/><path d="M306 482 Q376 512 440 572"/><path d="M306 746 Q376 716 440 656"/></g>
+    </mask>
+    <clipPath id="ibpl-ball"><rect x="250" y="300" width="178" height="630"/></clipPath>
+    <symbol id="ibpl-mark" viewBox="250 300 690 630">
+      <g mask="url(#ibpl-cut)">
+        <circle cx="470" cy="614" r="200" fill="url(#ibpl-gold)" clip-path="url(#ibpl-ball)"/>
+        <path fill="url(#ibpl-plat)" d="M445 318 H745 C795 318 822 340 845 372 L897 442 C916 470 918 525 902 562 C895 580 886 594 876 606 C902 624 922 656 922 702 C922 750 912 776 897 793 L845 862 C822 892 795 910 745 910 H445 Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="hdr">
+  <a href="./" class="brand" aria-label="Indian Basketball Pro League, home">
+    <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
+    <span class="wordmark"><b>Indian Basketball <em>Pro League</em></b><small>Season 1 · March 2027 · U-16 boys</small></span>
+  </a>
+  <nav class="hnav" id="hnav" aria-label="Main">
+    <a href="./">Home</a>
+    <a href="about.html">About</a>
+    <a href="league.html">League</a>
+    <a href="franchises.html">Franchises</a>
+    <a href="development.html" aria-current="page">Development</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="partners.html">Partners</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a href="register.html" class="btn btn-solid">Register now</a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="hnav">Menu</button>
+</header>
+<main>
+  <section class="pg-hero" style="--still:url(assets/stills/development.jpg)">
+    <div class="pg-hero-in">
+      <p class="tag"><span class="rd">IBPL</span><span>Development</span></p>
+      <h1 class="headline"><span class="ln"><span>Building the next</span></span><span class="ln"><span class="gold">generation of basketball<span class="pt">.</span></span></span></h1>
+      <p class="sub">Competition is one half of IBPL. The other is development: coaching, schools and a pathway for young players across India.</p><div class="actions"><a href="register.html#school" class="btn btn-solid">School collaboration</a><a href="register.html#player" class="btn btn-line">Register as a player</a></div>
+    </div>
+  </section>
+  <nav class="toc" aria-label="On this page"><a href="#grassroots">Grassroots</a><a href="#youth">Youth talent</a><a href="#schools">Schools</a><a href="#coaching">Coaching</a><a href="#technical">Technical</a><a href="#identification">Player ID</a><a href="#future">Future</a></nav>
+  <div class="blocks">
+    <section class="blk" id="grassroots">
+      <div class="blk-k"><span class="n">01</span><h2>Grassroots basketball</h2></div>
+      <div class="blk-b">
+<p>Bringing the game to more young people, in more places, with sessions open to beginners as well as club players.</p>
+      </div>
+    </section>
+    <section class="blk" id="youth">
+      <div class="blk-k"><span class="n">02</span><h2>Youth talent development</h2></div>
+      <div class="blk-b">
+        <p>Registered players get coach-led clinics in the weeks before the season.</p>
+        <ul class="board dates" aria-label="Clinic dates"><li><span class="k">FEB 15</span><span class="v">Shooting</span></li><li><span class="k">FEB 22</span><span class="v">Handles</span></li><li><span class="k">MAR 01</span><span class="v">Team defence</span></li><li><span class="k">MAR 08</span><span class="v">Film session</span></li></ul>
+      </div>
+    </section>
+    <section class="blk" id="schools">
+      <div class="blk-k"><span class="n">03</span><h2>School basketball programmes</h2></div>
+      <div class="blk-b">
+        <p>Working with schools and academies to bring their under-16 players into organised competition and coaching.</p>
+        <div class="actions"><a href="register.html#school" class="btn btn-solid">Start a school collaboration</a></div>
+      </div>
+    </section>
+    <section class="blk" id="coaching">
+      <div class="blk-k"><span class="n">04</span><h2>Professional coaching</h2></div>
+      <div class="blk-b">
+<p>Sessions are led by qualified coaches, with standards set by the league's Technical Director.</p>
+      </div>
+    </section>
+    <section class="blk" id="technical">
+      <div class="blk-k"><span class="n">05</span><h2>Technical development</h2></div>
+      <div class="blk-b">
+        <article class="leader"><span class="ph"><img src="assets/team/suresh-chandra-mali.jpg" alt="Portrait of Retd. Capt. Suresh Chandra Mali" loading="lazy" width="600" height="600"></span>
+          <div><h3>Retd. Capt. Suresh Chandra Mali</h3><p class="role">Technical Director &amp; Head Coach, IBA</p><p>A former Indian international player (1985–1990) and former coach of the Indian Women's National Team (2004), shaping IBPL's coaching standards and player development.</p></div></article>
+      </div>
+    </section>
+    <section class="blk" id="identification">
+      <div class="blk-k"><span class="n">06</span><h2>Player identification</h2></div>
+      <div class="blk-b">
+<p>The league gives coaches and scouts a structured way to see young talent in competitive games, beginning with Season 1.</p>
+      </div>
+    </section>
+    <section class="blk" id="future">
+      <div class="blk-k"><span class="n">07</span><h2>Future basketball initiatives</h2></div>
+      <div class="blk-b">
+<ul class="ticks"><li>More age groups and a girls' competition.</li><li>District-level development camps.</li><li>Coach education programmes.</li></ul>
+      </div>
+    </section>
+  </div>
+  <section class="pg-cta">
+    <h2 class="headline"><span class="ln"><span>Bring your</span></span><span class="ln"><span class="gold">school in<span class="pt">.</span></span></span></h2>
+    <p class="sub">Schools and academies can partner with IBPL to give their players coaching and competition.</p>
+    <div class="actions"><a href="register.html#school" class="btn btn-solid">School collaboration</a></div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
+      <span>Indian Basketball Pro League · Season 1 · March 2027</span>
+      <span class="addr">info@example.com</span>
+    </div>
+    <div class="foot-partner">
+      <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
+      <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div>
+    </div>
+    <div class="foot-cols">
+      <div><b>League</b><ul><li><a href="about.html">About</a></li><li><a href="league.html">The League</a></li><li><a href="franchises.html">Franchises</a></li><li><a href="development.html">Development</a></li></ul></div>
+      <div><b>Media</b><ul><li><a href="gallery.html">Gallery</a></li><li><a href="partners.html">Partners</a></li><li><a href="./#news">Announcements</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div><b>Get involved</b><ul><li><a href="register.html#player">Player registration</a></li><li><a href="register.html#franchise">Franchise enquiry</a></li><li><a href="register.html#sponsorship">Sponsorship enquiry</a></li><li><a href="register.html#school">School collaboration</a></li></ul></div>
+    </div>
+  </div>
+  <p class="copy">© <span data-year></span> Indian Basketball Pro League · <a href="#">Privacy policy</a> · <a href="#">Terms</a></p>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

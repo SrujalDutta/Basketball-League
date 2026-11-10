@@ -1,7 +1,7 @@
 /* =====================================================================
    INDIAN BASKETBALL PRO LEAGUE — 3D arena fly-through (three.js r147, no build step)
    Rendering: HDR scene → bloom → cinematic grade (ACES, vignette, grain)
-   The camera follows window.__hrT (0 → 8), set by the page script from
+   The camera follows window.__hrT along the route the page picks (window.__hrRoute), set by the page script from
    scroll position. Each whole number = one chapter on the page.
    ===================================================================== */
 (function () {
@@ -376,8 +376,8 @@
       const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#c99a3e'); gr.addColorStop(1, '#2a1d08');
       g.fillStyle = gr; g.fillRect(0, 0, w, h);
       drawShooter(g, w * 0.5, h * 0.82, 220, '#1a0a03');
-      g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = '800 92px "Barlow Condensed"'; g.fillText('CITY FINALS', w / 2, 110);
-      g.font = '600 36px "Barlow Condensed"'; spaced(g, 'BLACKTOP KINGS vs STORM', w / 2, 160, 3);
+      g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = '800 92px "Barlow Condensed"'; g.fillText('SEASON 1', w / 2, 110);
+      g.font = '600 36px "Barlow Condensed"'; spaced(g, 'MARCH 2027 · U-16 BOYS', w / 2, 160, 3);
     }, -8);
     poster((g, w, h) => {
       g.fillStyle = '#16121f'; g.fillRect(0, 0, w, h);
@@ -787,8 +787,9 @@
 
     /* =============== JERSEY WALL (x = -30, z -26 → -38) =============== */
     const jerseys = [
-      ['#ff5a1f', '#111', '23', 'ELITE'], ['#f0f0f0', '#ff5a1f', '7', 'KINGS'], ['#111111', '#ffb21a', '1', 'STORM'],
-      ['#1d3b8a', '#ffffff', '11', 'METRO'], ['#7a0f12', '#ffffff', '30', 'HEAT']
+      // franchise identities stay hidden until the reveal: dark jerseys, no names
+      ['#17140f', '#d4a54a', '?', 'FRANCHISE'], ['#22201c', '#cfc7ba', '?', 'FRANCHISE'], ['#0e0d0b', '#d4a54a', '?', 'FRANCHISE'],
+      ['#22201c', '#cfc7ba', '?', 'FRANCHISE'], ['#17140f', '#d4a54a', '?', 'FRANCHISE']
     ];
     jerseys.forEach(([col, trim, num, name], i) => {
       const z = -27.4 - i * 2.2;
@@ -920,9 +921,13 @@
      view offset (pushes the subject right so the copy on the left is clear)
      ===================================================================== */
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
-  const KEYS = [
-    { t: 0.00, p: V(0, 1.75, 13.5), l: V(0, 2.7, 0), o: 0.0 },               // 00 Home: arena entrance
-    { t: 0.45, p: V(0, 1.7, 3.2), l: V(0, 1.7, -8), o: 0.02 },
+  // Camera routes. Each page picks one with window.__hrRoute before scene.js loads;
+  // every whole number t is one <section class="chap"> on that page.
+  const ROUTES = {
+    // scroll.html: Home, About, League, Franchises, Development, Gallery, Partners, Contact, Register
+    scroll: [
+    { t: 0.00, p: V(0, 1.75, 13.5), l: V(0, 2.7, 0), o: 0.17 },               // 00 Home: arena entrance
+    { t: 0.45, p: V(0, 1.7, 3.2), l: V(0, 1.7, -8), o: 0.1 },
     { t: 0.75, p: V(0, 1.7, -2.5), l: V(0.6, 1.75, -12), o: 0.06 },
     { t: 1.00, p: V(-1.2, 1.7, -4.5), l: V(1.5, 1.85, -15), o: 0.12 },        // 01 About: the tunnel
     { t: 1.45, p: V(0, 2.0, -19), l: V(0, 1.6, -34), o: 0.08 },
@@ -940,7 +945,33 @@
     { t: 7.00, p: V(0, 12.5, -25.4), l: V(0, 4.2, -57), o: 0.1 },            // 07 Contact: high above the arena
     { t: 7.50, p: V(5, 4.6, -26.6), l: V(6.2, 0.6, -30.8), o: 0.15 },
     { t: 8.00, p: V(5.75, 1.4, -29.2), l: V(6.45, 0.5, -30.62), o: 0.17 }    // 08 Register now: the bench
-  ];
+    ],
+    // index.html: Hero, League intro, Season 1, The 16, Competition, Leadership, Development, Announcements, Partners, Final CTA
+    home: [
+      { t: 0.00, p: V(0, 1.75, 13.5), l: V(0, 2.7, 0), o: 0.17 },               // 0 Hero: arena entrance
+      { t: 0.45, p: V(0, 1.7, 3.2), l: V(0, 1.7, -8), o: 0.1 },
+      { t: 0.75, p: V(0, 1.7, -2.5), l: V(0.6, 1.75, -12), o: 0.06 },
+      { t: 1.00, p: V(-1.2, 1.7, -4.5), l: V(1.5, 1.85, -15), o: 0.12 },        // 1 League intro: the tunnel
+      { t: 1.45, p: V(0, 2.0, -19), l: V(0, 1.6, -34), o: 0.08 },
+      { t: 1.70, p: V(-1, 2.6, -26.5), l: V(-2, 1.8, -42), o: 0.1 },
+      { t: 2.00, p: V(-12, 6.8, -33), l: V(-1, 0.4, -51), o: 0.15 },           // 2 Season 1: high over the court
+      { t: 2.50, p: V(-14, 4.2, -29), l: V(-24, 2.4, -31.5), o: 0.12 },
+      { t: 3.00, p: V(-21.5, 2.3, -28.3), l: V(-29.6, 2.4, -32.2), o: 0.13 },   // 3 The 16: mystery jersey wall
+      { t: 3.50, p: V(-7.5, 3.4, -40), l: V(-1, 1.4, -56), o: 0.13 },
+      { t: 4.00, p: V(-5.2, 1.65, -55.6), l: V(1.6, 1.3, -62.6), o: 0.15 },    // 4 Competition: down on the court
+      { t: 4.50, p: V(-2, 6, -48), l: V(0, 9, -56), o: 0.13 },
+      { t: 5.00, p: V(-2.5, 7.2, -37.5), l: V(1.5, 9.8, -54), o: 0.2 },        // 5 Leadership: under the scoreboard
+      { t: 5.50, p: V(6, 5, -34), l: V(16, 2, -33), o: 0.12 },
+      { t: 6.00, p: V(11.2, 1.8, -27.6), l: V(21.5, 1.4, -33.2), o: 0.13 },    // 6 Development: training area
+      { t: 6.50, p: V(6, 6, -27), l: V(0, 4, -50), o: 0.1 },
+      { t: 7.00, p: V(0, 12.5, -25.4), l: V(0, 4.2, -57), o: 0.1 },            // 7 Announcements: high above the arena
+      { t: 7.50, p: V(3, 5, -30), l: V(8, 1, -45), o: 0.13 },
+      { t: 8.00, p: V(5.2, 1.15, -36.5), l: V(9.7, 0.45, -50), o: 0.16 },      // 8 Partners: courtside LED boards
+      { t: 8.50, p: V(5.2, 2.4, -31), l: V(6.2, 0.6, -31), o: 0.16 },
+      { t: 9.00, p: V(5.75, 1.4, -29.2), l: V(6.45, 0.5, -30.62), o: 0.17 }    // 9 Final CTA: the bench
+    ]
+  };
+  const KEYS = ROUTES[window.__hrRoute] || ROUTES.scroll;
   function cr(p0, p1, p2, p3, s, out) {
     const s2 = s * s, s3 = s2 * s;
     return out.set(

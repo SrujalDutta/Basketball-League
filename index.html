@@ -85,8 +85,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hnav{display:flex;align-items:center;gap:clamp(14px,2.2vw,30px)}
 .hnav a,.hnav button{font-size:var(--t-small);font-weight:500;color:var(--chalk);padding:8px 0;background-image:linear-gradient(var(--ball),var(--ball));background-size:0 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .3s var(--ease)}
 .hnav a:hover,.hnav button:hover{background-size:100% 2px}
-.hnav a[aria-current="page"]{color:var(--ball);background-size:100% 2px}
-.hdr .btn[aria-current="page"]{background:var(--chalk)}
+.hnav a[aria-current]{color:var(--ball);background-size:100% 2px}
+.hdr .btn[aria-current]{background:var(--chalk)}
 .menu-btn{display:none;align-items:center;min-height:42px;padding:0 14px;border:1px solid var(--seam-strong);border-radius:2px;font-size:var(--t-label);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
 .menu-btn:hover{border-color:var(--chalk)}
 
@@ -285,25 +285,7 @@ template{display:none}
 
 /* ---------- site pages (About, League, Franchisee, …) ----------
    Each page is a full-screen layer over the live arena; the camera flies to the page's spot. */
-.page{position:fixed;inset:0;z-index:30;overflow-y:auto;overscroll-behavior:contain;opacity:0;transition:opacity .45s var(--ease);
   background:linear-gradient(90deg,rgba(13,11,10,.95) 0%,rgba(13,11,10,.88) 44%,rgba(13,11,10,.35) 70%,rgba(13,11,10,.05) 100%)}
-.page[hidden]{display:none}
-.page.on{opacity:1}
-.page:not(.on){pointer-events:none}
-.pg-open main,.pg-open>.foot,.pg-open .bug,.pg-open .enter{visibility:hidden}
-.pg-in{max-width:760px;display:grid;gap:clamp(48px,8vh,76px);padding-block:calc(132px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));padding-left:max(var(--gut-l),var(--edge));padding-right:var(--gut-r)}
-.pg-hero h1{outline:none}
-.pg-hero .headline{font-size:clamp(3.1rem,6.6vw,6.6rem)}
-.page.on .ln>span{animation:rise .95s var(--ease) both}
-.page.on .ln:nth-child(2)>span{animation-delay:.09s}
-.page.on .pg-hero .tag,.page.on .pg-hero .sub,.page.on .pg-hero .actions{animation:fadeup .8s var(--ease) both;animation-delay:.2s}
-.pg-sec{display:grid;gap:18px;min-width:0}
-.pg-h2{display:flex;align-items:center;gap:14px;font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ball)}
-.pg-h2::after{content:"";flex:1;height:1px;background:var(--seam)}
-.pg-sec>p{color:var(--hardwood);max-width:36em}
-.pg-sec>p strong{color:var(--chalk);font-weight:600}
-.pg-sec .stats,.pg-sec .board,.pg-sec .road{margin-top:0}
-.pg-sec .actions{margin-top:4px}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--seam-strong);border-left:1px solid var(--seam)}
 .card{display:grid;gap:8px;align-content:start;padding:18px 18px 22px;border-right:1px solid var(--seam);border-bottom:1px solid var(--seam);background:rgba(13,11,10,.42);min-width:0}
 .card .n{font-family:var(--f-data);font-size:var(--t-label);color:var(--ball)}
@@ -329,14 +311,22 @@ template{display:none}
 .frame.photo::before{display:none}
 .frame.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(13,11,10,.85))}
 .frame.photo b,.frame.photo span{z-index:1}
-.pg-next{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-top:1px solid var(--seam-strong);border-bottom:1px solid var(--seam-strong);transition:color .2s}
-.pg-next span{font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--hardwood)}
-.pg-next b{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,4vw,2.8rem);line-height:1;text-transform:uppercase}
-.pg-next b::after{content:" →";color:var(--ball)}
-.pg-next:hover{color:var(--ball)}
-.pg-in .foot{padding:0;background:none}
-.pg-in .foot .foot-in{padding-top:24px}
 .form textarea{font:inherit}
+.chap .frames,.chap .pg-partner,.chap .list{margin-top:26px;max-width:600px}
+.chap .frames{max-width:500px;gap:8px}
+.chap .frame{aspect-ratio:3/2;padding:10px}
+.chap .frame::before{left:10px;top:10px;width:16px;height:16px}
+.chap .frame b{font-size:1rem}
+.chap .pg-partner{padding:14px 16px;gap:14px 20px;max-width:480px}
+.chap .pg-partner img{height:80px}
+.chap .pg-partner b{font-size:1.6rem}
+.chap .road{max-width:600px}
+.drawer .cards{margin:22px 0}
+.drawer .card{padding:14px 14px 18px}
+.drawer .list{margin:22px 0}
+.drawer .form{padding:0;border:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;max-width:none}
+.drawer .faq{margin-top:10px}
+.panel-k{display:block;margin-top:34px;font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ball)}
 .faq details{border-bottom:1px solid var(--seam)}
 .faq details:first-of-type{border-top:1px solid var(--seam-strong)}
 .faq summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;display:flex;justify-content:space-between;gap:16px}
@@ -370,6 +360,10 @@ template{display:none}
   .brand .mark{font-size:36px}
   .wordmark{display:none}
   .chap{align-items:flex-end;padding-block:96px 104px}
+  .chap .frames{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .chap .frame{padding:8px}
+  .chap .frame b{font-size:.95rem}
+  .chap .frame span{display:none}
   .chap.reg{padding-top:96px}
   .gap{height:70vh}
   .enter{display:none}
@@ -383,8 +377,6 @@ template{display:none}
   .bug-clock b{font-size:.85rem}
   .board{grid-template-columns:repeat(2,minmax(0,1fr))}
   .row2{grid-template-columns:1fr}
-  .page{background:rgba(13,11,10,.9)}
-  .pg-in{padding-top:calc(100px + env(safe-area-inset-top, 0px));gap:52px}
   .cards{grid-template-columns:1fr}
   .frames{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pg-partner img{height:110px}
@@ -435,8 +427,6 @@ template{display:none}
   .swish .net.go,.swish .spark.go,.swish .word.go{animation:none}
   .swish-copy{transition:none}
   html{scroll-behavior:auto}
-  .page{transition:none}
-  .page.on .ln>span,.page.on .pg-hero .tag,.page.on .pg-hero .sub,.page.on .pg-hero .actions{animation:none}
   .fx{transition:opacity .2s,visibility .2s;transform:none}
   .fx-open .fx-title .f{animation:none}
   .play .road,.enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
@@ -502,8 +492,8 @@ template{display:none}
 
 <main>
 
-  <!-- ROUND 00 — the camera's first stop. Keep these 8 sections in this order: each one is a camera position. -->
-  <section class="chap hero" id="overview" data-name="Overview">
+  <!-- Keep these 9 sections in this order: each one is a camera stop in scene.js (KEYS t = 0…8). -->
+  <section class="chap hero" id="home" data-name="Home">
     <div class="chap-in">
       <p class="tag"><span class="rd">R00</span><span class="meta">March 14–16, 2027 · Downtown Sports Complex</span></p>
       <h1 class="headline"><span class="ln"><span>Indian</span></span><span class="ln"><span>Basketball</span></span><span class="ln"><span class="gold">Pro League<span class="pt">.</span></span></span></h1>
@@ -519,191 +509,237 @@ template{display:none}
         <li><span class="n">04</span><b>Matches</b><span class="st">Mar 14–16, 2027</span></li>
       </ol>
     </div>
-    <a href="#tunnel" class="enter">Scroll to enter the arena<i></i></a>
+    <a href="#about" class="enter">Scroll to enter the arena<i></i></a>
   </section>
   <div class="gap"></div>
 
-  <!-- ROUND 01 -->
-  <section class="chap" id="tunnel" data-name="The Tunnel">
+  <!-- R01 · About -->
+  <section class="chap" id="about" data-name="About">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R01</span><span>The Tunnel</span></p>
-      <h2 class="headline"><span class="ln"><span>Every legend</span></span><span class="ln"><span>walks in here<span class="pt">.</span></span></span></h2>
-      <p class="sub">Every team gets a proper walk-out, a live scoreboard and certified officials. Pool play Friday and Saturday, brackets on Sunday.</p>
-      <dl class="stats">
-        <div><dt>Days</dt><dd>3</dd></div>
-        <div><dt>Courts</dt><dd>8</dd></div>
-        <div><dt>Teams</dt><dd>120+</dd></div>
-        <div><dt>Prize pool</dt><dd>$25K</dd></div>
-      </dl>
-      <button class="more" data-more="m-tunnel">Full details</button>
-      <template id="m-tunnel">
-        <p class="tag"><span class="rd">R01</span><span>The Tunnel</span></p>
-        <h3>Your walk-out starts here.</h3>
-        <p>The IBPL finals weekend is three days at the Downtown Sports Complex. Every team gets a proper walk-out, a scoreboard, certified officials and a minimum of three games.</p>
-        <p>No travelling across town for one game and done. Pool play on Friday and Saturday, brackets on Sunday.</p>
-        <ul><li><span>Teams</span><span>120+</span></li><li><span>Courts</span><span>8</span></li><li><span>Games guaranteed</span><span>3+</span></li><li><span>Prize pool</span><span>$25,000</span></li></ul>
-      </template>
-    </div>
-  </section>
-  <div class="gap"></div>
-
-  <!-- ROUND 02 -->
-  <section class="chap" id="court" data-name="The Court">
-    <div class="chap-in">
-      <p class="tag"><span class="rd">R02</span><span>The Court</span></p>
-      <h2 class="headline"><span class="ln"><span>One division<span class="pt">.</span></span></span><span class="ln"><span>One crown<span class="pt">.</span></span></span></h2>
-      <p class="sub">Under-16s only, so every game is against players your own age.</p>
+      <p class="tag"><span class="rd">R01</span><span>About</span></p>
+      <h2 class="headline"><span class="ln"><span>Built for the</span></span><span class="ln"><span>next generation<span class="pt">.</span></span></span></h2>
+      <p class="sub">An under-16 league that gives young players a professional stage: real teams built at a player auction, certified officials, and games that count.</p>
       <dl class="stats">
         <div><dt>Age limit</dt><dd>U16</dd></div>
         <div><dt>Format</dt><dd class="word">5v5 full</dd></div>
         <div><dt>Quarters</dt><dd>4×10</dd></div>
         <div><dt>Games guaranteed</dt><dd>3+</dd></div>
       </dl>
-      <button class="more" data-more="m-court">Eligibility &amp; rules</button>
-      <template id="m-court">
-        <p class="tag"><span class="rd">R02</span><span>The Court</span></p>
-        <h3>Under-16 division</h3>
-        <p>Open to players who are under 16 on September 1, 2026, which means born on or after September 2, 2010. Proof of age is checked at Friday check-in.</p>
-        <ul>
+      <button class="more" data-more="m-about">What we stand for</button>
+      <template id="m-about">
+        <p class="tag"><span class="rd">R01</span><span>About</span></p>
+        <h3>What we stand for</h3>
+        <p>The Indian Basketball Pro League gives under-16 players a professional stage, from the player auction to the finals weekend.</p>
+        <div class="cards">
+          <div class="card"><span class="n">01</span><b>Every game counts</b><p>At least three games for every team, with pools set by level so the best games happen late.</p></div>
+          <div class="card"><span class="n">02</span><b>Fair play</b><p>Certified referees, a live scoreboard and a 24-second shot clock in every game.</p></div>
+          <div class="card"><span class="n">03</span><b>Real teams</b><p>Squads are built at the player auction, so every player earns their place on a team.</p></div>
+          <div class="card"><span class="n">04</span><b>A pathway</b><p>Coach-led clinics before tip-off help every player arrive ready to compete.</p></div>
+        </div>
+        <p>Supported by the Indian Basketball Alliance.</p>
+      </template>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- R02 · League -->
+  <section class="chap" id="league" data-name="League">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">R02</span><span>League</span></p>
+      <h2 class="headline"><span class="ln"><span>One division</span></span><span class="ln"><span>One crown<span class="pt">.</span></span></span></h2>
+      <p class="sub">Under-16s only, five-on-five, full court. Register, get picked at the player auction, then play the finals weekend.</p>
+      <dl class="stats">
+        <div><dt>Finals weekend</dt><dd class="word">Mar 14–16</dd></div>
+        <div><dt>Day pass</dt><dd>$10</dd></div>
+        <div><dt>Weekend pass</dt><dd>$20</dd></div>
+      </dl>
+      <div class="links"><button class="more" data-fixtures>Fixtures · coming soon</button><button class="more" data-more="m-league">Format, rules &amp; schedule</button></div>
+      <template id="m-league">
+        <p class="tag"><span class="rd">R02</span><span>League</span></p>
+        <h3>Format &amp; rules</h3>
+        <ul class="list">
+          <li><span>Eligibility</span><span>Under 16 on Sep 1, 2026</span></li>
           <li><span>Format</span><span>5v5 full court</span></li>
           <li><span>Game length</span><span>4 × 10 min</span></li>
           <li><span>Shot clock</span><span>24 sec</span></li>
           <li><span>Rules</span><span>High school</span></li>
+          <li><span>Roster</span><span>Up to 12 players</span></li>
           <li><span>Games guaranteed</span><span>3+</span></li>
         </ul>
+        <span class="panel-k">How the season works</span>
+        <ul class="list">
+          <li><span>01 · Register</span><span>Open now</span></li>
+          <li><span>02 · Player auction</span><span>Date TBA</span></li>
+          <li><span>03 · Fixtures announced</span><span>After the auction</span></li>
+          <li><span>04 · Matches</span><span>Mar 14–16</span></li>
+        </ul>
+        <span class="panel-k">Finals weekend</span>
+        <ul class="list">
+          <li><span>Fri · Opening night + skills contest</span><span>5 PM</span></li>
+          <li><span>Sat · Pool play, all teams</span><span>8 AM</span></li>
+          <li><span>Sun · Quarterfinals → Final</span><span>9 AM</span></li>
+          <li><span>Sun · Awards ceremony</span><span>6 PM</span></li>
+          <li><span>Day pass · Weekend pass</span><span>$10 · $20</span></li>
+          <li><span>Kids under 12</span><span>Free</span></li>
+        </ul>
+        <p>After the auction, teams are drawn into pools by level. Pool records and point differential set Sunday's seeding, and the championship games are streamed live to ticket holders.</p>
       </template>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- ROUND 03 -->
-  <section class="chap" id="matchups" data-name="Matchups">
+  <!-- R03 · Franchisee -->
+  <section class="chap" id="franchisee" data-name="Franchisee">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
-      <h2 class="headline"><span class="ln"><span>The right</span></span><span class="ln"><span>matchups<span class="pt">.</span></span></span></h2>
-      <p class="sub">Once the auction sets the teams, they're drawn into pools by level, so the best games happen late and blowouts stay rare.</p>
-      <dl class="stats">
-        <div><dt>Pool play</dt><dd class="word">Fri–Sat</dd></div>
-        <div><dt>Seeding posted</dt><dd class="word">Sat 7 PM</dd></div>
-        <div><dt>Knockouts</dt><dd class="word">Sunday</dd></div>
-      </dl>
-      <div class="links"><button class="more" data-fixtures>See the fixtures</button><button class="more" data-more="m-matchups">How seeding works</button></div>
-      <template id="m-matchups">
-        <p class="tag"><span class="rd">R03</span><span>Matchups</span></p>
-        <h3>Fair brackets, every game.</h3>
-        <p>After the auction, teams are drawn into pools by competitive level. Pool records and point differential set Sunday's seeding, so the best games happen late.</p>
-        <p>Every game uses certified referees, a live scoreboard and a 24-second shot clock.</p>
-        <ul><li><span>Pool play</span><span>Fri–Sat</span></li><li><span>Seeding posted</span><span>Sat 7 PM</span></li><li><span>Single elimination</span><span>Sunday</span></li></ul>
+      <p class="tag"><span class="rd">R03</span><span>Franchisee</span></p>
+      <h2 class="headline"><span class="ln"><span>Own a team</span></span><span class="ln"><span>Shape the game<span class="pt">.</span></span></span></h2>
+      <p class="sub">Franchise owners build their squads at the player auction and carry their team's name through the season.</p>
+      <ol class="road" aria-label="How to become a franchisee">
+        <li class="now"><span class="n">01</span><b>Enquire</b><span class="st">Send a message</span></li>
+        <li><span class="n">02</span><b>Meet</b><span class="st">With the league</span></li>
+        <li><span class="n">03</span><b>Sign</b><span class="st">Agree terms</span></li>
+        <li><span class="n">04</span><b>Bid</b><span class="st">At the auction</span></li>
+      </ol>
+      <div class="actions"><button class="btn btn-solid" type="button" data-contact="Franchise">Enquire about a franchise</button></div>
+      <button class="more" data-more="m-franchisee">What a franchise includes</button>
+      <template id="m-franchisee">
+        <p class="tag"><span class="rd">R03</span><span>Franchisee</span></p>
+        <h3>What a franchise includes</h3>
+        <div class="cards">
+          <div class="card"><span class="n">01</span><b>A seat at the auction</b><p>Bid for registered players and build your squad on auction night.</p></div>
+          <div class="card"><span class="n">02</span><b>Your team, your brand</b><p>Name your team and choose its colours, subject to league approval.</p></div>
+          <div class="card"><span class="n">03</span><b>Matchday presence</b><p>Your team on court through pool play and, if you go deep, Sunday's knockouts.</p></div>
+          <div class="card"><span class="n">04</span><b>The league behind you</b><p>Officials, venue, scheduling and the championship stream are run by the league.</p></div>
+        </div>
+        <p>Franchise fees and terms are shared on request.</p>
       </template>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- ROUND 04 -->
-  <section class="chap" id="training" data-name="Training">
+  <!-- R04 · Development -->
+  <section class="chap" id="development" data-name="Development">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R04</span><span>Training</span></p>
+      <p class="tag"><span class="rd">R04</span><span>Development</span></p>
       <h2 class="headline"><span class="ln"><span>Get game</span></span><span class="ln"><span>ready<span class="pt">.</span></span></span></h2>
-      <p class="sub">Registered players get four coach-led clinics in the weeks before tip-off.</p>
+      <p class="sub">Registered players get four coach-led clinics in the weeks before tip-off, so every team arrives ready.</p>
       <ul class="board dates" aria-label="Clinic dates">
         <li><span class="k">FEB 15</span><span class="v">Shooting</span></li>
         <li><span class="k">FEB 22</span><span class="v">Handles</span></li>
         <li><span class="k">MAR 01</span><span class="v">Team defence</span></li>
         <li><span class="k">MAR 08</span><span class="v">Film session</span></li>
       </ul>
-      <button class="more" data-more="m-training">Clinic details</button>
-      <template id="m-training">
-        <p class="tag"><span class="rd">R04</span><span>Training</span></p>
-        <h3>Clinics before tip-off.</h3>
-        <p>In the four weeks before the tournament, registered players get access to coach-led clinics: shooting, ball handling, defence and team sets.</p>
-        <ul><li><span>Shooting clinic</span><span>Sat Feb 15</span></li><li><span>Handles &amp; finishing</span><span>Sat Feb 22</span></li><li><span>Team defence</span><span>Sat Mar 1</span></li><li><span>Film session</span><span>Sat Mar 8</span></li></ul>
+      <button class="more" data-more="m-development">What players work on</button>
+      <template id="m-development">
+        <p class="tag"><span class="rd">R04</span><span>Development</span></p>
+        <h3>What players work on</h3>
+        <div class="cards">
+          <div class="card"><span class="n">01</span><b>Skills</b><p>Shooting form, ball handling and finishing at the rim.</p></div>
+          <div class="card"><span class="n">02</span><b>Team play</b><p>Team defence, spacing and simple sets that work five-on-five.</p></div>
+          <div class="card"><span class="n">03</span><b>Film study</b><p>Learning to read the game from footage, the way the pros prepare.</p></div>
+          <div class="card"><span class="n">04</span><b>Game day</b><p>Warm-ups, rotations and how to stay ready on the bench.</p></div>
+        </div>
+        <span class="panel-k">Schools, clubs &amp; academies</span>
+        <p>We'd like to hear from schools, clubs and academies who want to bring their under-16 players into the league. Use Contact and choose Development.</p>
       </template>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- ROUND 05 -->
-  <section class="chap" id="teams" data-name="Player Auction">
+  <!-- R05 · Gallery -->
+  <section class="chap" id="gallery" data-name="Gallery">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R05</span><span>Player Auction</span></p>
-      <h2 class="headline"><span class="ln"><span>Going, going,</span></span><span class="ln"><span>gone<span class="pt">.</span></span></span></h2>
-      <p class="sub">Every registered player enters the auction pool. Teams bid to build their squads, and when the hammer falls you'll know your team.</p>
-      <dl class="stats">
-        <div><dt>Auction entry</dt><dd class="word">Automatic</dd></div>
-        <div><dt>Teams form by</dt><dd class="word">Bidding</dd></div>
-        <div><dt>Auction date</dt><dd class="word">TBA</dd></div>
-      </dl>
-      <button class="more" data-more="m-teams">How the auction works</button>
-      <template id="m-teams">
-        <p class="tag"><span class="rd">R05</span><span>Player Auction</span></p>
-        <h3>The player auction</h3>
-        <p>Every registered player goes into the auction pool. Teams bid for players, and each player joins the team that wins them. Once every squad is set, the fixtures are announced.</p>
-        <ul>
-          <li><span>01 · Register</span><span>Open now</span></li>
-          <li><span>02 · Player auction</span><span>Date TBA</span></li>
-          <li><span>03 · Fixtures announced</span><span>After the auction</span></li>
-          <li><span>04 · Matches</span><span>Mar 14–16</span></li>
-        </ul>
-        <p>Registered players get the auction date and how to follow it by email.</p>
+      <p class="tag"><span class="rd">R05</span><span>Gallery</span></p>
+      <h2 class="headline"><span class="ln"><span>Moments</span></span><span class="ln"><span>in the making<span class="pt">.</span></span></span></h2>
+      <p class="sub">Photos from the auction, the clinics and the finals weekend will appear here as the season unfolds.</p>
+      <div class="frames" id="galGrid"></div>
+    </div>
+  </section>
+  <div class="gap"></div>
+
+  <!-- R06 · Partners -->
+  <section class="chap" id="partners" data-name="Partners">
+    <div class="chap-in">
+      <p class="tag"><span class="rd">R06</span><span>Partners</span></p>
+      <h2 class="headline"><span class="ln"><span>Stronger</span></span><span class="ln"><span>together<span class="pt">.</span></span></span></h2>
+      <p class="sub">IBPL is backed by partners who believe young players deserve a professional stage.</p>
+      <div class="pg-partner">
+        <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
+        <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div>
+      </div>
+      <div class="actions"><button class="btn btn-solid" type="button" data-contact="Partnership">Become a partner</button></div>
+      <button class="more" data-more="m-partners">Partnership opportunities</button>
+      <template id="m-partners">
+        <p class="tag"><span class="rd">R06</span><span>Partners</span></p>
+        <h3>Partnership opportunities</h3>
+        <div class="cards">
+          <div class="card"><span class="avail">Available</span><b>Title partner</b><p>Your name alongside the league's, across the season and the finals weekend.</p></div>
+          <div class="card"><span class="avail">Available</span><b>Associate partner</b><p>Courtside LED boards and matchday presence at every game.</p></div>
+          <div class="card"><span class="avail">Available</span><b>Official partners</b><p>Category partners for apparel, equipment, hydration and media.</p></div>
+          <div class="card"><span class="avail">Available</span><b>Community partner</b><p>Support the clinics and help bring more young players into the game.</p></div>
+        </div>
+        <p>To talk about a partnership, use Contact and choose Partnership.</p>
       </template>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- ROUND 06 -->
-  <section class="chap" id="events" data-name="Events &amp; Tickets">
+  <!-- R07 · Contact -->
+  <section class="chap" id="contact" data-name="Contact">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R06</span><span>Events &amp; Tickets</span></p>
-      <h2 class="headline"><span class="ln"><span>Tip-off to</span></span><span class="ln"><span>final buzzer<span class="pt">.</span></span></span></h2>
-      <p class="sub">Skills night opens Friday at 5 PM. Championship games are streamed live to every ticket holder.</p>
-      <dl class="stats">
-        <div><dt>Day pass</dt><dd>$10</dd></div>
-        <div><dt>Weekend pass</dt><dd>$20</dd></div>
-        <div><dt>Under 12</dt><dd class="word">Free</dd></div>
-      </dl>
-      <div class="links"><button class="more" data-fixtures>All fixtures</button><button class="more" data-more="m-events">Tickets &amp; timings</button></div>
-      <template id="m-events">
-        <p class="tag"><span class="rd">R06</span><span>Events &amp; Tickets</span></p>
-        <h3>Schedule &amp; tickets</h3>
-        <ul>
-          <li><span>Fri · Opening night + Skills contest</span><span>5 PM</span></li>
-          <li><span>Sat · Pool play, all teams</span><span>8 AM</span></li>
-          <li><span>Sun · Quarterfinals → Finals</span><span>9 AM</span></li>
-          <li><span>Sun · Awards ceremony</span><span>6 PM</span></li>
-        </ul>
-        <ul>
-          <li><span>Day pass</span><span>$10</span></li>
-          <li><span>Weekend pass</span><span>$20</span></li>
-          <li><span>Kids under 12</span><span>Free</span></li>
-        </ul>
-        <p>Championship games are live-streamed. The link is sent to all ticket holders.</p>
-      </template>
+      <p class="tag"><span class="rd">R07</span><span>Contact</span></p>
+      <h2 class="headline"><span class="ln"><span>Talk to</span></span><span class="ln"><span>the league<span class="pt">.</span></span></span></h2>
+      <p class="sub">Questions about registering, franchises or partnerships? Send a message and the right person will get back to you.</p>
+      <ul class="list">
+        <li><span>Email</span><span class="sel">info@example.com</span></li>
+        <li><span>Finals venue</span><span>Downtown Sports Complex, 123 Court Street</span></li>
+        <li><span>Finals weekend</span><span>Mar 14–16, 2027</span></li>
+      </ul>
+      <div class="actions"><button class="btn btn-solid" type="button" data-contact="General">Send a message</button><button class="btn btn-line" type="button" data-more="m-faq">FAQ</button></div>
     </div>
   </section>
   <div class="gap"></div>
 
-  <!-- ROUND 07 -->
-  <section class="chap reg" id="join" data-name="Register">
+  <!-- R08 · Register now -->
+  <section class="chap reg" id="register" data-name="Register now">
     <div class="chap-in">
-      <p class="tag"><span class="rd">R07</span><span>Player registration</span></p>
+      <p class="tag"><span class="rd">R08</span><span>Register now</span></p>
       <h2 class="headline"><span class="ln"><span>Your shot</span></span><span class="ln"><span>starts here<span class="pt">.</span></span></span></h2>
       <p class="sub">Registration is for players under 16. Registering puts you in the player auction pool, and we'll email you the auction date and next steps.</p>
+      <!-- To receive sign-ups, send this form's data to your form service (Formspree, Google Forms, etc.) in the submit handler below. -->
+      <form class="form" id="regForm" novalidate>
+        <div class="row2">
+          <label class="field" id="nameField"><span>Player's full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
+          <label class="field" id="dobField"><span>Date of birth</span><input id="f-dob" name="dob" type="date" min="2010-09-02" max="2022-12-31"></label>
+        </div>
+        <fieldset class="chips" id="posSet">
+          <legend>Position</legend>
+          <label><input type="radio" name="position" id="p-guard" value="Guard"><span>Guard</span></label>
+          <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
+          <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
+        </fieldset>
+        <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
+        <div class="submit-row">
+          <button class="btn btn-solid" type="submit">Register now</button>
+          <p class="fine">Under 16 on <b>SEP 01 2026</b> · Early-bird ends <b>FEB 01</b></p>
+        </div>
+        <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
+      </form>
+      <button class="more" data-more="m-who">Who can register</button>
       <template id="m-who">
-        <p class="tag"><span class="rd">R07</span><span>Player registration</span></p>
+        <p class="tag"><span class="rd">R08</span><span>Register now</span></p>
         <h3>Who can register</h3>
         <ul>
           <li><span>Who</span><span>Players only</span></li>
           <li><span>Age</span><span>Under 16 on Sep 1, 2026</span></li>
           <li><span>Born on or after</span><span>Sep 2, 2010</span></li>
+          <li><span>One registration per</span><span>Email address</span></li>
           <li><span>Next step</span><span>Player auction</span></li>
           <li><span>Early-bird ends</span><span>Feb 1</span></li>
           <li><span>Full refunds until</span><span>Feb 15</span></li>
         </ul>
         <p>Coaches, parents and fans don't need to register. Spectators can buy day or weekend passes at the door.</p>
       </template>
-
-      <div class="actions"><a href="#register" class="btn btn-solid">Register now</a><a href="#league" class="btn btn-line">How the league works</a></div>
-      <button class="more" data-more="m-who">Who can register</button>
     </div>
   </section>
 
@@ -729,285 +765,6 @@ template{display:none}
   </div>
   <p class="copy">© <span id="yr"></span> Indian Basketball Pro League</p>
 </footer>
-
-<!-- ======================= SITE PAGES (open over the arena; Home is the scroll experience) ======================= -->
-<section class="page" id="pg-about" data-route="about" data-cam="3" data-title="About" aria-label="About" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>About</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Built for the</span></span><span class="ln"><span>next generation<span class="pt">.</span></span></span></h1>
-      <p class="sub">The Indian Basketball Pro League is an under-16 league that gives young players a professional stage: real teams built at a player auction, certified officials, and games that count.</p>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">What we stand for</h2>
-      <div class="cards">
-        <div class="card"><span class="n">01</span><b>Every game counts</b><p>At least three games for every team, with pools set by level so the best games happen late.</p></div>
-        <div class="card"><span class="n">02</span><b>Fair play</b><p>Certified referees, a live scoreboard and a 24-second shot clock in every game.</p></div>
-        <div class="card"><span class="n">03</span><b>Real teams</b><p>Squads are built at the player auction, so every player earns their place on a team.</p></div>
-        <div class="card"><span class="n">04</span><b>A pathway</b><p>Coach-led clinics before tip-off help every player arrive ready to compete.</p></div>
-      </div>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">The league at a glance</h2>
-      <dl class="stats">
-        <div><dt>Age limit</dt><dd>U16</dd></div>
-        <div><dt>Format</dt><dd class="word">5v5 full</dd></div>
-        <div><dt>Quarters</dt><dd>4×10</dd></div>
-        <div><dt>Games guaranteed</dt><dd>3+</dd></div>
-      </dl>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Supported by</h2>
-      <div class="pg-partner">
-        <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
-        <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b><p><a class="more" href="#partners">Our partners</a></p></div>
-      </div>
-    </section>
-    <a class="pg-next" href="#league"><span>Next</span><b>The League</b></a>
-  </div>
-</section>
-<section class="page" id="pg-league" data-route="league" data-cam="2" data-title="League" aria-label="League" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>The League</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>One division</span></span><span class="ln"><span>One crown<span class="pt">.</span></span></span></h1>
-      <p class="sub">Under-16s only, five-on-five, full court. Here's how a season runs, from sign-up to the final buzzer.</p>
-      <div class="actions"><a href="#register" class="btn btn-solid">Register now</a><button class="btn btn-line" type="button" data-fixtures>Fixtures <span class="soon">Soon</span></button></div>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">How the season works</h2>
-      <ol class="road" aria-label="How the season works">
-        <li class="now"><span class="n">01</span><b>Register</b><span class="st">Open now</span></li>
-        <li><span class="n">02</span><b>Auction</b><span class="st">Date to be announced</span></li>
-        <li><span class="n">03</span><b>Fixtures</b><span class="st">After the auction</span></li>
-        <li><span class="n">04</span><b>Matches</b><span class="st">Mar 14–16, 2027</span></li>
-      </ol>
-      <p>Every registered player enters the <strong>player auction pool</strong>. Teams bid to build their squads, then the fixtures are announced and the season tips off.</p>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Format &amp; rules</h2>
-      <ul class="list">
-        <li><span>Eligibility</span><span>Under 16 on Sep 1, 2026</span></li>
-        <li><span>Format</span><span>5v5 full court</span></li>
-        <li><span>Game length</span><span>4 × 10 min</span></li>
-        <li><span>Shot clock</span><span>24 sec</span></li>
-        <li><span>Rules</span><span>High school</span></li>
-        <li><span>Roster</span><span>Up to 12 players</span></li>
-        <li><span>To start a game</span><span>5 players</span></li>
-        <li><span>Games guaranteed</span><span>3+</span></li>
-      </ul>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Finals weekend · Mar 14–16, 2027</h2>
-      <ul class="list">
-        <li><span>Fri · Opening night + skills contest</span><span>5 PM</span></li>
-        <li><span>Sat · Pool play, all teams</span><span>8 AM</span></li>
-        <li><span>Sun · Quarterfinals → Final</span><span>9 AM</span></li>
-        <li><span>Sun · Awards ceremony</span><span>6 PM</span></li>
-      </ul>
-      <dl class="stats">
-        <div><dt>Day pass</dt><dd>$10</dd></div>
-        <div><dt>Weekend pass</dt><dd>$20</dd></div>
-        <div><dt>Under 12</dt><dd class="word">Free</dd></div>
-      </dl>
-    </section>
-    <a class="pg-next" href="#franchisee"><span>Next</span><b>Franchisee</b></a>
-  </div>
-</section>
-<section class="page" id="pg-franchisee" data-route="franchisee" data-cam="5" data-title="Franchisee" aria-label="Franchisee" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>Franchisee</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Own a team</span></span><span class="ln"><span>Shape the game<span class="pt">.</span></span></span></h1>
-      <p class="sub">IBPL franchise owners build their squads at the player auction and carry their team's name through the season.</p>
-      <div class="actions"><a href="#contact" class="btn btn-solid" data-topic="Franchise">Enquire about a franchise</a></div>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">What a franchise includes</h2>
-      <div class="cards">
-        <div class="card"><span class="n">01</span><b>A seat at the auction</b><p>Bid for registered players and build your squad on auction night.</p></div>
-        <div class="card"><span class="n">02</span><b>Your team, your brand</b><p>Name your team and choose its colours, subject to league approval.</p></div>
-        <div class="card"><span class="n">03</span><b>Matchday presence</b><p>Your team on court through pool play and, if you go deep, Sunday's knockouts.</p></div>
-        <div class="card"><span class="n">04</span><b>The league behind you</b><p>Officials, venue, scheduling and the championship stream are run by the league.</p></div>
-      </div>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">How to become a franchisee</h2>
-      <ol class="road" aria-label="How to become a franchisee">
-        <li class="now"><span class="n">01</span><b>Enquire</b><span class="st">Send a message</span></li>
-        <li><span class="n">02</span><b>Meet</b><span class="st">With the league team</span></li>
-        <li><span class="n">03</span><b>Sign</b><span class="st">Agree terms</span></li>
-        <li><span class="n">04</span><b>Bid</b><span class="st">At the auction</span></li>
-      </ol>
-      <p>Franchise fees and terms are shared on request.</p>
-      <div class="actions"><a href="#contact" class="btn btn-solid" data-topic="Franchise">Enquire about a franchise</a></div>
-    </section>
-    <a class="pg-next" href="#development"><span>Next</span><b>Development</b></a>
-  </div>
-</section>
-<section class="page" id="pg-development" data-route="development" data-cam="4" data-title="Development" aria-label="Development" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>Development</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Get game</span></span><span class="ln"><span>ready<span class="pt">.</span></span></span></h1>
-      <p class="sub">Development is built into the season. Registered players get coach-led clinics before tip-off, so every team arrives ready.</p>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Pre-tournament clinics</h2>
-      <ul class="board dates" aria-label="Clinic dates">
-        <li><span class="k">FEB 15</span><span class="v">Shooting</span></li>
-        <li><span class="k">FEB 22</span><span class="v">Handles</span></li>
-        <li><span class="k">MAR 01</span><span class="v">Team defence</span></li>
-        <li><span class="k">MAR 08</span><span class="v">Film session</span></li>
-      </ul>
-      <p>Clinics are open to every registered player and run in the four weeks before the finals weekend.</p>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">What players work on</h2>
-      <div class="cards">
-        <div class="card"><span class="n">01</span><b>Skills</b><p>Shooting form, ball handling and finishing at the rim.</p></div>
-        <div class="card"><span class="n">02</span><b>Team play</b><p>Team defence, spacing and simple sets that work in a five-on-five game.</p></div>
-        <div class="card"><span class="n">03</span><b>Film study</b><p>Learning to read the game from footage, the way the pros prepare.</p></div>
-        <div class="card"><span class="n">04</span><b>Game day</b><p>Warm-ups, rotations and how to stay ready on the bench.</p></div>
-      </div>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Schools, clubs &amp; academies</h2>
-      <p>We'd like to hear from schools, clubs and academies who want to bring their under-16 players into the league.</p>
-      <div class="actions"><a href="#contact" class="btn btn-line" data-topic="Development">Get in touch</a></div>
-    </section>
-    <a class="pg-next" href="#gallery"><span>Next</span><b>Gallery</b></a>
-  </div>
-</section>
-<section class="page" id="pg-gallery" data-route="gallery" data-cam="6" data-title="Gallery" aria-label="Gallery" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>Gallery</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Moments</span></span><span class="ln"><span>in the making<span class="pt">.</span></span></span></h1>
-      <p class="sub">Photos from the auction, the clinics and the finals weekend will appear here as the season unfolds.</p>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2" id="galTitle">Coming this season</h2>
-      <div class="frames" id="galGrid"></div>
-    </section>
-    <a class="pg-next" href="#partners"><span>Next</span><b>Partners</b></a>
-  </div>
-</section>
-<section class="page" id="pg-partners" data-route="partners" data-cam="1" data-title="Partners" aria-label="Partners" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>Partners</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Stronger</span></span><span class="ln"><span>together<span class="pt">.</span></span></span></h1>
-      <p class="sub">IBPL is backed by partners who believe young players deserve a professional stage.</p>
-      <div class="actions"><a href="#contact" class="btn btn-solid" data-topic="Partnership">Become a partner</a></div>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Supporting partner</h2>
-      <div class="pg-partner">
-        <span class="plate"><img src="assets/iba-logo.jpg" alt="Indian Basketball Alliance logo" loading="lazy"></span>
-        <div><span class="k">Supporting partner</span><b>Indian Basketball<br>Alliance</b></div>
-      </div>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Partnership opportunities</h2>
-      <div class="cards">
-        <div class="card"><span class="avail">Available</span><b>Title partner</b><p>Your name alongside the league's, across the season and the finals weekend.</p></div>
-        <div class="card"><span class="avail">Available</span><b>Associate partner</b><p>Courtside LED boards and matchday presence at every game.</p></div>
-        <div class="card"><span class="avail">Available</span><b>Official partners</b><p>Category partners for apparel, equipment, hydration and media.</p></div>
-        <div class="card"><span class="avail">Available</span><b>Community partner</b><p>Support the clinics and help bring more young players into the game.</p></div>
-      </div>
-      <div class="actions"><a href="#contact" class="btn btn-solid" data-topic="Partnership">Become a partner</a></div>
-    </section>
-    <a class="pg-next" href="#contact"><span>Next</span><b>Contact</b></a>
-  </div>
-</section>
-<section class="page" id="pg-contact" data-route="contact" data-cam="0" data-title="Contact" aria-label="Contact" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>Contact</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Talk to</span></span><span class="ln"><span>the league<span class="pt">.</span></span></span></h1>
-      <p class="sub">Questions about registering, franchises or partnerships? Send a message and the right person will get back to you.</p>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Reach us</h2>
-      <ul class="list">
-        <li><span>Email</span><span class="sel">info@example.com</span></li>
-        <li><span>Finals venue</span><span>Downtown Sports Complex, 123 Court Street</span></li>
-        <li><span>Finals weekend</span><span>Mar 14–16, 2027</span></li>
-      </ul>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Send a message</h2>
-      <form class="form" id="cForm" novalidate>
-        <fieldset class="chips" id="cTopicSet">
-          <legend>Topic</legend>
-          <label><input type="radio" name="topic" id="t-general" value="General" checked><span>General</span></label>
-          <label><input type="radio" name="topic" id="t-franchise" value="Franchise"><span>Franchise</span></label>
-          <label><input type="radio" name="topic" id="t-partner" value="Partnership"><span>Partnership</span></label>
-          <label><input type="radio" name="topic" id="t-dev" value="Development"><span>Development</span></label>
-          <label><input type="radio" name="topic" id="t-media" value="Media"><span>Media</span></label>
-        </fieldset>
-        <div class="row2">
-          <label class="field" id="cNameField"><span>Your name</span><input id="c-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="cEmailField"><span>Email</span><input id="c-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
-        </div>
-        <label class="field" id="cMsgField"><span>Message</span><textarea id="c-msg" name="message" placeholder="How can we help?"></textarea></label>
-        <div class="submit-row"><button class="btn btn-solid" type="submit">Send message</button></div>
-        <p class="msg" id="cMsg" role="status" aria-live="polite"></p>
-      </form>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Questions</h2>
-      <div class="faq" id="pgFaq"></div>
-    </section>
-    <a class="pg-next" href="#register"><span>Next</span><b>Register now</b></a>
-  </div>
-</section>
-<section class="page" id="pg-register" data-route="register" data-cam="7" data-title="Register now" aria-label="Register now" hidden>
-  <div class="pg-in">
-    <header class="pg-hero">
-      <p class="tag"><span class="rd">IBPL</span><span>Register now</span></p>
-      <h1 class="headline" tabindex="-1"><span class="ln"><span>Your shot</span></span><span class="ln"><span>starts here<span class="pt">.</span></span></span></h1>
-      <p class="sub">Registration is for players under 16. Registering puts you in the player auction pool, and we'll email you the auction date and next steps.</p>
-    </header>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Player registration</h2>
-      <!-- To receive sign-ups, send this form's data to your form service (Formspree, Google Forms, etc.) in the submit handler below. -->
-      <form class="form" id="regForm" novalidate>
-        <div class="row2">
-          <label class="field" id="nameField"><span>Player's full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="dobField"><span>Date of birth</span><input id="f-dob" name="dob" type="date" min="2010-09-02" max="2022-12-31"></label>
-        </div>
-        <fieldset class="chips" id="posSet">
-          <legend>Position</legend>
-          <label><input type="radio" name="position" id="p-guard" value="Guard"><span>Guard</span></label>
-          <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
-          <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
-        </fieldset>
-        <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
-        <div class="submit-row">
-          <button class="btn btn-solid" type="submit">Register now</button>
-          <p class="fine">Under 16 on <b>SEP 01 2026</b> · Early-bird ends <b>FEB 01</b></p>
-        </div>
-        <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
-      </form>
-    </section>
-    <section class="pg-sec">
-      <h2 class="pg-h2">Who can register</h2>
-      <ul class="list">
-        <li><span>Who</span><span>Players only</span></li>
-        <li><span>Age</span><span>Under 16 on Sep 1, 2026</span></li>
-        <li><span>Born on or after</span><span>Sep 2, 2010</span></li>
-        <li><span>One registration per</span><span>Email address</span></li>
-        <li><span>Next step</span><span>Player auction</span></li>
-        <li><span>Early-bird ends</span><span>Feb 1</span></li>
-        <li><span>Full refunds until</span><span>Feb 15</span></li>
-      </ul>
-      <p>Coaches, parents and fans don't need to register. Spectators can buy day or weekend passes at the door.</p>
-    </section>
-    <a class="pg-next" href="#home"><span>Next</span><b>Back to Home</b></a>
-  </div>
-</section>
 
 <!-- ======================= SCOREBUG (round + quarters + tip-off clock) ======================= -->
 <nav class="bug" aria-label="Arena rounds">
@@ -1046,7 +803,7 @@ template{display:none}
     </div>
     <div class="fx-cta">
       <a href="#register" class="btn btn-solid" data-fx-close>Register to play</a>
-      <button class="more" type="button" data-more="m-events">See the weekend schedule</button>
+      <button class="more" type="button" data-more="m-league">See the weekend schedule</button>
     </div>
   </div>
 </section>
@@ -1084,6 +841,28 @@ template{display:none}
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Details" aria-hidden="true">
   <button class="drawer-x" id="drawerX" aria-label="Close">×</button>
   <div id="drawerBody"></div>
+  <div class="drawer-panel" id="panel-contact" hidden>
+    <p class="tag"><span class="rd">R07</span><span>Contact</span></p>
+    <h3>Send a message</h3>
+    <p>Choose a topic and the right person will reply by email.</p>
+      <form class="form" id="cForm" novalidate>
+        <fieldset class="chips" id="cTopicSet">
+          <legend>Topic</legend>
+          <label><input type="radio" name="topic" id="t-general" value="General" checked><span>General</span></label>
+          <label><input type="radio" name="topic" id="t-franchise" value="Franchise"><span>Franchise</span></label>
+          <label><input type="radio" name="topic" id="t-partner" value="Partnership"><span>Partnership</span></label>
+          <label><input type="radio" name="topic" id="t-dev" value="Development"><span>Development</span></label>
+          <label><input type="radio" name="topic" id="t-media" value="Media"><span>Media</span></label>
+        </fieldset>
+        <div class="row2">
+          <label class="field" id="cNameField"><span>Your name</span><input id="c-name" name="name" autocomplete="name" placeholder="First and last name"></label>
+          <label class="field" id="cEmailField"><span>Email</span><input id="c-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
+        </div>
+        <label class="field" id="cMsgField"><span>Message</span><textarea id="c-msg" name="message" placeholder="How can we help?"></textarea></label>
+        <div class="submit-row"><button class="btn btn-solid" type="submit">Send message</button></div>
+        <p class="msg" id="cMsg" role="status" aria-live="polite"></p>
+      </form>
+  </div>
 </aside>
 
 <script>
@@ -1142,7 +921,7 @@ template{display:none}
     else for (let i = 0; i < anchors.length - 1; i++) {
       if (y >= anchors[i] && y < anchors[i + 1]) { t = i + ease((y - anchors[i]) / (anchors[i + 1] - anchors[i])); break; }
     }
-    window.__hrT = window.__hrPageCam != null ? window.__hrPageCam : t; // a site page holds the camera at its own spot
+    window.__hrT = t;
 
     const idx = Math.min(chaps.length - 1, Math.round(t));
     segs.forEach((b, i) => {
@@ -1153,6 +932,9 @@ template{display:none}
     });
     if (idx !== lastIdx) {
       lastIdx = idx;
+      document.querySelectorAll('#hnav a, .hdr .btn').forEach(a => {
+        if (a.getAttribute('href') === '#' + chaps[idx].id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
       bugRd.textContent = String(idx).padStart(2, '0');
       bugName.textContent = chaps[idx].dataset.name.replace('&amp;', '&');
     }
@@ -1204,10 +986,13 @@ template{display:none}
   const drawer = $('#drawer'), body = document.body;
   let lastFocus = null;
   function openDrawer(id) {
-    const tpl = $('#' + id); if (!tpl) return;
+    const panel = document.getElementById('panel-' + id), tpl = $('#' + id);
+    if (!panel && !tpl) return;
     lastFocus = document.activeElement;
-    $('#drawerBody').innerHTML = tpl.innerHTML;
-    const h = $('h3', drawer); drawer.setAttribute('aria-label', h ? h.textContent : 'Details');
+    $$('.drawer-panel').forEach(pn => { pn.hidden = pn !== panel; });
+    $('#drawerBody').hidden = !!panel;
+    if (!panel) $('#drawerBody').innerHTML = tpl.innerHTML;
+    const h = panel ? $('h3', panel) : $('h3', $('#drawerBody')); drawer.setAttribute('aria-label', h ? h.textContent : 'Details');
     body.classList.add('drawer-open'); drawer.setAttribute('aria-hidden', 'false');
     drawer.scrollTop = 0;
     setTimeout(() => $('#drawerX').focus(), 50);
@@ -1218,6 +1003,7 @@ template{display:none}
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   $$('[data-more]').forEach(b => b.addEventListener('click', () => openDrawer(b.dataset.more)));
+  window.__hrOpenDrawer = openDrawer;
   const faqBtn = $('#faqBtn'); if (faqBtn) faqBtn.addEventListener('click', () => openDrawer('m-faq'));
   $('#scrim').addEventListener('click', closeDrawer);
   $('#drawerX').addEventListener('click', closeDrawer);
@@ -1225,7 +1011,7 @@ template{display:none}
     if (!body.classList.contains('drawer-open')) return;
     if (e.key === 'Escape') { closeDrawer(); return; }
     if (e.key === 'Tab') {
-      const f = $$('button, a[href], summary, input', drawer).filter(el => el.offsetParent !== null);
+      const f = $$('button, a[href], summary, input, textarea', drawer).filter(el => el.offsetParent !== null);
       if (!f.length) return;
       if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
       else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
@@ -1396,7 +1182,7 @@ template{display:none}
   function closeSwish() {
     if (sw.hidden) return;
     swTimers.forEach(clearTimeout); cancelAnimationFrame(swRaf);
-    sw.classList.remove('on'); document.documentElement.style.overflow = document.body.classList.contains('pg-open') ? 'hidden' : '';
+    sw.classList.remove('on'); document.documentElement.style.overflow = '';
     setTimeout(() => { sw.hidden = true; }, 350);
     if (swFocus && swFocus.focus) swFocus.focus();
   }
@@ -1426,7 +1212,7 @@ template{display:none}
   }
   function close(restore = true) {
     if (!body.classList.contains('fx-open')) return;
-    body.classList.remove('fx-open'); fx.setAttribute('aria-hidden', 'true'); root.style.overflow = body.classList.contains('pg-open') ? 'hidden' : '';
+    body.classList.remove('fx-open'); fx.setAttribute('aria-hidden', 'true'); root.style.overflow = '';
     try { if (location.hash === '#fixtures') history.replaceState(null, '', prevHash || (location.pathname + location.search)); } catch (e) { /* ignore */ }
     if (restore && lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -1454,25 +1240,22 @@ template{display:none}
 })();
 </script>
 <script>
-/* ============ site pages: router, menu, gallery, contact form ============ */
+/* ============ menu, gallery, contact form ============ */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
-  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
-  const root = document.documentElement, body = document.body;
-  const pages = {}; $$('.page').forEach(p => { pages[p.dataset.route] = p; });
-  const navLinks = $$('#hnav a');
+  const body = document.body;
 
-  /* shared footer at the bottom of every page */
-  const foot = $('.foot');
-  Object.values(pages).forEach(p => { const f = foot.cloneNode(true); f.querySelectorAll('[id]').forEach(el => el.removeAttribute('id')); $('.pg-in', p).appendChild(f); });
-
-  /* FAQ on the Contact page comes from the same template as the drawer */
-  const faqT = $('#m-faq'); if (faqT) { const t = faqT.content.cloneNode(true); t.querySelectorAll('.tag, h3').forEach(el => el.remove()); $('#pgFaq').appendChild(t); }
+  /* ---- menu (small screens) ---- */
+  const menuBtn = $('#menuBtn');
+  const setMenu = (open) => { body.classList.toggle('menu-open', open); menuBtn.setAttribute('aria-expanded', String(open)); menuBtn.textContent = open ? 'Close' : 'Menu'; };
+  menuBtn.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
+  document.querySelectorAll('.hdr a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && body.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
 
   /* ---- GALLERY ----
-     Add photos here as the season happens, e.g.
+     Add photos as the season happens, e.g.
        { src: 'assets/gallery/auction-night-01.jpg', title: 'Auction night', note: 'Mumbai' }
-     Put the image files in assets/gallery/. While the list is empty, the page shows the planned albums. */
+     Put the image files in assets/gallery/. While the list is empty, the section shows the planned albums. */
   const GALLERY = [];
   const gal = $('#galGrid');
   const frame = (title, note, src) => {
@@ -1481,57 +1264,16 @@ template{display:none}
     const b = document.createElement('b'); b.textContent = title; const n = document.createElement('span'); n.textContent = note;
     f.append(b, n); return f;
   };
-  if (GALLERY.length) { $('#galTitle').textContent = 'From the season'; GALLERY.forEach(g => gal.appendChild(frame(g.title || '', g.note || '', g.src))); }
+  if (GALLERY.length) GALLERY.slice(0, 6).forEach(g => gal.appendChild(frame(g.title || '', g.note || '', g.src)));
   else ['Auction night', 'Clinics', 'Pool play', 'Finals weekend', 'Behind the scenes', 'Champions'].forEach(t => gal.appendChild(frame(t, 'Coming soon')));
 
-  /* ---- menu (small screens) ---- */
-  const menuBtn = $('#menuBtn');
-  const setMenu = (open) => { body.classList.toggle('menu-open', open); menuBtn.setAttribute('aria-expanded', String(open)); menuBtn.textContent = open ? 'Close' : 'Menu'; };
-  menuBtn.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
-  $$('.hdr a').forEach(a => a.addEventListener('click', () => setMenu(false)));
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && body.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
+  /* ---- contact: buttons open the message panel with a topic picked ---- */
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-contact]'); if (!b) return;
+    const r = document.querySelector(`#cTopicSet input[value="${b.dataset.contact}"]`); if (r) r.checked = true;
+    if (window.__hrOpenDrawer) window.__hrOpenDrawer('contact');
+  });
 
-  /* ---- router: #about, #league, … open a page; #home or a chapter id returns to the arena ---- */
-  let current = null, pendingTopic = null;
-  document.addEventListener('click', (e) => { const t = e.target.closest('[data-topic]'); if (t) pendingTopic = t.dataset.topic; });
-  const navLinksAll = [...navLinks, $('.hdr .btn')];
-  function setNav(route) { navLinksAll.forEach(a => { if (a.getAttribute('href') === '#' + route) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); }); }
-  function show(route) {
-    const pg = pages[route];
-    if (current !== pg) {
-      Object.values(pages).forEach(p => { if (p !== pg) { p.classList.remove('on'); p.hidden = true; } });
-      pg.hidden = false; pg.scrollTop = 0;
-      requestAnimationFrame(() => pg.classList.add('on'));
-      current = pg;
-    }
-    body.classList.add('pg-open'); root.style.overflow = 'hidden';
-    window.__hrPageCam = +pg.dataset.cam; window.__hrT = window.__hrPageCam;
-    setNav(route); document.title = pg.dataset.title + ' · Indian Basketball Pro League';
-    if (route === 'contact' && pendingTopic) { const r = $(`#cTopicSet input[value="${pendingTopic}"]`); if (r) r.checked = true; }
-    pendingTopic = null;
-    setTimeout(() => { const h = $('h1', pg); if (h) h.focus({ preventScroll: true }); }, 60);
-  }
-  function hide() {
-    window.__hrPageCam = null;
-    setNav('home'); document.title = 'Indian Basketball Pro League';
-    if (!current) return;
-    const p = current; current = null;
-    p.classList.remove('on'); setTimeout(() => { if (current !== p) p.hidden = true; }, 450);
-    body.classList.remove('pg-open'); root.style.overflow = '';
-  }
-  function route() {
-    const h = decodeURIComponent(location.hash.slice(1));
-    if (pages[h]) { show(h); return; }
-    if (h === 'fixtures') return;                    // the fixtures layer handles itself
-    hide();
-    if (h === 'home') scrollTo({ top: 0, behavior: 'auto' });
-    else if (h) { const el = document.getElementById(h); if (el) el.scrollIntoView(); }
-    dispatchEvent(new Event('scroll'));             // hand the camera back to the scroll position
-  }
-  addEventListener('hashchange', route);
-  route();
-
-  /* ---- contact form ---- */
   const cForm = $('#cForm'), cMsg = $('#cMsg'), cBtn = $('button[type="submit"]', cForm);
   const hasRuntime = () => window.claude && typeof window.claude.use === 'function';
   const dbReady = (async () => { try { return hasRuntime() ? await window.claude.use('db') : null; } catch (e) { return null; } })();

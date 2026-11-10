@@ -335,6 +335,34 @@ template{display:none}
 .faq details[open] summary::after{content:"−"}
 .faq details p,.faq>p{color:var(--hardwood);padding-bottom:14px;max-width:38em}
 
+/* ---------- leadership ---------- */
+.chap.tall{align-items:flex-start;padding-top:104px}
+.chap.tall .headline{font-size:clamp(3rem,min(6vw,9.5vh),6rem)}
+.chap.tall .sub{margin-top:16px}
+.team-k{margin-top:22px;font-size:var(--t-label);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ball)}
+.team{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px;max-width:min(470px,58vh)}
+.person{display:grid;gap:4px;width:100%;text-align:left;align-content:start}
+.person .ph{position:relative;display:block;aspect-ratio:1;max-width:100%;overflow:hidden;margin-bottom:8px;
+  background:linear-gradient(160deg,#f2dca0 0%,#d4a54a 45%,#8f6420 100%);box-shadow:inset 0 0 0 1px rgba(241,235,225,.18)}
+.person .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(13,11,10,.55));transition:opacity .4s}
+.person .ph::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--ball);z-index:1;transform:scaleX(.25);transform-origin:left;transition:transform .5s var(--ease)}
+.person img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(1.04);mix-blend-mode:multiply;transform:scale(1.02);transition:filter .5s var(--ease),transform .6s var(--ease),mix-blend-mode .5s}
+.person:hover img,.person:focus-visible img{filter:none;mix-blend-mode:normal;transform:scale(1.06)}
+.person:hover .ph::before,.person:focus-visible .ph::before{transform:scaleX(1)}
+.person:hover .ph::after,.person:focus-visible .ph::after{opacity:0}
+.person b{font-family:var(--f-display);font-weight:800;font-size:1.15rem;line-height:1;text-transform:uppercase;text-wrap:balance}
+.person .role{display:grid;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--hardwood);line-height:1.4}
+.person .role em{font-style:normal;color:var(--ball)}
+.play .team,.play .team-k{animation:fadeup .8s var(--ease) both;animation-delay:.3s}
+.bio-ph{width:132px;aspect-ratio:1;max-width:100%;overflow:hidden;margin-bottom:22px;border-bottom:3px solid var(--ball)}
+.bio-ph img{display:block;width:100%;height:100%;object-fit:cover}
+.drawer .bio-role{color:var(--chalk);font-weight:600;margin-top:-8px}
+.drawer .bio-role span{color:var(--hardwood);font-weight:400;font-size:var(--t-small)}
+.drawer .ticks{border-top:0;margin:12px 0 0}
+.drawer .ticks li{justify-content:flex-start;gap:12px;border-bottom:1px solid var(--seam)}
+.drawer .ticks li::before{content:"";flex:none;width:8px;height:8px;margin-top:7px;background:var(--ball);transform:rotate(45deg)}
+.drawer .stats{margin:20px 0}
+
 /* ---------- responsive ---------- */
 @media (max-width:1320px){
   .wordmark{display:none}
@@ -364,6 +392,10 @@ template{display:none}
   .chap .frame{padding:8px}
   .chap .frame b{font-size:.95rem}
   .chap .frame span{display:none}
+  .team{gap:8px}
+  .person b{font-size:.92rem}
+  .person .role{font-size:.6rem;letter-spacing:.06em}
+  .team-k{margin-top:18px}
   .chap.reg{padding-top:96px}
   .gap{height:70vh}
   .enter{display:none}
@@ -429,7 +461,8 @@ template{display:none}
   html{scroll-behavior:auto}
   .fx{transition:opacity .2s,visibility .2s;transform:none}
   .fx-open .fx-title .f{animation:none}
-  .play .road,.enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
+  .person img{transition:none}
+  .play .team,.play .team-k,.play .road,.enter i,.play .ln>span,.play .tag,.play .sub,.play .actions,.play .stats,.play .board,.play .more,.play .form{animation:none}
 }
 </style>
 
@@ -514,17 +547,26 @@ template{display:none}
   <div class="gap"></div>
 
   <!-- R01 · About -->
-  <section class="chap" id="about" data-name="About">
+  <section class="chap tall" id="about" data-name="About">
     <div class="chap-in">
       <p class="tag"><span class="rd">R01</span><span>About</span></p>
       <h2 class="headline"><span class="ln"><span>Built for the</span></span><span class="ln"><span>next generation<span class="pt">.</span></span></span></h2>
-      <p class="sub">An under-16 league that gives young players a professional stage: real teams built at a player auction, certified officials, and games that count.</p>
-      <dl class="stats">
-        <div><dt>Age limit</dt><dd>U16</dd></div>
-        <div><dt>Format</dt><dd class="word">5v5 full</dd></div>
-        <div><dt>Quarters</dt><dd>4×10</dd></div>
-        <div><dt>Games guaranteed</dt><dd>3+</dd></div>
-      </dl>
+      <p class="sub">An under-16 league giving young players a professional stage, led by people who have lived the game.</p>
+      <p class="team-k">Leadership</p>
+      <ul class="team" aria-label="Leadership">
+        <li><button class="person" type="button" data-more="m-team-abhinash">
+          <span class="ph"><img src="assets/team/abhinash-nayak.jpg" alt="" loading="lazy" width="600" height="600"></span>
+          <b>Abhinash Nayak</b><span class="role">Co-founder &amp; Director<em>Marketing</em></span>
+        </button></li>
+        <li><button class="person" type="button" data-more="m-team-jasobanta">
+          <span class="ph"><img src="assets/team/jasobanta-sethi.jpg" alt="" loading="lazy" width="600" height="600"></span>
+          <b>Jasobanta Sethi</b><span class="role">Co-founder &amp; Director<em>Operations</em></span>
+        </button></li>
+        <li><button class="person" type="button" data-more="m-team-suresh">
+          <span class="ph"><img src="assets/team/suresh-chandra-mali.jpg" alt="" loading="lazy" width="600" height="600"></span>
+          <b>Retd. Capt. Suresh Chandra Mali</b><span class="role">Technical Director<em>Head Coach, IBA</em></span>
+        </button></li>
+      </ul>
       <button class="more" data-more="m-about">What we stand for</button>
       <template id="m-about">
         <p class="tag"><span class="rd">R01</span><span>About</span></p>
@@ -536,7 +578,39 @@ template{display:none}
           <div class="card"><span class="n">03</span><b>Real teams</b><p>Squads are built at the player auction, so every player earns their place on a team.</p></div>
           <div class="card"><span class="n">04</span><b>A pathway</b><p>Coach-led clinics before tip-off help every player arrive ready to compete.</p></div>
         </div>
+        <dl class="stats">
+          <div><dt>Age limit</dt><dd>U16</dd></div>
+          <div><dt>Format</dt><dd class="word">5v5 full</dd></div>
+          <div><dt>Games guaranteed</dt><dd>3+</dd></div>
+        </dl>
         <p>Supported by the Indian Basketball Alliance.</p>
+      </template>
+      <template id="m-team-abhinash">
+        <figure class="bio-ph"><img src="assets/team/abhinash-nayak.jpg" alt="Portrait of Abhinash Nayak" width="600" height="600"></figure>
+        <p class="tag"><span class="rd">IBPL</span><span>Leadership</span></p>
+        <h3>Abhinash Nayak</h3>
+        <p class="bio-role">Co-founder &amp; Director – Marketing<br><span>Indian Basketball Pro League (IBPL)</span></p>
+        <p>A visionary leader with a deep passion for basketball, Abhinash Nayak is the Co-founder &amp; Director of IBPL, driving the league's mission to nurture young talent and elevate Indian basketball to greater heights.</p>
+        <span class="panel-k">Key responsibilities</span>
+        <ul class="ticks"><li>Sports leadership</li><li>Strategic growth</li></ul>
+      </template>
+      <template id="m-team-jasobanta">
+        <figure class="bio-ph"><img src="assets/team/jasobanta-sethi.jpg" alt="Portrait of Jasobanta Sethi" width="600" height="600"></figure>
+        <p class="tag"><span class="rd">IBPL</span><span>Leadership</span></p>
+        <h3>Jasobanta Sethi</h3>
+        <p class="bio-role">Co-founder &amp; Director – Operations<br><span>Indian Basketball Pro League (IBPL)</span></p>
+        <p>With a strong commitment to sports development and organisational excellence, Jasobanta Sethi plays a pivotal role in the operational leadership of IBPL, ensuring effective execution and sustainable growth of the league.</p>
+        <span class="panel-k">Key responsibilities</span>
+        <ul class="ticks"><li>Operations management</li><li>League expansion</li></ul>
+      </template>
+      <template id="m-team-suresh">
+        <figure class="bio-ph"><img src="assets/team/suresh-chandra-mali.jpg" alt="Portrait of Retd. Capt. Suresh Chandra Mali" width="600" height="600"></figure>
+        <p class="tag"><span class="rd">IBPL</span><span>Leadership</span></p>
+        <h3>Retd. Capt. Suresh Chandra Mali</h3>
+        <p class="bio-role">Technical Director &amp; Head Coach, Indian Basketball Alliance<br><span>Indian Basketball Pro League (IBPL)</span></p>
+        <p>An accomplished former Indian international basketball player and coach, Mr. Suresh Chandra Mali brings unparalleled experience and technical expertise to IBPL. His leadership will shape the league's coaching standards and player development initiatives.</p>
+        <span class="panel-k">Key credentials</span>
+        <ul class="ticks"><li>International career, 1985–1990</li><li>Former Coach, Indian Women's National Team (2004)</li></ul>
       </template>
     </div>
   </section>

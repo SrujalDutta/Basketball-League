@@ -42,6 +42,7 @@
   </defs>
 </svg>
 
+<a class="skip" href="#content">Skip to content</a>
 <header class="hdr">
   <a href="./" class="brand" aria-label="Indian Basketball Pro League, home">
     <svg class="mark" aria-hidden="true"><use href="#ibpl-mark"/></svg>
@@ -60,7 +61,7 @@
   <a href="register.html" class="btn btn-solid" aria-current="page">Register now</a>
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="hnav">Menu</button>
 </header>
-<main>
+<main id="content">
   <section class="pg-hero" style="--still:url(assets/stills/register.jpg)">
     <div class="pg-hero-in">
       <p class="tag"><span class="rd">IBPL</span><span>Register now</span></p>
@@ -75,7 +76,7 @@
       <div class="blk-b">
         <div class="hub">
           <label class="field"><span>I want to</span><select id="pathSelect" name="path"><option value="player">Register as a player</option><option value="franchise">Enquire about a franchise</option><option value="sponsorship">Enquire about sponsorship</option><option value="school">Start a school collaboration</option></select></label>
-          <div data-path="player"><p class="lede">Player registration · U-16 boys · Season 1</p>
+          <div data-path="player"><span class="panel-k">Player registration · U-16 boys · Season 1</span>
       <div data-reg-open>
       <form class="form" id="regForm" novalidate>
         <div class="row2">
@@ -98,7 +99,7 @@
       </div>
       <div class="tbc-box" data-reg-closed hidden><b>Coming soon</b>Player registration for Season 1 opens soon. Franchise, sponsorship and school enquiries are open now.</div>
             <span class="panel-k">Who can register</span><ul class="list"><li><span>Who</span><span>Boys under 16</span></li><li><span>Born on or after</span><span>Sep 2, 2010</span></li><li><span>One registration per</span><span>Email address</span></li><li><span>Next step</span><span>Player auction</span></li></ul></div>
-          <div data-path="franchise" hidden><p class="lede">Franchise enquiry</p><form class="form enq" id="rfForm" data-type="Franchise enquiry" novalidate>
+          <div data-path="franchise" hidden><span class="panel-k">Franchise enquiry</span><form class="form enq" id="rfForm" data-type="Franchise enquiry" novalidate>
           <div class="row2"><label class="field"><span>Your name</span><input id="rf-name" name="name" type="text" data-req="your name" autocomplete="name" placeholder="First and last name"></label><label class="field"><span>Email</span><input id="rf-email" name="email" type="email" data-req="a valid email" autocomplete="email" placeholder="you@company.com"></label></div>
           <div class="row2"><label class="field"><span>Phone</span><input id="rf-phone" name="phone" type="tel" data-req="a phone number" autocomplete="tel" placeholder="+91"></label><label class="field"><span>City / district of interest</span><input id="rf-district" name="district" type="text" data-req="a city or district" placeholder="e.g. Bhubaneswar"></label></div>
           <label class="field"><span>Organisation <em>optional</em></span><input id="rf-org" name="organisation" type="text" autocomplete="organization" placeholder="Company, school or investor group"></label>
@@ -106,7 +107,7 @@
           <div class="submit-row"><button class="btn btn-solid" type="submit">Send franchise enquiry</button><p class="fine">Pricing and the ownership model are shared privately after your enquiry.</p></div>
           <p class="msg" role="status" aria-live="polite"></p>
         </form></div>
-          <div data-path="sponsorship" hidden><p class="lede">Sponsorship enquiry</p><form class="form enq" id="rsForm" data-type="Sponsorship enquiry" novalidate>
+          <div data-path="sponsorship" hidden><span class="panel-k">Sponsorship enquiry</span><form class="form enq" id="rsForm" data-type="Sponsorship enquiry" novalidate>
           <div class="row2"><label class="field"><span>Your name</span><input id="rs-name" name="name" type="text" data-req="your name" autocomplete="name" placeholder="First and last name"></label><label class="field"><span>Company</span><input id="rs-company" name="company" type="text" data-req="your company" autocomplete="organization" placeholder="Brand or company"></label></div>
           <div class="row2"><label class="field"><span>Email</span><input id="rs-email" name="email" type="email" data-req="a valid email" autocomplete="email" placeholder="you@company.com"></label><label class="field"><span>Phone <em>optional</em></span><input id="rs-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91"></label></div>
           <label class="field"><span>Interested in</span><select id="rs-interest" name="interest"><option>Title partner</option><option>Associate partner</option><option>Kit & equipment partner</option><option>Hydration partner</option><option>Media partner</option><option>Not sure yet</option></select></label>
@@ -114,7 +115,7 @@
           <div class="submit-row"><button class="btn btn-solid" type="submit">Send sponsorship enquiry</button></div>
           <p class="msg" role="status" aria-live="polite"></p>
         </form></div>
-          <div data-path="school" hidden><p class="lede">School collaboration</p><form class="form enq" id="rcForm" data-type="School collaboration" novalidate>
+          <div data-path="school" hidden><span class="panel-k">School collaboration</span><form class="form enq" id="rcForm" data-type="School collaboration" novalidate>
           <div class="row2"><label class="field"><span>School / academy</span><input id="rc-school" name="school" type="text" data-req="the school name" autocomplete="organization" placeholder="School or academy name"></label><label class="field"><span>City</span><input id="rc-city" name="city" type="text" data-req="a city" placeholder="City"></label></div>
           <div class="row2"><label class="field"><span>Contact person</span><input id="rc-name" name="name" type="text" data-req="a contact person" autocomplete="name" placeholder="First and last name"></label><label class="field"><span>Email</span><input id="rc-email" name="email" type="email" data-req="a valid email" autocomplete="email" placeholder="you@school.edu"></label></div>
           <div class="row2"><label class="field"><span>Phone <em>optional</em></span><input id="rc-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91"></label><label class="field"><span>Under-16 players (approx.) <em>optional</em></span><input id="rc-players" name="players" type="number" placeholder="e.g. 25"></label></div>

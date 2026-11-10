@@ -605,3 +605,30 @@ body.inner{background:var(--night)}
 
 /* inner pages: solid header once content scrolls beneath it */
 .inner .hdr{background:rgba(13,11,10,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--seam)}
+
+/* =====================================================================
+   Polish pass
+   ===================================================================== */
+[hidden]{display:none!important}
+.skip{position:fixed;left:16px;top:-60px;z-index:200;background:var(--ball);color:var(--night);font-weight:600;padding:10px 14px;border-radius:2px;transition:top .2s}
+.skip:focus{top:calc(12px + env(safe-area-inset-top, 0px))}
+.list .plain{font-family:var(--f-body);font-weight:600;color:var(--chalk);text-align:right}
+.split .card{border:1px solid var(--seam)}
+.cta2 b::after{content:"\00a0\2192"}
+.blk-b{max-width:820px}
+.toc a[aria-current]{color:var(--night);background:var(--ball);border-color:var(--ball)}
+.blk{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.blk.pre{opacity:0;transform:translateY(28px)}
+.hub [data-path]>.panel-k:first-child{margin-top:4px;margin-bottom:6px}
+@media (max-width:700px){
+  .list li{display:grid;gap:3px;justify-items:start}
+  .list li>span:last-child,.list .plain{text-align:left}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(92px,1fr))}
+  .stats dd.word{font-size:1.35rem}
+  .pg-hero::after{background:linear-gradient(0deg,var(--night) 0%,rgba(13,11,10,.82) 45%,rgba(13,11,10,.45) 100%)}
+  .pg-hero .sub{color:var(--chalk)}
+}
+@media (prefers-reduced-motion:reduce){
+  .blk.pre{opacity:1;transform:none}
+  .blk{transition:none}
+}

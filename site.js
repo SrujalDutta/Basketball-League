@@ -330,6 +330,31 @@ const IBPL = {
     show(path.value); fromHash();
   }
 
+  /* ---------------- inner pages: blocks fade up on scroll; "On this page" follows along ---------------- */
+  const blks = $$('.blk');
+  if (blks.length && 'IntersectionObserver' in window) {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      blks.forEach(b => { if (b.getBoundingClientRect().top > innerHeight * 0.9) b.classList.add('pre'); });
+      const rev = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); rev.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+      blks.forEach(b => { if (b.classList.contains('pre')) rev.observe(b); });
+      // a jump link (#format, #enquire…) shows its target straight away
+      const showHash = () => { const t = location.hash && document.getElementById(location.hash.slice(1)); if (t) { const b = t.closest('.blk'); if (b) b.classList.remove('pre'); } };
+      addEventListener('hashchange', showHash); showHash();
+    }
+    const toc = $$('.toc a');
+    if (toc.length) {
+      const bar = $('.toc');
+      const setCur = (id) => toc.forEach(a => {
+        if (a.getAttribute('href') === '#' + id) {
+          a.setAttribute('aria-current', 'true');
+          bar.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' });
+        } else a.removeAttribute('aria-current');
+      });
+      const spy = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) setCur(e.target.id); }), { rootMargin: '-30% 0px -60% 0px' });
+      blks.forEach(b => spy.observe(b));
+    }
+  }
+
   /* ---------------- CONTENT: announcements + gallery ----------------
      Edit content/news.json and content/gallery.json (the CMS will write these files).
      The defaults below are used if those files can't be loaded. */

@@ -1,11 +1,9 @@
 # Indian Basketball Pro League (IBPL) website
 
-Two designs for the client to compare, sharing one stylesheet, one script and the 3D arena.
+Home is a 10-section scroll through a 3D arena. About, League, Franchises, Development, Gallery,
+Partners, Contact and Register Now are separate pages. Open `index.html` → http://localhost:8000.
 
-| Design | Open | What it is |
-|---|---|---|
-| **B · Home + pages** (main) | `index.html` → http://localhost:8000 | Home is a 10-section arena scroll; About, League, Franchises, Development, Gallery, Partners, Contact and Register Now are separate pages |
-| **A · All in one scroll** | `scroll.html` → http://localhost:8000/scroll.html | Every page is a section of one arena scroll |
+An earlier all-in-one-scroll version is kept, unlinked, as `scroll.html`. It is no longer updated.
 
 ## Run it on your computer (Windows)
 

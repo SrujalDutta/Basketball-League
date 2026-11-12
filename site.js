@@ -314,6 +314,7 @@ const IBPL = {
      The defaults below are used if those files can't be loaded. */
   const DEFAULT_NEWS = [
     { date: '2026-11-10', tag: 'Registration', title: 'Player registration is open', text: 'Under-16 boys can register free for Season 1 and enter the player auction pool.', link: 'register.html#player' },
+    { date: '2026-11-12', tag: 'Entry', title: 'Free entry for spectators', text: 'No tickets needed. Registration is free for players, and entry is free for everyone watching.', link: '' },
     { date: '2026-11-10', tag: 'Franchises', title: 'Sixteen franchise slots open for enquiry', text: 'Franchise enquiries for Season 1 are now being accepted.', link: 'franchises.html' },
     { date: '', tag: 'Auction', title: 'Player auction date to be announced', text: 'Registered players will hear first, by email.', link: '' }
   ];

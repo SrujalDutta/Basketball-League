@@ -197,10 +197,9 @@
           <li><span>Sat · Pool play, all teams</span><span>8 AM</span></li>
           <li><span>Sun · Quarterfinals → Final</span><span>9 AM</span></li>
           <li><span>Sun · Awards ceremony</span><span>6 PM</span></li>
-          <li><span>Day pass · Weekend pass</span><span>$10 · $20</span></li>
-          <li><span>Kids under 12</span><span>Free</span></li>
+          <li><span>Registration &amp; entry</span><span>Free</span></li>
         </ul>
-        <p>After the auction, teams are drawn into pools by level. Pool records and point differential set Sunday's seeding, and the championship games are streamed live to ticket holders.</p>
+        <p>After the auction, teams are drawn into pools by level. Pool records and point differential set Sunday's seeding, and the championship games are streamed live.</p>
       </template>
     </div>
   </section>
@@ -325,28 +324,20 @@
     <div class="chap-in">
       <p class="tag"><span class="rd">R08</span><span>Register now</span></p>
       <h2 class="headline"><span class="ln"><span>Your shot</span></span><span class="ln"><span>starts here<span class="pt">.</span></span></span></h2>
-      <p class="sub">Player registration is open for under-16 boys. Registering puts you in the player auction pool, and we'll email you the auction date and next steps.</p>
-      <div data-reg-open>
-      <form class="form" id="regForm" novalidate>
-        <div class="row2">
-          <label class="field" id="nameField"><span>Player's full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="dobField"><span>Date of birth</span><input id="f-dob" name="dob" type="date" min="2010-09-02" max="2022-12-31"></label>
-        </div>
-        <fieldset class="chips" id="posSet">
-          <legend>Position</legend>
-          <label><input type="radio" name="position" id="p-guard" value="Guard"><span>Guard</span></label>
-          <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
-          <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
-        </fieldset>
-        <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
+      <p class="sub">Player registration is open and free for under-16 boys. Registering puts you in the player auction pool, and we'll email you the auction date and next steps.</p>
+      <div class="form gform">
+        <dl class="stats">
+          <div><dt>Registration</dt><dd class="word">Free</dd></div>
+          <div><dt>Entry</dt><dd class="word">Free</dd></div>
+          <div><dt>How</dt><dd class="word">Google Form</dd></div>
+        </dl>
+        <p class="gform-p">Registration is free. Fill in one Google Form and you're in the player auction pool.</p>
         <div class="submit-row">
-          <button class="btn btn-solid" type="submit">Register now</button>
-          <p class="fine">U-16 boys · born on or after <b>SEP 02 2010</b> · one player per email</p>
+          <a class="btn btn-solid" data-gform-link aria-disabled="true">Registration form coming soon</a>
+          <p class="fine">U-16 boys · born on or after <b>SEP 02 2010</b></p>
         </div>
-        <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
-      </form>
+        <p class="fine" data-gform-note>The Google Form link will be added here shortly.</p>
       </div>
-      <div class="tbc-box" data-reg-closed hidden><b>Coming soon</b>Player registration for Season 1 opens soon. Franchise, sponsorship and school enquiries are open now.</div>
       <p class="fine">Franchise, sponsorship or school enquiry? <button class="more" type="button" data-contact="Franchise">Send a message</button></p>
       <button class="more" data-more="m-who">Who can register</button>
       <template id="m-who">
@@ -356,12 +347,11 @@
           <li><span>Who</span><span>Players only</span></li>
           <li><span>Age</span><span>Under 16 on Sep 1, 2026</span></li>
           <li><span>Born on or after</span><span>Sep 2, 2010</span></li>
-          <li><span>One registration per</span><span>Email address</span></li>
+          <li><span>Registration &amp; entry</span><span>Free</span></li>
+          <li><span>How</span><span>Google Form</span></li>
           <li><span>Next step</span><span>Player auction</span></li>
-          <li><span>Early-bird ends</span><span>Feb 1</span></li>
-          <li><span>Full refunds until</span><span>Feb 15</span></li>
         </ul>
-        <p>Coaches, parents and fans don't need to register. Spectators can buy day or weekend passes at the door.</p>
+        <p>Coaches, parents and fans don't need to register.</p>
       </template>
     </div>
   </section>
@@ -405,8 +395,7 @@
   <details><summary>Do I need a team to register?</summary><p>No. Teams are formed at the player auction. Register on your own and you'll enter the auction pool.</p></details>
   <details><summary>How does the auction work?</summary><p>Every registered player enters the auction pool. Teams bid for players, and each player joins the team that wins them. The auction date will be announced and emailed to registered players.</p></details>
   <details><summary>How many players are on a roster?</summary><p>Up to 12 players per team, and at least 5 to start a game.</p></details>
-  <details><summary>Is there a refund policy?</summary><p>Full refunds until February 15. After that, entry can be moved to next season.</p></details>
-  <details><summary>Do spectators need tickets?</summary><p>Day passes are $10, weekend passes $20, and kids under 12 get in free. Coaches and parents don't register.</p></details>
+  <details><summary>Is there a fee?</summary><p>No. Registration and entry are free. Players sign up by filling in a Google Form.</p></details>
   <details><summary>What rules do you play by?</summary><p>Standard high school rules: four 10-minute quarters and a 24-second shot clock. The full rulebook is emailed after registration.</p></details>
   <p>Still stuck? Email <strong>info@example.com</strong></p>
 </template>

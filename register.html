@@ -5,9 +5,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Register as a player for IBPL Season 1, or send a franchise, sponsorship or school collaboration enquiry.">
+<meta name="description" content="Register free as a player for IBPL Season 1, or send a franchise, sponsorship or school collaboration enquiry.">
 <meta property="og:title" content="Register Now · IBPL">
-<meta property="og:description" content="Register as a player for IBPL Season 1, or send a franchise, sponsorship or school collaboration enquiry.">
+<meta property="og:description" content="Register free as a player for IBPL Season 1, or send a franchise, sponsorship or school collaboration enquiry.">
 <meta property="og:image" content="assets/stills/register.jpg">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0d0b0a">
@@ -66,7 +66,7 @@
     <div class="pg-hero-in">
       <p class="tag"><span class="rd">IBPL</span><span>Register now</span></p>
       <h1 class="headline"><span class="ln"><span>Your shot</span></span><span class="ln"><span class="gold">starts here<span class="pt">.</span></span></span></h1>
-      <p class="sub">Choose what you want to do. Player registration for under-16 boys is open now.</p>
+      <p class="sub">Choose what you want to do. Player registration for under-16 boys is open now, and it's free.</p>
     </div>
   </section>
   
@@ -77,28 +77,20 @@
         <div class="hub">
           <label class="field"><span>I want to</span><select id="pathSelect" name="path"><option value="player">Register as a player</option><option value="franchise">Enquire about a franchise</option><option value="sponsorship">Enquire about sponsorship</option><option value="school">Start a school collaboration</option></select></label>
           <div data-path="player"><span class="panel-k">Player registration · U-16 boys · Season 1</span>
-      <div data-reg-open>
-      <form class="form" id="regForm" novalidate>
-        <div class="row2">
-          <label class="field" id="nameField"><span>Player's full name</span><input id="f-name" name="name" autocomplete="name" placeholder="First and last name"></label>
-          <label class="field" id="dobField"><span>Date of birth</span><input id="f-dob" name="dob" type="date" min="2010-09-02" max="2022-12-31"></label>
-        </div>
-        <fieldset class="chips" id="posSet">
-          <legend>Position</legend>
-          <label><input type="radio" name="position" id="p-guard" value="Guard"><span>Guard</span></label>
-          <label><input type="radio" name="position" id="p-forward" value="Forward"><span>Forward</span></label>
-          <label><input type="radio" name="position" id="p-center" value="Center"><span>Center</span></label>
-        </fieldset>
-        <label class="field" id="emailField"><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></label>
+      <div class="form gform">
+        <dl class="stats">
+          <div><dt>Registration</dt><dd class="word">Free</dd></div>
+          <div><dt>Entry</dt><dd class="word">Free</dd></div>
+          <div><dt>How</dt><dd class="word">Google Form</dd></div>
+        </dl>
+        <p class="gform-p">Registration is free. Fill in one Google Form and you're in the player auction pool.</p>
         <div class="submit-row">
-          <button class="btn btn-solid" type="submit">Register now</button>
-          <p class="fine">U-16 boys · born on or after <b>SEP 02 2010</b> · one player per email</p>
+          <a class="btn btn-solid" data-gform-link aria-disabled="true">Registration form coming soon</a>
+          <p class="fine">U-16 boys · born on or after <b>SEP 02 2010</b></p>
         </div>
-        <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
-      </form>
+        <p class="fine" data-gform-note>The Google Form link will be added here shortly.</p>
       </div>
-      <div class="tbc-box" data-reg-closed hidden><b>Coming soon</b>Player registration for Season 1 opens soon. Franchise, sponsorship and school enquiries are open now.</div>
-            <span class="panel-k">Who can register</span><ul class="list"><li><span>Who</span><span>Boys under 16</span></li><li><span>Born on or after</span><span>Sep 2, 2010</span></li><li><span>One registration per</span><span>Email address</span></li><li><span>Next step</span><span>Player auction</span></li></ul></div>
+            <span class="panel-k">Who can register</span><ul class="list"><li><span>Who</span><span>Boys under 16</span></li><li><span>Born on or after</span><span>Sep 2, 2010</span></li><li><span>Next step</span><span>Player auction</span></li></ul></div>
           <div data-path="franchise" hidden><span class="panel-k">Franchise enquiry</span><form class="form enq" id="rfForm" data-type="Franchise enquiry" novalidate>
           <div class="row2"><label class="field"><span>Your name</span><input id="rf-name" name="name" type="text" data-req="your name" autocomplete="name" placeholder="First and last name"></label><label class="field"><span>Email</span><input id="rf-email" name="email" type="email" data-req="a valid email" autocomplete="email" placeholder="you@company.com"></label></div>
           <div class="row2"><label class="field"><span>Phone</span><input id="rf-phone" name="phone" type="tel" data-req="a phone number" autocomplete="tel" placeholder="+91"></label><label class="field"><span>City / district of interest</span><input id="rf-district" name="district" type="text" data-req="a city or district" placeholder="e.g. Bhubaneswar"></label></div>

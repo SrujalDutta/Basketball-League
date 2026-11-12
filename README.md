@@ -15,7 +15,8 @@ Two designs for the client to compare, sharing one stylesheet, one script and th
 
 ## Where to change things
 
-- **Settings** (registration open/closed, age cut-off, contact email): top of `site.js` (`IBPL = { … }`)
+- **Settings** (registration open/closed, the Google Form link, contact email): top of `site.js` (`IBPL = { … }`)
+- **Player registration** is free and uses a Google Form: paste its link into `REGISTRATION_FORM_URL`
 - **Announcements**: `content/news.json` · **Gallery**: `content/gallery.json` (photos in `assets/gallery/`)
 - **Page text**: the `.html` files · **Styles**: `site.css`
 - **3D arena**: `scene.js` (camera routes for each design are in `ROUTES`)

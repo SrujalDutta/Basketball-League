@@ -632,3 +632,8 @@ body.inner{background:var(--night)}
   .blk.pre{opacity:1;transform:none}
   .blk{transition:none}
 }
+
+/* registration through a Google Form */
+.gform .stats{margin-top:0;max-width:none}
+.gform-p{color:var(--chalk);max-width:34em}
+.btn[aria-disabled="true"]{background:transparent;color:var(--hardwood);border:1px dashed var(--seam-strong);cursor:default;pointer-events:none}

@@ -5,8 +5,8 @@
    elements exist, so pages only include the markup they need.
    ===================================================================== */
 const IBPL = {
-  REGISTRATION_OPEN: true,          // EDIT: false shows "Coming soon" instead of the player form
-  DOB_CUTOFF: '2010-09-02',         // EDIT: earliest date of birth (under 16 on Sep 1, 2026)
+  REGISTRATION_OPEN: true,          // EDIT: false shows "coming soon" instead of the form button
+  REGISTRATION_FORM_URL: '',        // EDIT: paste the Google Form link here (https://forms.gle/... or https://docs.google.com/forms/...)
   CONTACT_EMAIL: 'info@example.com' // EDIT: official email
 };
 
@@ -141,91 +141,19 @@ const IBPL = {
     form.addEventListener('input', (e) => { const fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
   }
 
-  /* ---------------- registration open / coming soon ---------------- */
-  $$('[data-reg-open]').forEach(el => { el.hidden = !IBPL.REGISTRATION_OPEN; });
-  $$('[data-reg-closed]').forEach(el => { el.hidden = IBPL.REGISTRATION_OPEN; });
-
-  /* ---------------- player registration: one player per email ----------------
-     On the Claude link, registrations go to the page's shared database:
-       emails/<fingerprint>                             claim marker (no personal data)
-       registrations/<viewer id>/players/<fingerprint>  the registration, readable by the submitter and the owner
-     Elsewhere (localhost) there is no shared database, so the check covers this browser only.
-     A public launch connects this to the site's hosting backend. */
-  const regForm = $('#regForm');
-  if (regForm) {
-    const msg = $('#formMsg'), submitBtn = $('button[type="submit"]', regForm);
-    const holder = 'reg-' + Math.random().toString(36).slice(2);
-    async function fingerprint(email) {
-      const norm = email.trim().toLowerCase();
-      try {
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('ibpl:' + norm));
-        return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-      } catch (e) {
-        let h1 = 0x811c9dc5, h2 = 0x01000193;
-        for (const ch of norm) { h1 = Math.imul(h1 ^ ch.charCodeAt(0), 16777619); h2 = Math.imul(h2 + ch.charCodeAt(0), 2246822507); }
-        return 'f' + (h1 >>> 0).toString(16) + (h2 >>> 0).toString(16);
-      }
-    }
-    const local = {
-      read() { try { return JSON.parse(localStorage.getItem('ibpl-registered-emails') || '[]'); } catch (e) { return []; } },
-      write(list) { try { localStorage.setItem('ibpl-registered-emails', JSON.stringify(list)); } catch (e) { /* storage blocked */ } }
-    };
-    async function register(rec) {
-      const key = await fingerprint(rec.email);
-      const db = await dbReady;
-      if (!db) {
-        const list = local.read();
-        if (list.includes(key)) return 'taken';
-        list.push(key); local.write(list);
-        return 'ok';
-      }
-      const claim = db.doc('emails/' + key);
-      const lease = await claim.acquire({ holder, ttlMs: 10000 });
-      if (!lease.acquired) return 'taken';
-      const snap = await claim.get();
-      if (snap.exists && (snap.data() || {}).claimed) return 'taken';
-      const uid = await uidReady;
-      if (!uid) throw new Error('no viewer id');
-      const at = new Date().toISOString();
-      await db.collection('registrations/' + uid + '/players').doc(key).set({ name: rec.name, dob: rec.dob, position: rec.position, email: rec.email.trim().toLowerCase(), registeredAt: at });
-      await claim.set({ claimed: true, at });
-      await db.doc('registrations/' + uid).set({ lastAt: at });
-      return 'ok';
-    }
-    clearOnEdit(regForm);
-    regForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (submitBtn.disabled) return;
-      const name = regForm.name.value.trim(), dob = regForm.dob.value, position = regForm.position.value, email = regForm.email.value.trim();
-      const missing = [];
-      $('#nameField').classList.toggle('bad', !name); if (!name) missing.push("the player's name");
-      $('#dobField').classList.toggle('bad', !dob); if (!dob) missing.push('a date of birth');
-      $('#posSet').classList.toggle('bad', !position); if (!position) missing.push('a position');
-      $('#emailField').classList.toggle('bad', !okEmail(email)); if (!okEmail(email)) missing.push('a valid email');
-      msg.classList.remove('ok');
-      if (missing.length) { msg.textContent = 'Add ' + listJoin(missing) + ' to register.'; return; }
-      if (dob < IBPL.DOB_CUTOFF) {
-        $('#dobField').classList.add('bad');
-        msg.textContent = 'IBPL Season 1 is for players under 16 on September 1, 2026, so the player must be born on or after September 2, 2010.';
-        return;
-      }
-      const label = submitBtn.textContent;
-      submitBtn.disabled = true; submitBtn.textContent = 'Registering…'; msg.textContent = '';
-      try {
-        const result = await register({ name, dob, position, email });
-        if (result === 'taken') {
-          $('#emailField').classList.add('bad');
-          msg.textContent = `${email} has already been used to register a player. Each email can register one player only, so use a different email.`;
-          return;
-        }
-        regForm.reset();
-        msg.classList.add('ok');
-        msg.textContent = `${name.split(' ')[0]} is registered and in the player auction pool.`;
-        celebrate(name.split(' ')[0], email);
-      } catch (err) {
-        msg.textContent = "We couldn't save the registration just now. Check your connection and try again.";
-      } finally { submitBtn.disabled = false; submitBtn.textContent = label; }
+  /* ---------------- player registration: free, through a Google Form ----------------
+     Paste the form's link into IBPL.REGISTRATION_FORM_URL at the top of this file.
+     Until then (or while REGISTRATION_OPEN is false) the button reads "coming soon".
+     Optional: in the Google Form, Settings > Presentation > Confirmation message, add a link to
+     <your site>/register.html#registered so players land back here on the swish animation. */
+  const formUrl = IBPL.REGISTRATION_OPEN && IBPL.REGISTRATION_FORM_URL.indexOf('https://') === 0 ? IBPL.REGISTRATION_FORM_URL : '';
+  if (formUrl) {
+    $$('[data-gform-link]').forEach(a => {
+      a.href = formUrl; a.target = '_blank'; a.rel = 'noopener';
+      a.removeAttribute('aria-disabled');
+      a.textContent = 'Open the registration form';
     });
+    $$('[data-gform-note]').forEach(n => { n.textContent = 'Opens in Google Forms, in a new tab.'; });
   }
 
   /* ---------------- success: the ball swishes through the hoop ---------------- */
@@ -258,10 +186,8 @@ const IBPL = {
         requestAnimationFrame(() => c.classList.add('go'));
       }
     };
-    celebrate = (first, email) => {
-      const m = $('#swishMsg'); m.innerHTML = '';
-      m.append(`${first}, you're in the IBPL player auction pool. The auction date and next steps are on their way to `);
-      const b = document.createElement('b'); b.textContent = email; m.append(b, '.');
+    celebrate = () => {
+      $('#swishMsg').textContent = "Your registration is in, and you're in the IBPL player auction pool. The auction date and next steps will reach you by email.";
       swFocus = document.activeElement;
       swTimers.forEach(clearTimeout); swTimers = []; cancelAnimationFrame(swRaf);
       swNet.classList.remove('go'); swWord.classList.remove('go'); swCopy.classList.remove('on'); swSparks.innerHTML = '';
@@ -300,6 +226,13 @@ const IBPL = {
       if (e.key === 'Escape') closeSwish();
       if (e.key === 'Tab') { e.preventDefault(); $('#swishDone').focus(); }
     });
+    // a player returning from the Google Form (…#registered) gets the swish
+    if (location.hash === '#registered') {
+      const go = () => { celebrate(); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ } };
+      const ld = $('#loader');
+      if (!ld) setTimeout(go, 400);
+      else { const w = setInterval(() => { if (ld.classList.contains('out')) { clearInterval(w); go(); } }, 200); }
+    }
   }
 
   /* ---------------- enquiry forms (contact, franchise, sponsorship, school) ----------------
@@ -380,7 +313,7 @@ const IBPL = {
      Edit content/news.json and content/gallery.json (the CMS will write these files).
      The defaults below are used if those files can't be loaded. */
   const DEFAULT_NEWS = [
-    { date: '2026-11-10', tag: 'Registration', title: 'Player registration is open', text: 'Under-16 boys can register for Season 1 and enter the player auction pool.', link: 'register.html#player' },
+    { date: '2026-11-10', tag: 'Registration', title: 'Player registration is open', text: 'Under-16 boys can register free for Season 1 and enter the player auction pool.', link: 'register.html#player' },
     { date: '2026-11-10', tag: 'Franchises', title: 'Sixteen franchise slots open for enquiry', text: 'Franchise enquiries for Season 1 are now being accepted.', link: 'franchises.html' },
     { date: '', tag: 'Auction', title: 'Player auction date to be announced', text: 'Registered players will hear first, by email.', link: '' }
   ];
